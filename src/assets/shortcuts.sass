@@ -1,0 +1,103 @@
+@import "./variables.sass";
+
+// ----------------------------------------
+// 布局
+// ----------------------------------------
+
+.hide
+  display: none !important;
+
+// ----------------------------------------
+// 功能
+// ----------------------------------------
+
+.fake-link
+  color: $brand;
+  cursor: pointer;
+  &:hover
+    color: $brand;
+
+// ----------------------------------------
+// 颜色
+// ----------------------------------------
+
+// 文字灰度
+.color-3        { color: #333; }
+.color-6        { color: #666; }
+.color-9        { color: #999; }
+.color-c        { color: #CCC; }
+.color-f        { color: #FFF; }
+
+// 色块灰度
+.bg-c           { background-color: #CCCCCC; }
+.bg-e6          { background-color: #E6E6E6; }
+.bg-f0          { background-color: #F0F0F0; }
+.bg-f5          { background-color: #F5F5F5; }
+.bg-fa          { background-color: #FAFAFA; }
+.bg-f           { background-color: #FFFFFF; }
+
+// ----------------------------------------
+// 字体
+// ----------------------------------------
+
+@each $i in 12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,60
+  .fontsize-#{$i}
+    font-size: $i * 1px;
+
+.font-bold
+    font-weight: bold;
+.font-tahoma,
+.font-number
+    font-family: "Tahoma";
+.nowrap
+    white-space: nowrap;
+
+// ----------------------------------------
+// 行距 Line Height
+// ----------------------------------------
+
+@each $i in 0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,32,35,40,50,60,80,100
+  .m#{$i}
+    margin: $i * 1px;
+  .ml#{$i}
+    margin-left: $i * 1px;
+  .mr#{$i}
+    margin-right: $i * 1px;
+  .mt#{$i}
+    margin-top: $i * 1px;
+  .mb#{$i}
+    margin-bottom: $i * 1px;
+  .p#{$i}
+    padding: $i * 1px;
+  .pl#{$i}
+    padding-left: $i * 1px;
+  .pr#{$i}
+    padding-right: $i * 1px;
+  .pt#{$i}
+    padding-top: $i * 1px;
+  .pb#{$i}
+    padding-bottom: $i * 1px;
+
+@each $i in 50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300,310,320,340,350,360,370,380,390,400,500,600,800
+  .w#{$i}
+    width: $i * 1px;
+  .h#{$i}
+    height: $i * 1px;
+
+// ----------------------------------------
+// 动画 Animation
+// ----------------------------------------
+
+// .animated {
+//     -webkit-animation-duration: 1s;
+//        -moz-animation-duration: 1s;
+//             animation-duration: 1s;
+//     -webkit-animation-fill-mode: both;
+//        -moz-animation-fill-mode: both;
+//             animation-fill-mode: both;
+// }
+// .animated.infinite {
+//     -webkit-animation-iteration-count: infinite;
+//        -moz-animation-iteration-count: infinite;
+//             animation-iteration-count: infinite;
+// }

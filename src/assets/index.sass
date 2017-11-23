@@ -1,0 +1,73 @@
+// 基于 bootstrap v4
+// 视觉参考 GitHub
+// TODO 2.x 主题 codesandbox.io
+
+// @import '../../node_modules/bootstrap/dist/css/bootstrap.css';
+@import "./fonts.sass"
+@import "./variables.sass"
+@import "./components.sass"
+@import "./shortcuts.sass"
+// @import "../../node_modules/animate.css/animate.css"
+
+html
+  font-size: 62.5%; // 10 ÷ 16 × 100% = 62.5%
+
+body
+  font-size: 1.2rem;
+  line-height: 1.5;
+  font-family: $font-family;
+  -webkit-font-smoothing: antialiased;
+  color: #24292e;
+
+html, body
+  height: 100%;
+
+#root
+  height: 100%;
+  > .Routes
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    > .body
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      > .Spin
+        align-items: center;
+        justify-content: center;
+      > * // 内容区域
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        > .body
+          flex-grow: 1;
+
+button, input, optgroup, select, textarea
+  font-size: 1.2rem;
+  font-family: $font-family;
+  color: #24292e;
+  -webkit-font-smoothing: antialiased;
+
+// *
+//   transition: color .15s ease-out, background-color .15s ease-out, opacity .15s ease-out;
+
+a
+  &, &:hover, &:focus, &:active, &:visited
+    outline: 0;
+    text-decoration: none;
+  &[disabled],
+  &.disabled
+    pointer-events: none;
+    cursor: not-allowed;
+
+a.text-decoration
+  &:hover
+    border-bottom: 1px solid $brand;
+
+pre
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $border;
+  border-radius: 0.4rem;
+  background-color: $bg;
+  white-space: pre-wrap;

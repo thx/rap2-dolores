@@ -1,0 +1,55 @@
+@import "../../assets/variables.sass";
+
+.dialog
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  border: none;
+  border-radius: .5rem;
+  box-shadow: none;
+  z-index: 1040;
+  
+  .dialog-close
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    border: none;
+    background-color: transparent;
+    opacity: .2;
+    
+    .rapfont
+      font-size: 3rem;
+    
+    &:hover, &:focus
+      color: #000;
+      text-decoration: none;
+      filter: alpha(opacity=50);
+      opacity: .5;
+  
+  .dialog-content
+    .dialog-header
+      border-bottom: 1px solid $border;
+      padding: 1.5rem 4rem 1.5rem 3rem;
+      text-align: left;
+      .dialog-title
+        margin: 0;
+        font-size: 1.8rem;
+    .dialog-body
+      padding: 1.5rem 3rem;
+    .dialog-footer
+      text-align: left;
+      border-top: 1px solid $border;
+      padding: 1.5rem 3rem;
+
+.dialog-backdrop
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #000;
+  filter: alpha(opacity=50);
+  opacity: .5;
+  // display: none;
+  z-index: 1039;

@@ -1,0 +1,368 @@
+@import "../../assets/variables.sass";
+
+.RepositoryEditor
+  > .header
+    position: relative;
+    padding: 2rem;
+    background-color: #fafbfc;
+    > .title
+      font-size: 2rem;
+      margin-right: 1rem;
+      .slash
+        color: #999;
+    > .toolbar
+      display: inline-block;
+      a, .fake-link
+        margin-right: 1rem;
+    > .desc
+      margin-top: .5rem;
+      color: #666;
+  > .body
+    // padding: 0 2rem;
+
+.RepositorySearcher.dropdown
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  left: auto;
+  > .dropdown-input
+    margin-bottom: 0;
+    width: 20rem;
+  > .dropdown-menu
+    position: absolute;
+    right: 0;
+    left: auto;
+    display: block;
+    min-width: 100%;
+    max-height: 50rem;
+    overflow: scroll;
+    a.dropdown-item
+      &.dropdown-item-module
+        padding-left: 1.5rem;
+        color: #333;
+      &.dropdown-item-interface
+        padding-left: 1.5rem + 2.5rem;
+        color: #333;
+      &.dropdown-item-property
+        padding-left: 1.5rem + 2.5rem + 2.5rem;
+        color: #666;
+
+      > .label
+        margin-right: .5rem;
+        color: #666;
+
+      > .dropdown-item-clip
+        margin-right: .5rem;
+        .highlight
+          font-weight: bold;
+          color: $brand;
+      
+      &:active
+        color: #FFF;
+        > .label
+          color: #FFF;
+        > .dropdown-item-clip
+          .highlight
+            color: #FFF;
+
+.DuplicatedInterfacesWarning
+  margin-top: 1rem;
+  .alert.alert-warning
+    margin-bottom: .5rem;
+    .title
+      margin-right: 1rem;
+      .icon
+        font-size: 1.4rem;
+        margin-right: .5rem;
+      .msg
+        font-weight: bold;
+        margin-right: 1rem;
+      .itf
+    a
+      margin-right: 1rem;
+
+.ModuleList
+  margin: 0 0 1.5rem 0;
+  padding: 0 2rem;
+  list-style: none;
+  border-bottom: 1px solid #e1e4e8;
+  background-color: #fafbfc;
+  > li
+    position: relative;
+    display: block;
+    float: left;
+    margin-bottom: -1px;
+    padding: .8rem 1.2rem;
+    border: 1px solid transparent;
+    border-width: 3px 1px 0px 1px;
+    border-radius: .4rem .4rem 0 0;
+    &.active
+      // border: 1px solid $border;
+      border-bottom-color: transparent;
+      background-color: white;
+      cursor: default;
+      border-color: #e36209 #e1e4e8 transparent #e1e4e8;
+    &.active:hover
+      background-color: white;
+    > .Module
+      position: relative;
+      a.name
+        color: #586069;
+      .toolbar
+        // float: right;
+        display: inline-block;
+        a, .fake-link
+          margin-left: 0.5rem;
+          font-size: 1.4rem;
+          color: #999;
+          &:hover
+            color: $brand;
+  > li:hover > .Module
+    .toolbar
+        display: inline-block;
+  > li.active > .Module
+      a.name
+        color: #333;
+      .toolbar
+        display: inline-block;
+        // font-size: 1.4rem;
+
+.InterfaceWrapper
+  display: flex;
+  flex-direction: row;
+  padding: 0 2rem;
+  .InterfaceList
+    flex-basis: 16rem;
+    flex-shrink: 0;
+  .InterfaceEditor
+    flex-grow: 1;
+
+.InterfaceList
+  ul.body
+    margin: 0;
+    padding: 0;
+    border: 1px solid #d1d5da;
+    border-radius: .4rem;
+    list-style: none;
+    > li
+      position: relative;
+      padding: 1rem 1rem;
+      border-bottom: 1px solid #d1d5da;
+      &:last-child
+        border-bottom: 0;
+      .Interface
+        position: relative;
+        padding-right: 4rem;
+        .name
+          position: relative;
+          float: left;
+          // width: 10rem;
+          max-width: 30rem;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        .toolbar
+          display: none;
+          position: absolute;
+          right: 0;
+          top: 0;
+          font-size: 1.4rem;
+          a, .fake-link
+            margin-left: 0.5rem;
+            color: #999;
+            &:hover
+              color: $brand;
+        .locked
+          font-size: 1.4rem;
+          color: $warning;
+    > li:hover
+      .toolbar
+        display: block;
+    > li.active
+      .Interface
+        .name a
+          color: #333;
+          &:hover
+            color: #333;
+        .toolbar
+          display: block;
+    > li.active
+      &::before
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        content: "";
+        background-color: #e36209;
+  .footer
+    padding: 0.75rem 1rem;
+
+.InterfaceEditor
+  margin-left: 2rem;
+  position: relative;
+  .InterfaceEditorToolbar
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: center;
+    .btn.edit, .btn.save, .btn.cancel, .locker-success, .locker-warning
+      display: block;
+      margin-bottom: 0.5rem;
+      width: 12rem;
+    .locker-success
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.4rem;
+      color: white;
+      background-color: $success;
+    .locker-warning
+      @extend .locker-success;
+      background-color: $warning;
+
+.InterfaceSummary
+  margin-bottom: 2rem;
+  padding-right: 13rem;
+  > .header
+    margin-bottom: .5rem;
+    > .title
+      font-size: 1.6rem;
+      margin-right: 1rem;
+      .slash
+        color: #999;
+    a.edit, a.delete
+      margin-right: .5rem;
+  ul.body
+    color: #666;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    > li
+      margin-bottom: .2rem;
+      .label
+        color: #666;
+        margin-right: .3rem;
+
+.PropertyList
+  margin-bottom: 3rem;
+  > .header
+    margin-bottom: 1rem;
+    > .title
+      font-size: 1.6rem;
+      margin-right: 1rem;
+    > .toolbar
+      float: right;
+      .preview
+        margin: 0;
+        input
+          margin-right: .5rem;
+  > .body
+    margin-bottom: 1rem;
+  > .footer
+    > .Previewer
+      margin-top: 1rem;
+      > .result-template,
+      > .result-mocked
+        > .header
+          margin-bottom: .5rem;
+          .title
+            margin-right: .75rem
+        > pre.body
+      > .result-valid
+        padding-top: 2.5rem;
+        text-align: center;
+        color: #999;
+
+.SortableTreeTable
+  .SortableTreeTableHeader,
+  .SortableTreeTableRow
+  .flex-row
+    display: flex;
+    .thtd
+      border: 1px solid #eceeef;
+      flex-grow: 1;
+      // 垂直居中
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      margin-right: -1px;
+    .th
+      @extend .thtd;
+      padding: .75rem;
+      font-weight: bold;
+    .td
+      @extend .thtd;
+      padding: .5rem .75rem;
+      margin-bottom: -1px;
+    .th, .td
+      &.operations
+        width: 4.5rem;
+        min-width: 4.5rem;
+      &.name
+        width: 20rem;
+        flex-grow: 3;
+      &.type
+        width: 7rem;
+      &.rule
+        width: 10rem;
+      &.value
+        width: 10rem;
+      &.desc
+        width: 15rem;
+    .th
+      .helper
+          margin-left: .5rem;
+          color: #999;
+          &:hover
+            color: $brand;
+    .td
+      &.operations
+        padding: .5rem .75rem;
+        height: auto;
+        line-height: 1;
+        justify-content: flex-end;
+        a
+          color: #999;
+          margin-right: .5rem;
+          &:last-child
+            margin-right: 0;
+          &:hover
+            color: $brand;
+      &.payload
+        padding: .5rem .75rem;
+        height: auto;
+        line-height: 1.5;
+      &.payload.name
+        @for $i from 0 through 42
+          &.depth-#{$i}
+            padding-left: $i * 1rem + 0.75rem;
+      &.payload.value
+        word-break: break-word;
+.SortableTreeTable.editable
+  .flex-row
+    .td
+      &.payload
+        padding: 0;
+      &.payload.name
+        @for $i from 0 through 10
+          &.depth-#{$i}
+            padding-left: $i * 1rem;
+  input.editable, 
+  select.editable, 
+  textarea.editable
+    margin: 0;
+    padding: .5rem .75rem;
+    width: 100%;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    line-height: 1.5;
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+
+.Importer
+  .CodeMirror
+    height: 30rem;
+  textarea.result
+    font-family: Menlo, Monaco, 'Courier New', monospace

@@ -1,0 +1,152 @@
+@import "./variables.sass";
+
+// ----------------------------------------
+// 输入框 Input
+// 文本框 Textarea
+// ----------------------------------------
+
+.form-control
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  padding: 6px 9px;
+  border: 1px solid $border;
+  border-radius: 4px;
+  box-shadow: none;
+  font-size: 12px;
+  background-color: white;
+  &:focus
+    border-color: $brand;
+    outline: 0;
+
+input.form-control,
+select.form-control
+  height: 32px;
+
+input[type="radio"], 
+input[type="checkbox"]
+  margin-top: 3px;
+
+.form-horizontal
+  label.control-label
+    padding-top: 7px;
+    padding-right: 0;
+  label.radio-inline
+    padding-top: 7px;
+    padding-right: 0;
+    margin: 0 15px 10px 0;
+    input[type=radio]
+      margin-right: 10px;
+
+@media (max-width: 575px)
+  .form-horizontal
+    label.control-label
+      text-align: left;
+
+@media (min-width: 576px)
+  .form-horizontal
+    label.control-label
+      text-align: right;
+
+// ----------------------------------------
+// 按钮 Button
+// ----------------------------------------
+
+.btn
+  line-height: 1.5;
+  .rapfont
+    line-height: 1rem;
+    margin-right: .5rem;
+a.btn.btn-success
+  color: white;
+
+// .btn
+//   font-size: 12px;
+//   line-height: 1.5;
+//   padding: 6px 20px;
+//   border: 1px solid $border;
+//   border-radius: 4px;
+//   background-color: $border;
+//   cursor: pointer;
+//   // height: 32px;
+//   &:hover
+//     background-color: #ccc;
+//     border-color: $border;
+//   &:focus
+//     outline: none;
+//     box-shadow: none;
+//   &.btn-primary
+//     color: white;
+//     border-color: $brand;
+//     background-color: $brand;
+//     &:hover
+//       background-color: $brand-hover;
+//   &.btn-rapfont
+//     padding-right: 2rem;
+//     .rapfont
+//       font-size: 1rem;
+//       margin-right: 0.5rem;
+
+// ----------------------------------------
+// 表格 Table
+// ----------------------------------------
+
+table.table
+  > thead
+    > tr
+      th
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+  > tbody
+    > tr
+      > td
+        vertical-align: middle;
+        .operation
+          visibility: hidden;
+    > tr:hover
+      > td
+        .operation
+          visibility: visible;
+
+// ----------------------------------------
+// 面板 Panel
+// ----------------------------------------
+
+// .panel
+//   margin-bottom: 1rem;
+//   border: 1px solid $border;
+//   border-radius: 0.3rem;
+//   > .panel-header,
+//   > .panel-footer
+//     padding: 0.75rem 1.25rem;
+//     background-color: $bg;
+//   > .panel-header
+//     border-bottom: 1px solid $border;
+//   > .panel-footer
+//     border-top: 1px solid $border;
+//   > .panel-body
+//     padding: 1.25rem;
+
+// ----------------------------------------
+// 整站开屏动画
+// ----------------------------------------
+
+.OpeningScreenAdvertising
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20rem;
+  height: 4rem;
+  margin-left: -10rem;
+  margin-top: -2rem;
+  .Spin
+    margin: 0;
+    padding: 0;
+
+// card
+.card-block
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1.25rem;

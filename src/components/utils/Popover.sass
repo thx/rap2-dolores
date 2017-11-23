@@ -1,0 +1,40 @@
+@import "../../assets/variables.sass";
+
+.Popover
+  position: relative;
+
+.popover
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  max-width: 30rem;
+  display: block;
+  padding: 0;
+  border: 1px solid $border;
+  border-radius: 4px;
+  box-shadow: 0 6px 8px rgba(51, 51, 51, 0.08);
+  font-family: $font-family;
+  background-color: white;
+  
+  &.top    { margin-top: -10px; }
+  &.right  { margin-left: 10px; }
+  &.bottom { margin-top: 10px; }
+  &.left   { margin-left: -10px; }
+  
+  .arrow
+    display: none;
+  
+  .popover-title
+    margin: 0;
+    padding: 0.5rem 1rem; // 8px 14px
+    border-bottom: 1px solid #ebebeb;
+    border-radius: .4rem .4px 0 0;
+    font-size: 14px;
+    background-color: #fafafa;
+  
+  .popover-content
+    margin: 0;
+    padding: 0.5rem 1rem; // 8px 14px
+    font-size: 12px;
+    line-height: 22px;    

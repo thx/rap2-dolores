@@ -1,0 +1,38 @@
+@import "../../assets/variables.sass";
+
+.Header
+  background-color: $nav-bg;
+  color: white;
+  font-size: 1.4rem;
+  line-height: 4rem;
+  vertical-align: middle;
+  // margin-bottom: 2rem;
+  padding: 0 2rem;
+  ul.nav-links
+    float: left;
+  ul.nav-actions
+    float: right;
+  ul.nav-links,
+  ul.nav-actions
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    > li
+      float: left;
+      padding: 0 1rem;
+      > a
+        color: white;
+        opacity: 0.5;
+        &:hover, &.selected
+          border: none;
+          font-weight: bold;
+          opacity: 1;
+      > a.logo
+        opacity: 1;
+        font-weight: bold;
+  .avatar
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  .name
+    margin-left: .5rem;

@@ -1,0 +1,21 @@
+language: node_js
+
+cache:
+  directories:
+    - node_modules
+    - $HOME/.npm
+
+notifications:
+  email: false
+t
+node_js:
+  - '8'
+
+before_install:
+  - npm i -g npm@^5.5.1
+
+script:
+  - npm run build
+  - npm run test
+
+after_success:

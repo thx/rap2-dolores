@@ -1,0 +1,56 @@
+.OrganizationListWrapper
+  padding: 2rem;
+  > .header
+    margin-bottom: 2rem;
+    .title
+      font-size: 2rem;
+  > .toolbar
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e1e4e8;
+    select.OrganizationsTypeDropdown
+      margin-right: .5rem;
+      font-size: 1.4rem;
+    button.OrganizationCreateButton
+      padding: .4rem 1rem;
+      font-size: 1.4rem;
+    .form-control
+      margin-bottom: 0;
+  > .body
+    .table
+  > .footer
+
+  .OrganizationList
+    .Organization.card
+      margin-bottom: 1rem;
+      // transition: box-shadow .15s ease-out;
+      // &:hover
+      //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.18);
+      .card-block
+        > .header
+          .title
+            margin-bottom: .5rem;
+            font-size: 1.4rem;
+          .toolbar
+            float: right;
+            display: none;
+            margin-left: 1rem;
+        > .body
+          .desc
+            margin-bottom: .5rem;
+            color: #666;
+          .members
+            .avatar
+              margin-right: .2rem;
+              width: 2.5rem;
+              height: 2.5rem;
+              border-radius: 50%;
+            .avatar.owner
+              margin-right: 1rem;
+            .popover
+              white-space: nowrap;
+      .card-block:hover
+        > .header
+          .toolbar
+            display: inline-block
+

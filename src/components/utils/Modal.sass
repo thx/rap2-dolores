@@ -1,0 +1,51 @@
+@import "../../assets/variables.sass";
+
+.Modal
+  position: fixed;
+  top: 0;
+  left: 0;
+  max-height: 100%;
+  overflow: scroll;
+  border: none;
+  border-radius: .5rem;
+  box-shadow: none;
+  background-color: white;
+  z-index: 1040;
+  
+  button.close
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    border: none;
+    color: #000;
+    background-color: transparent;
+    opacity: .2;
+    &:hover, &:focus
+      opacity: .5;
+      text-decoration: none;
+    .rapfont
+      font-size: 3rem;
+  .modal-header
+    border-bottom: 1px solid $border;
+    padding: 1.5rem 4rem 1.5rem 3rem;
+    text-align: left;
+    .modal-title
+      margin: 0;
+      font-size: 1.8rem;
+  .modal-body
+    padding: 1.5rem 3rem;
+  .modal-footer
+    text-align: left;
+    border-top: 1px solid $border;
+    padding: 1.5rem 3rem;
+
+.modal-backdrop
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: #000;
+  filter: alpha(opacity=50);
+  opacity: .5;
+  z-index: 1039;
