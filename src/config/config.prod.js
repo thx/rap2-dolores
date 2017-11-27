@@ -1,5 +1,5 @@
 module.exports = {
-  serve: 'https://rap2api.alibaba-inc.com',
+  serve: 'http://rap2api.taobao.org',
   keys: ['some secret hurr'],
   session: {
     key: 'koa:sess'

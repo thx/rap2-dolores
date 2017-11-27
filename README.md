@@ -32,11 +32,12 @@ npm run dev
 ### production
 
 ```sh
+# 1. config server API path in /src/config/config.prod.js(production config file)
 
-# produce react production package
+# 2. produce react production package
 npm run build
 
-# use serve or nginx to serve the static build directory
+# 3. use serve or nginx to serve the static build directory
 serve -s ./build -p 80
 ```
 
