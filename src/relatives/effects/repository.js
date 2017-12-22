@@ -43,7 +43,13 @@ export function * deleteRepository (action) {
 }
 export function * updateRepository (action) {
   try {
-    const repository = yield call(RepositoryService.updateRepository, action.repository)
+    let r = action.repository
+    let acceptedKeys = ['creatorId', 'organizationId', 'memberIds', 'id', 'collaboratorIds', 'description', 'ownerId']
+    let params = {}
+    acceptedKeys.forEach(x => {
+      params[x] = r[x]
+    })
+    const repository = yield call(RepositoryService.updateRepository, params)
     yield put(RepositoryAction.updateRepositorySucceeded(repository))
     if (action.onResolved) action.onResolved()
   } catch (e) {
