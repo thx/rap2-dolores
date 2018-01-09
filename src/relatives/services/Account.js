@@ -20,11 +20,11 @@ export default {
       .then(json => json.data)
   },
   // 用户登陆
-  login ({ email, password }) {
+  login ({ email, password, captcha }) {
     return fetch(`${serve}/account/login`, {
       ...CREDENTIALS,
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, captcha }),
       headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())

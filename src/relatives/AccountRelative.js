@@ -14,7 +14,7 @@ export default {
         case AccountAction.fetchLoginInfoFailed().type:
           return {}
         case AccountAction.loginFailed().type:
-          return { errMsg: '登陆错误，账户或密码错误。' }
+          return { message: action.message }
         default:
           return state
       }
@@ -68,11 +68,11 @@ export default {
     * [AccountAction.login().type] (action) {
       try {
         const user = yield call(AccountService.login, action.user)
-        if (user) {
+        if (user && user.id) {
           yield put(AccountAction.loginSucceeded(user))
           if (action.onResolved) action.onResolved()
-        } else {
-          yield put(AccountAction.loginFailed())
+        } else if (user && user.errMsg) {
+          yield put(AccountAction.loginFailed(user.errMsg))
         }
       } catch (e) {
         console.error(e.message)
