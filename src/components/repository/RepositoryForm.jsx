@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom'
 import { mock } from 'mockjs'
 import { SmartTextarea, MembersInput, RParsley } from '../utils'
 import { GoInfo } from 'react-icons/lib/go'
+import RadioList from '../utils/RadioList'
+import { FORM } from '../../family/UIConst'
 
 // 模拟数据
 // DONE 2.1 各种表单的初始值混乱，待重构
@@ -72,6 +74,13 @@ class RepositoryForm extends Component {
                   </div>
                 </div>
               }
+              <div className='form-group row'>
+                <label className='col-sm-2 control-label'>权限</label>
+                <div className='col-sm-10'>
+                  <RadioList data={FORM.RADIO_LIST_DATA_VISIBILITY} curVal={this.state.visibility} name='visibility'
+                    onChange={visibility => this.setState({ visibility })} />
+                </div>
+              </div>
               <div className='form-group row'>
                 <label className='col-sm-2 control-label'>名称：</label>
                 <div className='col-sm-10'>

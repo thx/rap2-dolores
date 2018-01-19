@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Mock from 'mockjs'
 import { SmartTextarea, MembersInput, RParsley } from '../utils'
+import RadioList from '../utils/RadioList'
+import { FORM } from '../../family/UIConst'
 
 // 模拟数据
 const mockOrganization = process.env.NODE_ENV === 'development'
@@ -67,6 +69,13 @@ class OrganizationForm extends Component {
                   </div>
                 </div>
               }
+              <div className='form-group row'>
+                <label className='col-sm-2 control-label'>权限</label>
+                <div className='col-sm-10'>
+                  <RadioList data={FORM.RADIO_LIST_DATA_VISIBILITY} curVal={this.state.visibility} name='visibility'
+                    onChange={visibility => this.setState({ visibility })} />
+                </div>
+              </div>
               <div className='form-group row'>
                 <label className='col-sm-2 control-label'>名称：</label>
                 <div className='col-sm-10'>

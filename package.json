@@ -62,7 +62,7 @@
     ]
   },
   "engines": {
-    "install-node": "9.2.0"
+    "install-node": "8.9.3"
   },
   "devDependencies": {
     "babel-eslint": "7.2.3",
