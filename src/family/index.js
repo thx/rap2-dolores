@@ -7,7 +7,7 @@ export const PropTypes = require('prop-types')
 export { render, findDOMNode } from 'react-dom' // ReactDOM
 export { connect, createStore, applyMiddleware, combineReducers, Provider } from 'react-redux'
 export { BrowserRouter, HashRouter, NavLink, Link, Redirect, Router, Route, Switch } from 'react-router-dom'
-export { replace, go, goBack, goForward } from 'react-router-redux'
+export { push, replace, go, goBack, goForward } from 'react-router-redux'
 export { call, put, take, takeLatest } from 'redux-saga/effects'
 export { delay } from 'redux-saga'
 export const _ = require('lodash')
