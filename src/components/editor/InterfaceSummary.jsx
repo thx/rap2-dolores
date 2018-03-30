@@ -39,7 +39,7 @@ class InterfaceSummary extends Component {
         <ul className='body'>
           <li>
             <span className='label'>地址：</span>
-            <Link to={`${serve}/app/mock/${repository.id}/${itf.method}/${itf.url}`} target='_blank'>{itf.url}</Link>
+            <Link to={`${serve}/app/mock/${repository.id}/${itf.url}`} target='_blank'>{itf.url}</Link>
           </li>
           <li><span className='label'>类型：</span>{itf.method}</li>
           {itf.description &&
