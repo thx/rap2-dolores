@@ -16,3 +16,6 @@ yarn.lock
 
 # css
 src/**/*.css
+
+# build
+/build
