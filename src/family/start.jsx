@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, applyMiddleware, combineReducers } from 'redux'
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { ConnectedRouter, routerReducer, routerMiddleware as createRouterMiddleware } from 'react-router-redux'
@@ -16,10 +16,11 @@ const start = (container, { reducers = {}, listeners = {}, Routes }, callback) =
   const history = createHistory()
   const routerMiddleware = createRouterMiddleware(history)
   const sagaMiddleware = createSagaMiddleware({})
+  const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
   let middlewares = logger ? [loggerMiddleware, routerMiddleware, sagaMiddleware] : [routerMiddleware, sagaMiddleware]
   store = createStore(
     combineReducers({ ...reducers, router: routerReducer }),
-    applyMiddleware(...middlewares)
+    composeEnhancers(applyMiddleware(...middlewares))
   )
 
   // 初始化当前页所需的数据
