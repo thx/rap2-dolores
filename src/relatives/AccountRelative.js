@@ -65,6 +65,19 @@ export default {
         yield put(AccountAction.addUserFailed(e.message))
       }
     },
+    * [AccountAction.updateUser().type] (action) {
+      try {
+        const result = yield call(AccountService.updateUser, action.user)
+        if (result.isOk) {
+          yield put(AccountAction.updateUserSucceeded(result))
+          if (action.onResolved) action.onResolved()
+        } else {
+          throw new Error(result.errMsg || '更新失败')
+        }
+      } catch (e) {
+        yield put(AccountAction.updateUserFailed(e.message))
+      }
+    },
     * [AccountAction.login().type] (action) {
       try {
         const user = yield call(AccountService.login, action.user)

@@ -1,4 +1,4 @@
-import { CREDENTIALS, serve } from './constant'
+import { CREDENTIALS, serve, HEADERS } from './constant'
 
 export default {
   // 获取登陆信息
@@ -15,6 +15,17 @@ export default {
       method: 'POST',
       body: JSON.stringify(user),
       headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(json => json.data)
+  },
+  // 修改密码
+  updateUser (user) {
+    return fetch(`${serve}/account/update`, {
+      ...CREDENTIALS,
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers: HEADERS.JSON
     })
       .then(res => res.json())
       .then(json => json.data)

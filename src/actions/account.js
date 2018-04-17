@@ -18,6 +18,11 @@ export const addUser = (user, onResolved) => ({ type: 'USER_ADD', user, onResolv
 export const addUserSucceeded = (user) => ({ type: 'USER_ADD_SUCCEEDED', user })
 export const addUserFailed = (message) => ({ type: 'USER_ADD_FAILED', message })
 
+// 更新
+export const updateUser = (user, onResolved) => ({ type: 'USER_UPDATE', user, onResolved })
+export const updateUserSucceeded = (user) => ({ type: 'USER_UPDATE_SUCCEEDED', user })
+export const updateUserFailed = (message) => ({ type: 'USER_UPDATE_FAILED', message })
+
 // 删除用户
 export const deleteUser = (id) => ({ type: 'USER_DELETE', id })
 export const deleteUserSucceeded = (id) => ({ type: 'USER_DELETE_SUCCEEDED', id })
