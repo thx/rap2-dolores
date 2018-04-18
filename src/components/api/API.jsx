@@ -42,7 +42,19 @@ class API extends React.Component {
     return (
       <section className='APIList'>
         <div className='header'>
-          <span className='title'>接口</span>
+          <span className='title'>用户手册</span>
+        </div>
+        <div className='body'>
+          <div className='API'>
+            <ul>
+              <li>
+                <a href='https://github.com/thx/rap2-delos/wiki'>https://github.com/thx/rap2-delos/wiki</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className='header'>
+          <span className='title'>平台API接口</span>
         </div>
         <div className='body'>
           <div className='API'>
@@ -69,7 +81,7 @@ class API extends React.Component {
                   })
                 }
               }>用法</a></li>
-              { this.state.showExampleJQuery && <ExampleJQuery /> }
+              {this.state.showExampleJQuery && <ExampleJQuery />}
               <li><span className='label'>Mock.js 插件</span><code>{serve}/libs/mock.rap.js</code></li>
               <li><span className='label'>fetch 插件</span><code>{serve}/libs/fetch.rap.js</code></li>
             </ul>
