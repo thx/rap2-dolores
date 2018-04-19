@@ -27,7 +27,7 @@ RAP2是在RAP1基础上重做的新项目，它包含两个组件(对应两个Gi
 npm install
 
 # config development mode server API path in /src/config/config.dev.js
-# 配置开发模式后端服务器的地址。 /src/config/config.prod.js
+# 配置开发模式后端服务器的地址。 /src/config/config.dev.js
 
 # test cases 测试用例
 npm run test
