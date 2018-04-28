@@ -2,6 +2,10 @@ export const addRepository = (repository, onResolved) => ({ type: 'REPOSITORY_AD
 export const addRepositorySucceeded = (repository) => ({ type: 'REPOSITORY_ADD_SUCCEEDED', repository })
 export const addRepositoryFailed = (message) => ({ type: 'REPOSITORY_ADD_FAILED', message })
 
+export const importRepository = (data, onResolved) => { { type: 'REPOSITORY_IMPORT', onResolved } }
+export const importRepositorySucceeded = () => ({ type: 'REPOSITORY_IMPORT_SUCCEEDED' })
+export const importRepositoryFailed = (message) => ({ type: 'REPOSITORY_IMPORT_FAILED', message })
+
 export const updateRepository = (repository, onResolved) => ({ type: 'REPOSITORY_UPDATE', repository, onResolved })
 export const updateRepositorySucceeded = (repository) => ({ type: 'REPOSITORY_UPDATE_SUCCEEDED', repository })
 export const updateRepositoryFailed = (message) => ({ type: 'REPOSITORY_UPDATE_FAILED', message })

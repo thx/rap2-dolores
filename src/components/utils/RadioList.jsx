@@ -14,8 +14,10 @@ class RadioList extends React.Component {
   }
 
   handleChange (e) {
-    this.setState({ curVal: e.target.value === 'true' })
-    this.props.onChange(e.target.value)
+    if (e.target.value !== this.state.curVal) {
+      this.setState({ curVal: e.target.value })
+      this.props.onChange && this.props.onChange(e.target.value)
+    }
   }
 
   render () {
@@ -24,9 +26,9 @@ class RadioList extends React.Component {
       <div className='ctl-radio-list'>
         {
           this.props.data.map(item =>
-            <label className='label' key={item.value}>
-              <input className='input'type='radio' name={that.props.name} value={item.value}
-                checked={this.state.curVal === item.value} onChange={e => that.handleChange(e)} />
+            <label className='label mr8' key={item.value}>
+              <input className='input' type='radio' name={that.props.name} value={item.value} disabled={that.props.disabled}
+                checked={this.state.curVal == item.value} data-log={typeof this.state.curVal + '|' + typeof item.value} onChange={e => that.handleChange(e)} />
               {item.label}
             </label>)
         }

@@ -4,9 +4,10 @@ import { Spin, RModal, Pagination } from '../utils'
 
 import RepositoryList from './RepositoryList'
 import RepositoryForm from './RepositoryForm'
+import ImportRepositoryForm from './ImportRepositoryForm'
 import { addRepository, updateRepository, deleteRepository } from '../../actions/repository'
 
-import { GoRepo } from 'react-icons/lib/go'
+import { GoRepo, GoMoveRight } from 'react-icons/lib/go'
 
 export const contextTypes = {
   store: PropTypes.object
@@ -43,7 +44,10 @@ export class CreateButton extends Component {
   }
   constructor (props) {
     super(props)
-    this.state = { create: !!props.create }
+    this.state = {
+      create: !!props.create,
+      import: !!props.import
+    }
   }
   render () {
     let { organization } = this.props
@@ -53,8 +57,14 @@ export class CreateButton extends Component {
         <button className='RepositoryCreateButton btn btn-success' onClick={e => this.setState({ create: true })}>
           <GoRepo /> 新建仓库
         </button>
+        <button className='RepositoryCreateButton btn btn-secondary ml8' onClick={e => this.setState({ import: true })}>
+          <GoMoveRight /> 导入仓库
+        </button>
         <RModal when={this.state.create} onClose={e => this.setState({ create: false })} onResolve={this.handleUpdate}>
           <RepositoryForm title='新建仓库' organization={organization} />
+        </RModal>
+        <RModal when={this.state.import} onClose={e => this.setState({ import: false })} onResolve={this.handleUpdate}>
+          <ImportRepositoryForm title='导入仓库' orgId={organization.id} />
         </RModal>
       </span>
     )
