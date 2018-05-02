@@ -57,15 +57,19 @@ export class CreateButton extends Component {
         <button className='RepositoryCreateButton btn btn-success' onClick={e => this.setState({ create: true })}>
           <GoRepo /> 新建仓库
         </button>
-        <button className='RepositoryCreateButton btn btn-secondary ml8' onClick={e => this.setState({ import: true })}>
-          <GoMoveRight /> 导入仓库
+        {organization &&
+          <button className='RepositoryCreateButton btn btn-secondary ml8' onClick={e => this.setState({ import: true })}>
+            <GoMoveRight /> 导入仓库
         </button>
+        }
         <RModal when={this.state.create} onClose={e => this.setState({ create: false })} onResolve={this.handleUpdate}>
           <RepositoryForm title='新建仓库' organization={organization} />
         </RModal>
-        <RModal when={this.state.import} onClose={e => this.setState({ import: false })} onResolve={this.handleUpdate}>
-          <ImportRepositoryForm title='导入仓库' orgId={organization.id} />
-        </RModal>
+        {organization &&
+          <RModal when={this.state.import && !!organization} onClose={e => this.setState({ import: false })} onResolve={this.handleUpdate}>
+            <ImportRepositoryForm title='导入仓库' orgId={organization.id} />
+          </RModal>
+        }
       </span>
     )
   }

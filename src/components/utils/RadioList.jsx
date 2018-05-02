@@ -28,7 +28,7 @@ class RadioList extends React.Component {
           this.props.data.map(item =>
             <label className='label mr8' key={item.value}>
               <input className='input' type='radio' name={that.props.name} value={item.value} disabled={that.props.disabled}
-                checked={this.state.curVal == item.value} data-log={typeof this.state.curVal + '|' + typeof item.value} onChange={e => that.handleChange(e)} />
+                checked={this.state.curVal + '' === item.value + ''} data-log={typeof this.state.curVal + '|' + typeof item.value} onChange={e => that.handleChange(e)} />
               {item.label}
             </label>)
         }

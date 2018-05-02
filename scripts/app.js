@@ -46,7 +46,6 @@ router.get('/env', (ctx, next) => {
 router.get('/delos', (ctx, next) => {
   ctx.body = process.env.RAP2_DELOS
 })
-
 router.get('/account/info', (ctx) => {
   ctx.body = {
     url: ctx.request.url,

@@ -2,7 +2,6 @@ import URI from 'urijs'
 
 const handleLocation = ({ store, listeners, location, action }) => {
   // TODO 2.x 统一控制日志
-  // console.log('[HISTORY]', action, location.pathname, location.state)
   location.params = URI(location.search || '').search(true)
   let isLogined = !!store.getState().auth.id
   let { pathname, params } = location

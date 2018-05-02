@@ -3,21 +3,24 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import RadioList from '../utils/RadioList'
-import { SmartTextarea } from '../utils'
 import './ImportRepositoryForm.css'
+import { importRepository, fetchRepositoryList } from '../../actions/repository'
 
 class ImportRepositoryForm extends Component {
   static contextTypes = {
     rmodal: PropTypes.object.isRequired
   }
   static propTypes = {
-    orgId: PropTypes.number.isRequired
+    orgId: PropTypes.number.isRequired,
+    importRepository: PropTypes.func.isRequired
   }
   constructor (props) {
     super(props)
     this.state = {
       orgId: props.orgId,
-      version: 1
+      version: 1,
+      docUrl: ''
+
     }
   }
   render () {
@@ -40,8 +43,8 @@ class ImportRepositoryForm extends Component {
               <div className='form-group row'>
                 <label className='col-sm-2 control-label'>文档URL</label>
                 <div className='col-sm-10'>
-                  <input name='projectId' value={this.state.projectId} onChange={e => this.setState({ projectId: e.target.value })}
-                    className='form-control' placeholder='如' spellCheck='false' autoFocus='true'
+                  <input name='projectId' value={this.state.docUrl} onChange={e => this.setState({ docUrl: e.target.value })}
+                    className='form-control' placeholder='http://rapapi.org/workspace/myWorkspace.do?projectId=145#2548' spellCheck='false' autoFocus='true'
                     required data-parsley-maxlength='256' />
                 </div>
               </div>
@@ -62,15 +65,27 @@ class ImportRepositoryForm extends Component {
     this.context.rmodal.reposition()
   }
   handleSubmit = (e) => {
-    console.log(this.state)
     e.preventDefault()
+    const { docUrl, orgId } = this.state
+    this.props.importRepository({ docUrl, orgId }, (res) => {
+      if (res.isOk) {
+        this.context.rmodal.resolve()
+      } else {
+        console.log(res.message)
+      }
+    })
   }
 }
 
 // 容器组件
 const mapStateToProps = (state) => ({
 })
-const mapDispatchToProps = ({})
+
+const mapDispatchToProps = ({
+  importRepository,
+  fetchRepositoryList
+})
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

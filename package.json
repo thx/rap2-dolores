@@ -35,6 +35,7 @@
     "mockjs": "1.0.1-beta3",
     "moment": "2.22.1",
     "node-fetch": "1.7.1",
+    "normalizr": "^3.2.4",
     "nprogress": "0.2.0",
     "parsleyjs": "^2.7.2",
     "prop-types": "15.5.10",

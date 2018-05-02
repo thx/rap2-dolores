@@ -89,7 +89,6 @@ class Checker extends Component {
         nextMatch(type, path, actual, expected, result, message)
       }
       var result = Diff.diff(schema, data)
-      console.log(result)
       for (var i = 0; i < result.length; i++) {
         console.warn(Assert.message(result[i]))
       }

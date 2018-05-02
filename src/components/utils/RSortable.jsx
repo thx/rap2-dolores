@@ -14,7 +14,6 @@ class RSortable extends Component {
       handle: '.sortable',
       animation: 150,
       onEnd: (e) => {
-        // console.log(e.oldIndex, '=>', e.newIndex, e)
         if (onChange) onChange(e, $sortable)
       },
       ...this.props

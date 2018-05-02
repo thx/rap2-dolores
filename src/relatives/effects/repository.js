@@ -57,6 +57,22 @@ export function * updateRepository (action) {
     yield put(RepositoryAction.updateRepositoryFailed(e.message))
   }
 }
+
+export function * importRepository (action) {
+  try {
+    const res = yield call(RepositoryService.importRepository, action.data)
+    if (res.isOk) {
+      yield put(RepositoryAction.importRepositorySucceeded(res.data))
+      if (action.onResolved) action.onResolved(res)
+    } else {
+      throw new Error(res.message)
+    }
+  } catch (e) {
+    console.error(e.message)
+    yield put(RepositoryAction.importRepositoryFailed(e.message))
+  }
+}
+
 export function * fetchRepository (action) {
   try {
     const count = yield call(RepositoryService.fetchRepository, action.repository || action.id)

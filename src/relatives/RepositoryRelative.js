@@ -142,9 +142,13 @@ export default {
     [RepositoryAction.addRepository().type]: RepositoryEffects.addRepository,
     [RepositoryAction.deleteRepository().type]: RepositoryEffects.deleteRepository,
     [RepositoryAction.updateRepository().type]: RepositoryEffects.updateRepository,
+
     [RepositoryAction.fetchRepository().type]: RepositoryEffects.fetchRepository,
     [RepositoryAction.fetchRepositoryCount().type]: RepositoryEffects.fetchRepositoryCount,
     [RepositoryAction.fetchRepositoryList().type]: RepositoryEffects.fetchRepositoryList,
+
+    [RepositoryAction.importRepository().type]: RepositoryEffects.importRepository,
+
     [RepositoryAction.fetchOwnedRepositoryList().type]: RepositoryEffects.fetchOwnedRepositoryList,
     [RepositoryAction.fetchJoinedRepositoryList().type]: RepositoryEffects.fetchJoinedRepositoryList,
 

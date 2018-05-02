@@ -116,11 +116,8 @@ class StringRuleEditor extends Component {
     )
   }
   componentDidUpdate () {
-    let template = this.get()
-    console.log(template, '=>', mock(template))
   }
   onChange = () => {
-    console.log(this.get())
   }
 }
 
