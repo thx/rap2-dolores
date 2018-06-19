@@ -73,14 +73,14 @@ class API extends React.Component {
             <div className='title'>获取仓库的前端插件（JS）</div>
             <ul>
               <li><span className='label'>基础插件</span><code>{serve}/app/plugin/:repositories</code></li>
-              <li><span className='label'>jQuery 插件</span><code>{serve}/libs/jquery.rap.js</code><a href='#' className='btn btn-secondary btn-sm ml8' onClick={
+              <li><span className='label'>jQuery 插件</span><code>{serve}/libs/jquery.rap.js</code><button className='btn btn-secondary btn-sm ml8' onClick={
                 e => {
                   e.preventDefault()
                   this.setState((prevState, props) => {
                     return { showExampleJQuery: !prevState.showExampleJQuery }
                   })
                 }
-              }>用法</a></li>
+              }>用法</button></li>
               {this.state.showExampleJQuery && <ExampleJQuery />}
               <li><span className='label'>Mock.js 插件</span><code>{serve}/libs/mock.rap.js</code></li>
               <li><span className='label'>fetch 插件</span><code>{serve}/libs/fetch.rap.js</code></li>

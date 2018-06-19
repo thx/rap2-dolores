@@ -58,7 +58,7 @@ class Importer extends Component {
   handleBeautify = (e) => {
     e.preventDefault()
     if (this.$rcm) {
-      let result = eval('(' + this.state.result + ')')  // eslint-disable-line no-eval
+      let result = eval('(' + this.state.result + ')') // eslint-disable-line no-eval
       let beautified = JSON.stringify(result, null, 2)
       this.$rcm.cm.setValue(beautified)
     }
@@ -104,7 +104,7 @@ class Importer extends Component {
   // DONE 2.1 因为 setState() 是异步的，导致重复调用 handleAddMemoryProperty() 时最后保留最后一个临时属性
   handleSubmit = (e) => {
     e.preventDefault()
-    let result = eval('(' + this.state.result + ')')  // eslint-disable-line no-eval
+    let result = eval('(' + this.state.result + ')') // eslint-disable-line no-eval
     let schema = Mock.toJSONSchema(result)
     let memoryProperties = []
     if (schema.properties) schema.properties.forEach(item => this.handleJSONSchema(item, undefined, memoryProperties))

@@ -46,7 +46,6 @@ class Repository extends Component {
               <RepositoryForm title='编辑仓库' repository={repository} />
             </RModal>
             {/* 删除权限：个人仓库 */}
-            {auth.id}
             {repository.owner.id === auth.id
               ? <Link to={location.pathname + location.search} onClick={this.handleDeleteRepository}><GoTrashcan /></Link>
               : null

@@ -62,14 +62,10 @@
       "/build"
     ]
   },
-  "engines": {
-    "install-node": "8.9.3"
-  },
   "devDependencies": {
     "babel-eslint": "7.2.3",
     "node-sass": "4.5.3",
     "npm-run-all": "4.0.2",
-    "pre-commit": "1.2.2",
     "react-scripts": "0.9.5",
     "standard": "10.0.2"
   }

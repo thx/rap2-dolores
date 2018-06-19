@@ -30,7 +30,7 @@ class RModal extends Component {
     let { children, when, onClose } = this.props
     if (!when) return null
     return (
-      <Modal isOpen onAfterOpen={this.reposition} contentLabel='Modal' style={customStyle}>
+      <Modal ariaHideApp={false} isOpen onAfterOpen={this.reposition} contentLabel='Modal' style={customStyle}>
         <div className='RModalWrapper'>
           <div className='rmodal-backdrop' />
           <div className='RModal' ref={$rmodal => { this.$rmodal = $rmodal }}>

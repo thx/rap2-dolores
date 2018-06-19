@@ -19,12 +19,13 @@ class ImportRepositoryForm extends Component {
     this.state = {
       orgId: props.orgId,
       version: 1,
-      docUrl: ''
-
+      docUrl: '',
+      disableSubmit: false
     }
   }
   render () {
     const { rmodal } = this.context
+    const { disableSubmit } = this.state
     return (
       <section className='ImportRepositoryForm'>
         <div className='rmodal-header'>
@@ -51,7 +52,7 @@ class ImportRepositoryForm extends Component {
               <div className='form-group row mb0'>
                 <label className='col-sm-2 control-label' />
                 <div className='col-sm-10'>
-                  <button type='submit' className='btn btn-success w140 mr20'>提交</button>
+                  <button type='submit' id='btnSubmitImportRAP' className='btn btn-success w140 mr20' disabled={disableSubmit}>{disableSubmit ? '导入中，请稍等...' : '提交'}</button>
                   <Link to='' onClick={e => { e.preventDefault(); rmodal.close() }} className='mr10'>取消</Link>
                 </div>
               </div>
@@ -65,9 +66,15 @@ class ImportRepositoryForm extends Component {
     this.context.rmodal.reposition()
   }
   handleSubmit = (e) => {
+    this.setState({
+      disableSubmit: true
+    })
     e.preventDefault()
     const { docUrl, orgId } = this.state
     this.props.importRepository({ docUrl, orgId }, (res) => {
+      this.setState({
+        disableSubmit: false
+      })
       if (res.isOk) {
         this.context.rmodal.resolve()
       } else {

@@ -149,7 +149,7 @@ const ExitLogView = ({ log }) => {
   )
 }
 
-const Log = ({ log }) => {  // eslint-disable-line no-unused-vars
+const Log = ({ log }) => { // eslint-disable-line no-unused-vars
   const userAvatar = <img alt={log.user.empId} src={`https://work.alibaba-inc.com/photo/${log.user.empId}.220x220.jpg`} className='avatar' />
   const userLink = <Link to={`https://work.alibaba-inc.com/work/u/${log.user.empId}`} target='_blank'>{log.user.fullname}</Link>
   const fromNow = <i className='fromnow'>{moment(log.updatedAt).fromNow()}</i>

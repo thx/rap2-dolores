@@ -3,6 +3,7 @@ import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../fam
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
 import InterfaceForm from './InterfaceForm'
+import { getRelativeUrl } from '../../utils/URLUtils'
 
 class InterfaceSummary extends Component {
   static contextTypes = {
@@ -39,7 +40,7 @@ class InterfaceSummary extends Component {
         <ul className='body'>
           <li>
             <span className='label'>地址：</span>
-            <Link to={`${serve}/app/mock/${repository.id}/${itf.url}`} target='_blank'>{itf.url}</Link>
+            <Link to={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url)}`} target='_blank'>{itf.url}</Link>
           </li>
           <li><span className='label'>类型：</span>{itf.method}</li>
           {itf.description &&

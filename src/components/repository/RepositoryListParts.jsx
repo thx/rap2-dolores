@@ -60,7 +60,7 @@ export class CreateButton extends Component {
         {organization &&
           <button className='RepositoryCreateButton btn btn-secondary ml8' onClick={e => this.setState({ import: true })}>
             <GoMoveRight /> 导入仓库
-        </button>
+          </button>
         }
         <RModal when={this.state.create} onClose={e => this.setState({ create: false })} onResolve={this.handleUpdate}>
           <RepositoryForm title='新建仓库' organization={organization} />
