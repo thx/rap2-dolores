@@ -48,8 +48,9 @@ const treeToJson = (tree) => {
       case 'Function':
         try {
           let fn = eval('(' + item.value + ')') // eslint-disable-line no-eval
+          let value
           try {
-            let value = fn()
+            value = fn()
           } catch(e) {
             console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`)
             result['string'] = item.value
