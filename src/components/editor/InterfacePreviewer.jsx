@@ -32,10 +32,14 @@ class Previewer extends Component {
     let scopedData = {
       request: Mock.mock(scopedTemplate.request)
     }
-    scopedData.response = Mock.mock(
-      Object.assign({}, _.pick(scopedData.request, extraKeys), scopedTemplate.response)
-    )
-    scopedData.response = _.pick(scopedData.response, scopedKeys.response)
+    try {
+      scopedData.response = Mock.mock(
+        Object.assign({}, _.pick(scopedData.request, extraKeys), scopedTemplate.response)
+      )
+      scopedData.response = _.pick(scopedData.response, scopedKeys.response)
+    } catch (ex) {
+      scopedData.response = `无法预览Mock数据，因为您编写规则导致如下错误：${ex.message}`
+    }
 
     let template = scopedTemplate[scope]
     let data = scopedData[scope]
