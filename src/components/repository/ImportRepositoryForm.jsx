@@ -36,7 +36,7 @@ class ImportRepositoryForm extends Component {
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>版本</label>
               <div className='col-sm-10'>
-                <RadioList data={[{ 'label': 'RAP1', 'value': 1 }, { 'label': 'RAP2(开发中...)', 'value': 2 }]}
+                <RadioList data={[{ 'label': 'RAP1', 'value': 1 }]}
                   curVal={this.state.version} name='version' disabled />
               </div>
             </div>

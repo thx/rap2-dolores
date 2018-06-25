@@ -23,7 +23,7 @@
   "license": "ISC",
   "dependencies": {
     "animate.css": "3.5.2",
-    "bootstrap": "^4.0.0-beta.2",
+    "bootstrap": "^4.1.1",
     "chart.js": "^2.6.0",
     "codemirror": "5.27.2",
     "graceful": "1.0.1",

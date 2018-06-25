@@ -12,9 +12,10 @@ import { addRepository, updateRepository, clearRepository } from '../../actions/
 import { addModule, updateModule, deleteModule, sortModuleList } from '../../actions/module'
 import { addInterface, updateInterface, deleteInterface, lockInterface, unlockInterface, sortInterfaceList } from '../../actions/interface'
 import { addProperty, updateProperty, deleteProperty, updateProperties, sortPropertyList } from '../../actions/property'
-import { GoRepo, GoPencil, GoPlug, GoDatabase, GoJersey } from 'react-icons/lib/go'
+import { GoRepo, GoPencil, GoPlug, GoDatabase, GoJersey, GoLinkExternal } from 'react-icons/lib/go'
 
 import './RepositoryEditor.css'
+import ExportPostmanForm from '../repository/ExportPostmanForm';
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
@@ -57,7 +58,8 @@ class RepositoryEditor extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      update: false
+      update: false,
+      exportPostman: false,
     }
   }
   render () {
@@ -91,6 +93,7 @@ class RepositoryEditor extends Component {
           </span>
           <div className='toolbar'>
             {/* 编辑权限：拥有者或者成员 */}
+
             {isOwned || isJoined
               ? <span className='fake-link edit' onClick={e => this.setState({ update: true })}><GoPencil /> 编辑</span>
               : null
@@ -101,6 +104,10 @@ class RepositoryEditor extends Component {
             <Link to={`${serve}/app/plugin/${repository.id}`} target='_blank' className='api'><GoPlug /> 插件</Link>
             <Link to={`${serve}/repository/get?id=${repository.id}`} target='_blank' className='api'><GoDatabase /> 数据</Link>
             <Link to={`${serve}/test/test.plugin.jquery.html?id=${repository.id}`} target='_blank' className='api'><GoJersey /> 测试</Link>
+            <span className='fake-link edit' onClick={e => this.setState({ exportPostman: true })}><GoLinkExternal /> 导出Postman Collection</span>
+            <RModal when={this.state.exportPostman} onClose={e => this.setState({ exportPostman: false })}>
+              <ExportPostmanForm title='导出到Postman' repoId={repository.id} />
+            </RModal>
           </div>
           <RepositorySearcher repository={repository} />
           <div className='desc'>{repository.description}</div>
