@@ -5,12 +5,12 @@ import config from '../../config'
 
 class ExportPostmanForm extends Component {
   static contextTypes = {
-    rmodal: PropTypes.object.isRequired,
+    rmodal: PropTypes.object.isRequired
   }
   static propTypes = {
-    repoId: PropTypes.number,
+    repoId: PropTypes.number
   }
-  render() {
+  render () {
     const { rmodal } = this.context
     const { repoId } = this.props
     return (
@@ -24,7 +24,7 @@ class ExportPostmanForm extends Component {
               <div>
                 请在Postman中点击导入（Import），选择从链接导入（Import From Link），输入如下链接即可。
               </div>
-              <div className="alert alert-info" role="alert" style={{ margin: '8px 0' }}> {config.serve}/postman/export?id={repoId} </div>
+              <div className='alert alert-info' role='alert' style={{ margin: '8px 0' }}> {config.serve}/postman/export?id={repoId} </div>
             </div>
             <div className='rmodal-footer'>
               <div className='form-group row mb0'>
@@ -39,7 +39,7 @@ class ExportPostmanForm extends Component {
       </section>
     )
   }
-  componentDidUpdate() {
+  componentDidUpdate () {
     this.context.rmodal.reposition()
   }
   handleSubmit = (e) => {

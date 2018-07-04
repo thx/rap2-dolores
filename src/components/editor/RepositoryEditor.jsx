@@ -15,7 +15,7 @@ import { addProperty, updateProperty, deleteProperty, updateProperties, sortProp
 import { GoRepo, GoPencil, GoPlug, GoDatabase, GoJersey, GoLinkExternal } from 'react-icons/lib/go'
 
 import './RepositoryEditor.css'
-import ExportPostmanForm from '../repository/ExportPostmanForm';
+import ExportPostmanForm from '../repository/ExportPostmanForm'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
@@ -59,7 +59,7 @@ class RepositoryEditor extends Component {
     super(props)
     this.state = {
       update: false,
-      exportPostman: false,
+      exportPostman: false
     }
   }
   render () {
