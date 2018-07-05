@@ -36,7 +36,7 @@ export function * updateProperty (action) {
 }
 export function * updateProperties (action) {
   try {
-    const properties = yield call(EditorService.updateProperties, action.itf, action.properties)
+    const properties = yield call(EditorService.updateProperties, action.itf, action.properties, action.summary)
     yield put(PropertyAction.updatePropertiesSucceeded(properties))
     if (action.onResolved) action.onResolved()
   } catch (e) {

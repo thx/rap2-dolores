@@ -38,7 +38,6 @@ class Example extends Component {
     })
   }
   handleChange = (value) => {
-    console.log(value)
     this.setState({ members: value, options: [] })
   }
 }

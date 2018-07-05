@@ -190,11 +190,11 @@ export default {
       .then(res => res.json())
       .then(json => json.data)
   },
-  updateProperties (itf, properties) {
+  updateProperties (itf, properties, summary) {
     return fetch(`${serve}/properties/update?itf=${itf}`, {
       ...CREDENTIALS,
       method: 'POST',
-      body: JSON.stringify(properties),
+      body: JSON.stringify({ properties, summary }),
       headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())

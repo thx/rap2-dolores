@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { PropTypes, connect, replace, StoreStateRouterLocationURI, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
-import InterfaceSummary from './InterfaceSummary'
+import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
 import PropertyList from './PropertyList'
 
-export const RequestPropertyList = (props) => (
-  <PropertyList scope='request' title='请求参数' label='请求' {...props} />
-)
+export const RequestPropertyList = (props) => {
+  return <PropertyList scope='request' title='请求参数' label='请求' {...props} />
+}
 export const ResponsePropertyList = (props) => (
   <PropertyList scope='response' title='响应内容' label='响应' {...props} />
 )
@@ -36,53 +36,65 @@ class InterfaceEditor extends Component {
     handleDeleteMemoryProperty: PropTypes.func.isRequired,
     handleChangeProperty: PropTypes.func.isRequired
   }
+  constructor (props) {
+    super(props)
+    this.state = {
+      ...InterfaceEditor.mapPropsToState(props),
+      summaryState: {
+        bodyOption: BODY_OPTION.FORM_DATA,
+        requestParamsType: REQUEST_PARAMS_TYPE.QUERY_PARAMS
+      }
+    }
+    this.summaryStateChange = this.summaryStateChange.bind(this)
+    // { itf: {}, properties: [] }
+  }
   getChildContext () {
     return _.pick(this, Object.keys(InterfaceEditor.childContextTypes))
-    // return {
-    //   handleLockInterface: this.handleLockInterface,
-    //   handleUnlockInterface: this.handleUnlockInterface,
-    //   handleSaveInterface: this.handleSaveInterface,
-    //   handleAddMemoryProperty: this.handleAddMemoryProperty,
-    //   handleAddMemoryProperties: this.handleAddMemoryProperties,
-    //   handleDeleteMemoryProperty: this.handleDeleteMemoryProperty,
-    //   handleChangeProperty: this.handleChangeProperty
-    // }
   }
-  static mapPropsToState (props) {
-    let { auth, itf, properties } = props
+  static mapPropsToState (prevProps, prevStates) {
+    let { auth, itf, properties } = prevProps
     return {
-      itf: { ...itf },
-      properties: properties.map(property => ({...property})),
+      ...prevStates,
+      itf,
+      properties: properties.map(property => ({ ...property })),
       editable: !!(itf.locker && (itf.locker.id === auth.id))
     }
   }
-  componentDidMount () {}
+  componentDidMount () { }
+  summaryStateChange (summaryState) {
+    this.setState({ summaryState })
+  }
   componentWillReceiveProps (nextProps) {
     if (
       nextProps.itf.id === this.state.itf.id &&
       nextProps.itf.updatedAt === this.state.itf.updatedAt
     ) return
-    this.setState(InterfaceEditor.mapPropsToState(nextProps))
+    const prevStates = this.state
+    this.setState(InterfaceEditor.mapPropsToState(nextProps, prevStates))
   }
   // Use shouldComponentUpdate() to let React know if a component's output is not affected by the current change in state or props.
   // TODO 2.2
   // shouldComponentUpdate (nextProps, nextState) {}
-  constructor (props) {
-    super(props)
-    this.state = InterfaceEditor.mapPropsToState(props)
-    // { itf: {}, properties: [] }
-  }
+
   render () {
-    let { auth, repository, mod, itf } = this.props
-    let { id, locker } = this.state.itf
+    const { auth, repository, mod, itf } = this.props
+    const { editable } = this.state
+    const { id, locker } = this.state.itf
     if (!id) return null
     return (
       <article className='InterfaceEditor'>
-        <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={this.state.editable} />
-        <InterfaceSummary repository={repository} mod={mod} itf={itf} active />
-        <RequestPropertyList properties={this.state.properties} editable={this.state.editable}
-          repository={repository} mod={mod} itf={this.state.itf} />
-        <ResponsePropertyList properties={this.state.properties} editable={this.state.editable}
+        <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
+        <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
+        <RequestPropertyList
+          properties={this.state.properties}
+          editable={editable}
+          repository={repository}
+          mod={mod}
+          itf={this.state.itf}
+          bodyOption={this.state.summaryState.bodyOption}
+          requestParamsType={this.state.summaryState.requestParamsType}
+        />
+        <ResponsePropertyList properties={this.state.properties} editable={editable}
           repository={repository} mod={mod} itf={this.state.itf} />
       </article>
     )
@@ -91,9 +103,13 @@ class InterfaceEditor extends Component {
     this.handleAddMemoryProperties([property], cb)
   }
   handleAddMemoryProperties = (properties, cb) => {
+    const requestParamsType = this.state.summaryState.requestParamsType
+    const rpt = rptFromStr2Num(requestParamsType)
+
     properties.forEach(item => {
       if (item.memory === undefined) item.memory = true
       if (item.id === undefined) item.id = _.uniqueId('memory-')
+      item.pos = rpt
     })
     let nextState = { properties: [...this.state.properties, ...properties] }
     this.setState(nextState, () => {
@@ -126,13 +142,13 @@ class InterfaceEditor extends Component {
     let index = properties.findIndex(item => item.id === property.id)
     if (index >= 0) {
       properties.splice(index, 1, property)
-      this.setState({ properties }, () => {})
+      this.setState({ properties }, () => { })
     }
   }
   handleSaveInterface = (e) => {
     e.preventDefault()
-    let { onUpdateProperties } = this.context
-    onUpdateProperties(this.state.itf.id, this.state.properties, () => {
+    const { onUpdateProperties } = this.context
+    onUpdateProperties(this.state.itf.id, this.state.properties, this.state.summaryState, () => {
       this.handleUnlockInterface()
     })
   }

@@ -6,7 +6,7 @@ export const updateProperty = (property, onResolved) => ({ type: 'PROPERTY_UPDAT
 export const updatePropertySucceeded = (property) => ({ type: 'PROPERTY_UPDATE_SUCCEEDED', property })
 export const updatePropertyFailed = (message) => ({ type: 'PROPERTY_UPDATE_FAILED', message })
 
-export const updateProperties = (itf, properties, onResolved) => ({ type: 'PROPERTIES_UPDATE', itf, properties, onResolved })
+export const updateProperties = (itf, properties, summary, onResolved) => ({ type: 'PROPERTIES_UPDATE', itf, properties, summary, onResolved })
 export const updatePropertiesSucceeded = (properties) => ({ type: 'PROPERTIES_UPDATE_SUCCEEDED', properties })
 export const updatePropertiesFailed = (message) => ({ type: 'PROPERTIES_UPDATE_FAILED', message })
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { PropTypes, connect, Link, Mock } from '../../family'
 import { SmartTextarea } from '../utils'
 
-export const METHODS = ['GET', 'POST', 'PUT', 'DELETE']
+export const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
 
 // 模拟数据
 const mockInterface = process.env.NODE_ENV === 'development'

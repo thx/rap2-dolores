@@ -121,8 +121,6 @@ class PropertyForm extends Component {
       parentId: parent.id
     })
     handleAddMemoryProperty(property, () => {
-      console.log('cb:')
-      console.log(arguments)
       let { rmodal } = this.context
       if (rmodal) rmodal.resolve()
     })

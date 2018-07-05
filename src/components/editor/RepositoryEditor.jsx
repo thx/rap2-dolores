@@ -105,7 +105,7 @@ class RepositoryEditor extends Component {
             <Link to={`${serve}/repository/get?id=${repository.id}`} target='_blank' className='api'><GoDatabase /> 数据</Link>
             <Link to={`${serve}/test/test.plugin.jquery.html?id=${repository.id}`} target='_blank' className='api'><GoJersey /> 测试</Link>
             <span className='fake-link edit' onClick={e => this.setState({ exportPostman: true })}><GoLinkExternal /> 导出Postman Collection</span>
-            <RModal when={this.state.exportPostman} onClose={e => this.setState({ exportPostman: false })}>
+            <RModal when={this.state.exportPostman} onClose={e => this.setState({ exportPostman: false })} onResolve={e => this.setState({ exportPostman: false })}>
               <ExportPostmanForm title='导出到Postman' repoId={repository.id} />
             </RModal>
           </div>

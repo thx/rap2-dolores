@@ -5,6 +5,7 @@ import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
 import { GoMention, GoFileCode, GoEye, GoPlus, GoTrashcan, GoQuestion } from 'react-icons/lib/go'
+import { rptFromStr2Num } from './InterfaceSummary'
 
 export const RequestPropertyListPreviewer = (props) => (
   <Previewer {...props} />
@@ -44,6 +45,17 @@ class SortableTreeTableHeader extends Component {
   }
 }
 
+const PropertyLabel = (props) => {
+  const { pos } = props
+  if (pos === 1) {
+    return <label className='ml5 badge badge-danger'>HEAD</label>
+  } else if (pos === 3) {
+    return <label className='ml5 badge badge-primary'>BODY</label>
+  } else {
+    return <label className='ml5 badge badge-secondary'>QUERY</label>
+  }
+}
+
 class SortableTreeTableRow extends Component {
   render () {
     let { property, editable } = this.props
@@ -64,7 +76,7 @@ class SortableTreeTableRow extends Component {
                 }
                 <div className={`td payload name depth-${item.depth} nowrap`}>
                   {!editable
-                    ? <span className='nowrap'>{item.name}</span>
+                    ? <span className='nowrap'>{item.name}{item.scope === 'request' && item.depth === 0 ? <PropertyLabel pos={item.pos} /> : null}</span>
                     : <input value={item.name} onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)} className='form-control editable' spellCheck='false' placeholder='' />
                   }
                 </div>
@@ -134,7 +146,11 @@ class PropertyList extends Component {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
-    editable: PropTypes.bool.isRequired
+    editable: PropTypes.bool.isRequired,
+
+    /** optional */
+    bodyOption: PropTypes.string,
+    requestParamsType: PropTypes.string
   }
   constructor (props) {
     super(props)
@@ -148,9 +164,12 @@ class PropertyList extends Component {
   render () {
     let { title, label, scope, properties = [], repository = {}, mod = {}, itf = {} } = this.props
     if (!itf.id) return null
-
+    let { editable, bodyOption, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
+    const pos = rptFromStr2Num(requestParamsType)
     let scopedProperties = properties.map(property => ({ ...property })).filter(property => property.scope === scope)
-    let { editable } = this.props // itf.locker && (itf.locker.id === auth.id)
+    if (scope === 'request' && editable) {
+      scopedProperties = scopedProperties.filter(s => s.pos === pos)
+    }
 
     return (
       <section className='PropertyList'>
@@ -216,9 +235,9 @@ class PropertyList extends Component {
     handleChangeProperty({ ...property, [key]: value })
   }
   handleCreatePropertySucceeded = () => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
+    // let { store } = this.context
+    // let uri = StoreStateRouterLocationURI(store)
+    // store.dispatch(replace(uri.href()))
   }
   handleDeleteMemoryProperty = (e, property) => {
     e.preventDefault()

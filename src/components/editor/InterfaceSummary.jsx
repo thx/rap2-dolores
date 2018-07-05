@@ -2,10 +2,49 @@ import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
-import InterfaceForm from './InterfaceForm'
+import InterfaceForm, { METHODS } from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
+import './InterfaceSummary.css'
+
+export const BODY_OPTION = {
+  FORM_DATA: 'FORM_DATA',
+  FORM_URLENCODED: 'FORM_URLENCODED',
+  RAW: 'RAW',
+  BINARY: 'BINARY'
+}
+
+export const REQUEST_PARAMS_TYPE = {
+  HEADERS: 'HEADERS',
+  QUERY_PARAMS: 'QUERY_PARAMS',
+  BODY_PARAMS: 'BODY_PARAMS'
+}
+
+export function rptFromStr2Num (rpt) {
+  let pos = 2
+  if (rpt === 'HEADERS') {
+    pos = 1
+  } else if (rpt === 'BODY_PARAMS') {
+    pos = 3
+  }
+  return pos
+}
 
 class InterfaceSummary extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      name: props.itf.name,
+      method: props.itf.method,
+      url: props.itf.url,
+      description: props.itf.description,
+      bodyOption: BODY_OPTION.FORM_DATA,
+      requestParamsType: props.method === 'POST' ? REQUEST_PARAMS_TYPE.BODY_PARAMS : REQUEST_PARAMS_TYPE.QUERY_PARAMS
+    }
+    this.changeMethod = this.changeMethod.bind(this)
+    this.changeHandler = this.changeHandler.bind(this)
+    this.switchBodyOptions = this.switchBodyOption.bind(this)
+    this.switchRequestParamsType = this.switchRequestParamsType.bind(this)
+  }
   static contextTypes = {
     store: PropTypes.object.isRequired,
     onDeleteInterface: PropTypes.func.isRequired
@@ -14,17 +53,50 @@ class InterfaceSummary extends Component {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
-    active: PropTypes.bool.isRequired
+    active: PropTypes.bool.isRequired,
+    editable: PropTypes.bool.isRequired,
+    stateChangeHandler: PropTypes.func.isRequired
   }
+  componentDidUpdate () {
+  }
+  switchBodyOption (val) {
+    return () => {
+      this.setState({
+        bodyOption: val
+      }, () => {
+        this.props.stateChangeHandler(this.state)
+      })
+    }
+  }
+  switchRequestParamsType (val) {
+    return () => {
+      this.setState({
+        requestParamsType: val
+      }, () => {
+        this.props.stateChangeHandler(this.state)
+      })
+    }
+  }
+
+  changeMethod (method) {
+    this.setState({ method })
+  }
+
+  changeHandler (e) {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
+
   render () {
-    let { repository = {}, mod = {}, itf = {} } = this.props
+    const { repository = {}, mod = {}, itf = {}, editable } = this.props
+    const { method, name, url, description, bodyOption, requestParamsType } = this.state
     if (!itf.id) return null
-    return (
+
+    return !editable ? (
       <div className='InterfaceSummary'>
         <div className='header'>
           <span className='title'>
-            {mod.name}
-            <span className='slash'> / </span>
             {itf.name}
           </span>
           {/* TODO 2.2 √模板接口、√数据接口、JSONSchema 接口 */}
@@ -42,13 +114,104 @@ class InterfaceSummary extends Component {
             <span className='label'>地址：</span>
             <Link to={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url)}`} target='_blank'>{itf.url}</Link>
           </li>
-          <li><span className='label'>类型：</span>{itf.method}</li>
+          <li><span className='label'>类型：</span>
+            {itf.method}
+          </li>
           {itf.description &&
             <li><span className='label'>简介：</span>{itf.description}</li>
           }
         </ul>
       </div>
     )
+      : (
+        <div className='InterfaceSummary'>
+          <div className='head'>
+            <div className='form-group row'>
+              <label className='col-sm-1 col-form-label'>接口名</label>
+              <div className='col-sm-10'>
+                <input type='text' className='form-control' name='name' value={name || ''} onChange={this.changeHandler} />
+              </div>
+            </div>
+
+            {/* TODO 2.2 √模板接口、√数据接口、JSONSchema 接口 */}
+            {/* TODO 2.2 权限控制，被别人锁定时不能编辑和删除 */}
+            {/* TODO 2.2 这里的接口编辑和右侧的编辑容易引起歧义，很难受 */}
+            <span className='hide'>
+              <DialogController content={<InterfaceForm title='修改接口' repository={repository} mod={mod} itf={itf} />} onResolved={this.handleUpdate}>
+                <Link to='' onClick={e => e.preventDefault()} title='修改接口' className='edit'>编辑</Link>
+              </DialogController>
+              <Link to='' onClick={e => this.handleDelete(e, itf)} className='delete'>删除</Link>
+            </span>
+          </div>
+          <div className='body'>
+            <div className='form-group row'>
+              <label className='col-sm-1 col-form-label'>地址</label>
+              <div className='col-sm-10'>
+                <input type='text' className='form-control' name='url' value={url || ''} onChange={this.changeHandler} />
+              </div>
+            </div>
+
+            <div className='form-group row'>
+              <label className='col-sm-1 col-form-label'>类型</label>
+              <div className='dropdown col-sm-10'>
+                <button
+                  className='btn btn-secondary dropdown-toggle'
+                  style={{ width: 160, display: 'block' }}
+                  type='button'
+                  id='btnDropdownMethods'
+                  data-toggle='dropdown'
+                  aria-haspopup='true'
+                  aria-expanded='false'
+                >
+                  {method}
+                </button>
+                <div className='dropdown-menu' aria-labelledby='btnDropdownMethods'>
+                  {METHODS.map(method =>
+                    <button className='dropdown-item' key={method} onClick={() => { this.changeMethod(method); return false }}>{method}</button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className='form-group row'>
+              <label className='col-sm-1 col-form-label'>简介</label>
+              <div className='col-sm-10'>
+                <textarea className='form-control' name='description' onChange={this.changeHandler} value={description || ''} />
+              </div>
+            </div>
+            <ul className='nav nav-tabs' role='tablist'>
+              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>headers</a>
+              </li>
+              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>Query Params</a>
+              </li>
+              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>Body Params</a>
+              </li>
+            </ul>
+          </div>
+          {requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS
+            ? <div className='body-options'>
+              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
+                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio1' value='option1' />
+                <label className='form-check-label' htmlFor='inlineRadio1'>form-data</label>
+              </div>
+              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}>
+                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio2' value='option2' />
+                <label className='form-check-label' htmlFor='inlineRadio2'>x-www-form-urlencoded</label>
+              </div>
+              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
+                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio3' value='option3' />
+                <label className='form-check-label' htmlFor='inlineRadio3'>raw</label>
+              </div>
+              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
+                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio4' value='option4' />
+                <label className='form-check-label' htmlFor='inlineRadio4'>binary</label>
+              </div>
+            </div> : null
+          }
+        </div>
+      )
   }
   handleDelete = (e, itf) => {
     e.preventDefault()
