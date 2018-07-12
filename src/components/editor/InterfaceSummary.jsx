@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
-import InterfaceForm, { METHODS } from './InterfaceForm'
+import InterfaceForm from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
+import { METHODS } from './InterfaceForm'
 import './InterfaceSummary.css'
 
 export const BODY_OPTION = {

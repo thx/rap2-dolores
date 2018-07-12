@@ -15,6 +15,7 @@ export default {
 
     INTERFACE_ADD: InterfaceEffects.addInterface,
     INTERFACE_UPDATE: InterfaceEffects.updateInterface,
+    INTERFACE_MOVE: InterfaceEffects.moveInterface,
     INTERFACE_DELETE: InterfaceEffects.deleteInterface,
     INTERFACE_COUNT: InterfaceEffects.fetchInterfaceCount,
     INTERFACE_LOCK: InterfaceEffects.lockInterface,

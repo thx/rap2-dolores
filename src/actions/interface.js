@@ -6,6 +6,10 @@ export const updateInterface = (itf, onResolved) => ({ type: 'INTERFACE_UPDATE',
 export const updateInterfaceSucceeded = (itf) => ({ type: 'INTERFACE_UPDATE_SUCCEEDED', interface: itf })
 export const updateInterfaceFailed = (message) => ({ type: 'INTERFACE_UPDATE_FAILED', message })
 
+export const moveInterface = (params, onResolved) => ({ type: 'INTERFACE_MOVE', params, onResolved })
+export const moveInterfaceSucceeded = () => ({ type: 'INTERFACE_MOVE_SUCCEEDED' })
+export const moveInterfaceFailed = (message) => ({ type: 'INTERFACE_MOVE_FAILED', message })
+
 export const deleteInterface = (id, onResolved) => ({ type: 'INTERFACE_DELETE', id, onResolved })
 export const deleteInterfaceSucceeded = (id) => ({ type: 'INTERFACE_DELETE_SUCCEEDED', id })
 export const deleteInterfaceFailed = (message) => ({ type: 'INTERFACE_DELETE_FAILED', message })

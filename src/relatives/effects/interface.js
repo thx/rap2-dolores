@@ -24,6 +24,17 @@ export function * updateInterface (action) {
     if (action.onRejected) action.onRejected()
   }
 }
+export function * moveInterface (action) {
+  try {
+    yield call(EditorService.moveInterface, action.params)
+    yield put(InterfaceAction.updateInterfaceSucceeded())
+    action.onResolved && action.onResolved()
+  } catch (e) {
+    console.error(e.message)
+    yield put(InterfaceAction.moveInterfaceFailed(e.message))
+    action.onRejected && action.onRejected()
+  }
+}
 export function * deleteInterface (action) {
   try {
     const count = yield call(EditorService.deleteInterface, action.id)

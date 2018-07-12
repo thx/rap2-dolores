@@ -3,6 +3,8 @@ import { PropTypes, connect, replace, StoreStateRouterLocationURI, _ } from '../
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
 import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
 import PropertyList from './PropertyList'
+import { RModal } from '../utils'
+import MoveInterfaceForm from './MovieInterfaceForm'
 
 export const RequestPropertyList = (props) => {
   return <PropertyList scope='request' title='请求参数' label='请求' {...props} />
@@ -31,6 +33,7 @@ class InterfaceEditor extends Component {
     handleLockInterface: PropTypes.func.isRequired,
     handleUnlockInterface: PropTypes.func.isRequired,
     handleSaveInterface: PropTypes.func.isRequired,
+    handleMoveInterface: PropTypes.func.isRequired,
     handleAddMemoryProperty: PropTypes.func.isRequired,
     handleAddMemoryProperties: PropTypes.func.isRequired,
     handleDeleteMemoryProperty: PropTypes.func.isRequired,
@@ -43,7 +46,8 @@ class InterfaceEditor extends Component {
       summaryState: {
         bodyOption: BODY_OPTION.FORM_DATA,
         requestParamsType: REQUEST_PARAMS_TYPE.QUERY_PARAMS
-      }
+      },
+      moveInterfaceDialogOpen: false
     }
     this.summaryStateChange = this.summaryStateChange.bind(this)
     // { itf: {}, properties: [] }
@@ -96,6 +100,13 @@ class InterfaceEditor extends Component {
         />
         <ResponsePropertyList properties={this.state.properties} editable={editable}
           repository={repository} mod={mod} itf={this.state.itf} />
+        <RModal
+          when={this.state.moveInterfaceDialogOpen}
+          onClose={e => this.setState({ moveInterfaceDialogOpen: false })}
+          onResolve={this.handleMoveInterfaceSubmit}
+        >
+          <MoveInterfaceForm title='移动接口' repository={repository} itfId={itf.id} />
+        </RModal>
       </article>
     )
   }
@@ -151,6 +162,17 @@ class InterfaceEditor extends Component {
     onUpdateProperties(this.state.itf.id, this.state.properties, this.state.summaryState, () => {
       this.handleUnlockInterface()
     })
+  }
+  handleMoveInterface = (e) => {
+    e.preventDefault()
+    this.setState({
+      moveInterfaceDialogOpen: true
+    })
+  }
+  handleMoveInterfaceSubmit = () => {
+    let { store } = this.context
+    let uri = StoreStateRouterLocationURI(store)
+    store.dispatch(replace(uri.href()))
   }
   handleLockInterface = () => {
     let { onLockInterface } = this.context

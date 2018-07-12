@@ -119,6 +119,17 @@ export default {
       .then(res => res.json())
       .then(json => json.data)
   },
+  moveInterface (params) {
+    return fetch(`${serve}/interface/move`, {
+      ...CREDENTIALS,
+      method: 'POST',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(res => res.json())
+      .then(json => json.data)
+  },
+
   fetchInterfaceCount () {
     return fetch(`${serve}/interface/count`, { ...CREDENTIALS })
       .then(res => res.json())
