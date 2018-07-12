@@ -75,11 +75,21 @@ class Importer extends Component {
     if (type === 'Array' && schema.items && schema.items.length > 1) {
       rule = schema.items.length
     }
+
+    let value = /Array|Object/.test(type) ? '' : schema.template
+    if (schema.items.length) {
+      let childType = schema.items[0].type
+      if (['number', 'null', 'undefined', 'boolean', 'string'].indexOf(childType) > -1) {
+        value = JSON.stringify(schema.template)
+        rule = ''
+      }
+    }
+
     let property = Object.assign({
       name: schema.name,
       type,
       rule,
-      value: /Array|Object/.test(type) ? '' : schema.template,
+      value,
       descripton: ''
     }, {
       creator: auth.id,
@@ -105,6 +115,9 @@ class Importer extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     let result = eval('(' + this.state.result + ')') // eslint-disable-line no-eval
+    if (result instanceof Array) {
+      result = { _root_: result }
+    }
     let schema = Mock.toJSONSchema(result)
     let memoryProperties = []
     if (schema.properties) schema.properties.forEach(item => this.handleJSONSchema(item, undefined, memoryProperties))

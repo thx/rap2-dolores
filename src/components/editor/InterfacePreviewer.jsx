@@ -43,6 +43,9 @@ class Previewer extends Component {
 
     let template = scopedTemplate[scope]
     let data = scopedData[scope]
+    if (data._root_) {
+      data = data._root_
+    }
 
     // DONE 2.1 支持虚拟属性 __root__ √服务端 √前端 √迁移测试
     let keys = Object.keys(data)
