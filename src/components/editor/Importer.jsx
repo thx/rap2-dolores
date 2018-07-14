@@ -77,7 +77,7 @@ class Importer extends Component {
     }
 
     let value = /Array|Object/.test(type) ? '' : schema.template
-    if (schema.items.length) {
+    if (schema.items && schema.items.length) {
       let childType = schema.items[0].type
       if (['number', 'null', 'undefined', 'boolean', 'string'].indexOf(childType) > -1) {
         value = JSON.stringify(schema.template)
