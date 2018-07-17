@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
-import InterfaceForm, { METHODS, STATUS_LIST } from './InterfaceForm'
+import InterfaceForm from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
 import './InterfaceSummary.css'
 
@@ -19,7 +19,7 @@ export const REQUEST_PARAMS_TYPE = {
   BODY_PARAMS: 'BODY_PARAMS'
 }
 
-export function rptFromStr2Num (rpt) {
+export function rptFromStr2Num(rpt) {
   let pos = 2
   if (rpt === 'HEADERS') {
     pos = 1
@@ -30,14 +30,9 @@ export function rptFromStr2Num (rpt) {
 }
 
 class InterfaceSummary extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      name: props.itf.name,
-      method: props.itf.method,
-      status: props.itf.status,
-      url: props.itf.url,
-      description: props.itf.description,
       bodyOption: BODY_OPTION.FORM_DATA,
       requestParamsType: props.method === 'POST' ? REQUEST_PARAMS_TYPE.BODY_PARAMS : REQUEST_PARAMS_TYPE.QUERY_PARAMS
     }
@@ -58,9 +53,9 @@ class InterfaceSummary extends Component {
     editable: PropTypes.bool.isRequired,
     stateChangeHandler: PropTypes.func.isRequired
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
   }
-  switchBodyOption (val) {
+  switchBodyOption(val) {
     return () => {
       this.setState({
         bodyOption: val
@@ -69,7 +64,7 @@ class InterfaceSummary extends Component {
       })
     }
   }
-  switchRequestParamsType (val) {
+  switchRequestParamsType(val) {
     return () => {
       this.setState({
         requestParamsType: val
@@ -79,26 +74,26 @@ class InterfaceSummary extends Component {
     }
   }
 
-  changeMethod (method) {
+  changeMethod(method) {
     this.setState({ method })
   }
 
-  changeStatus (status) {
+  changeStatus(status) {
     this.setState({ status })
   }
 
-  changeHandler (e) {
+  changeHandler(e) {
     this.setState({
       [e.target.name]: e.target.value
     })
   }
 
-  render () {
+  render() {
     const { repository = {}, mod = {}, itf = {}, editable } = this.props
-    const { method, name, url, description, requestParamsType, status } = this.state
+    const { requestParamsType } = this.state
     if (!itf.id) return null
 
-    return !editable ? (
+    return (
       <div className='InterfaceSummary'>
         <div className='header'>
           <span className='title'>
@@ -117,7 +112,7 @@ class InterfaceSummary extends Component {
         <ul className='body'>
           <li>
             <span className='label'>地址：</span>
-            <Link to={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`} target='_blank'>{itf.url}</Link>
+            <a href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`} target='_blank'>{itf.url}</a>
           </li>
           <li><span className='label'>类型：</span>
             {itf.method}
@@ -128,120 +123,42 @@ class InterfaceSummary extends Component {
           {itf.description &&
             <li><span className='label'>简介：</span>{itf.description}</li>
           }
+          {editable &&
+          <ul className='nav nav-tabs' role='tablist'>
+            <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
+              <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} role='tab' data-toggle='tab'>headers</a>
+            </li>
+            <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}>
+              <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Query Params</a>
+            </li>
+            <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}>
+              <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Body Params</a>
+            </li>
+          </ul>
+          }
         </ul>
+        {editable && requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS
+          ? <div className='body-options'>
+            <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
+              <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio1' value='option1' />
+              <label className='form-check-label' htmlFor='inlineRadio1'>form-data</label>
+            </div>
+            <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}>
+              <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio2' value='option2' />
+              <label className='form-check-label' htmlFor='inlineRadio2'>x-www-form-urlencoded</label>
+            </div>
+            <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
+              <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio3' value='option3' />
+              <label className='form-check-label' htmlFor='inlineRadio3'>raw</label>
+            </div>
+            <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
+              <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio4' value='option4' />
+              <label className='form-check-label' htmlFor='inlineRadio4'>binary</label>
+            </div>
+          </div> : null
+        }
       </div>
     )
-      : (
-        <div className='InterfaceSummary'>
-          <div className='head'>
-            <div className='form-group row'>
-              <label className='col-sm-1 col-form-label'>接口名</label>
-              <div className='col-sm-10'>
-                <input type='text' className='form-control' name='name' value={name || ''} onChange={this.changeHandler} />
-              </div>
-            </div>
-
-            {/* TODO 2.2 √模板接口、√数据接口、JSONSchema 接口 */}
-            {/* TODO 2.2 权限控制，被别人锁定时不能编辑和删除 */}
-            {/* TODO 2.2 这里的接口编辑和右侧的编辑容易引起歧义，很难受 */}
-            <span className='hide'>
-              <DialogController content={<InterfaceForm title='修改接口' repository={repository} mod={mod} itf={itf} />} onResolved={this.handleUpdate}>
-                <Link to='' onClick={e => e.preventDefault()} title='修改接口' className='edit'>编辑</Link>
-              </DialogController>
-              <Link to='' onClick={e => this.handleDelete(e, itf)} className='delete'>删除</Link>
-            </span>
-          </div>
-          <div className='body'>
-            <div className='form-group row'>
-              <label className='col-sm-1 col-form-label'>地址</label>
-              <div className='col-sm-10'>
-                <input type='text' className='form-control' name='url' value={url || ''} onChange={this.changeHandler} />
-              </div>
-            </div>
-
-            <div className='form-group row'>
-              <label className='col-sm-1 col-form-label'>类型</label>
-              <div className='dropdown col-sm-10'>
-                <button
-                  className='btn btn-secondary dropdown-toggle'
-                  style={{ width: 160, display: 'block' }}
-                  type='button'
-                  id='btnDropdownMethods'
-                  data-toggle='dropdown'
-                  aria-haspopup='true'
-                  aria-expanded='false'
-                >
-                  {method}
-                </button>
-                <div className='dropdown-menu' aria-labelledby='btnDropdownMethods'>
-                  {METHODS.map(method =>
-                    <button className='dropdown-item' key={method} onClick={() => { this.changeMethod(method); return false }}>{method}</button>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className='form-group row'>
-              <label className='col-sm-1 col-form-label'>状态码</label>
-              <div className='dropdown col-sm-10'>
-                <button
-                  className='btn btn-secondary dropdown-toggle'
-                  style={{ width: 160, display: 'block' }}
-                  type='button'
-                  id='btnDropdownStatus'
-                  data-toggle='dropdown'
-                  aria-haspopup='true'
-                  aria-expanded='false'
-                >
-                  {status}
-                </button>
-                <div className='dropdown-menu' aria-labelledby='btnDropdownStatus'>
-                  {STATUS_LIST.map(status =>
-                    <button className='dropdown-item' key={status} onClick={() => { this.changeStatus(status); return false }}>{status}</button>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className='form-group row'>
-              <label className='col-sm-1 col-form-label'>简介</label>
-              <div className='col-sm-10'>
-                <textarea className='form-control' name='description' onChange={this.changeHandler} value={description || ''} />
-              </div>
-            </div>
-            {this.renderRoom()}
-            <ul className='nav nav-tabs' role='tablist'>
-              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} role='tab' data-toggle='tab'>headers</a>
-              </li>
-              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Query Params</a>
-              </li>
-              <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Body Params</a>
-              </li>
-            </ul>
-          </div>
-          {requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS
-            ? <div className='body-options'>
-              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
-                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio1' value='option1' />
-                <label className='form-check-label' htmlFor='inlineRadio1'>form-data</label>
-              </div>
-              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}>
-                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio2' value='option2' />
-                <label className='form-check-label' htmlFor='inlineRadio2'>x-www-form-urlencoded</label>
-              </div>
-              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
-                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio3' value='option3' />
-                <label className='form-check-label' htmlFor='inlineRadio3'>raw</label>
-              </div>
-              <div className='form-check form-check-inline' onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
-                <input className='form-check-input' type='radio' name='inlineRadioOptions' id='inlineRadio4' value='option4' />
-                <label className='form-check-label' htmlFor='inlineRadio4'>binary</label>
-              </div>
-            </div> : null
-          }
-        </div>
-      )
   }
   handleDelete = (e, itf) => {
     e.preventDefault()
@@ -256,10 +173,10 @@ class InterfaceSummary extends Component {
       })
     }
   }
-  handleUpdate = (e) => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
+  handleUpdate = () => {
+    let { store } = this.context;
+    let uri = StoreStateRouterLocationURI(store);
+    store.dispatch(replace(uri.href()));
   }
 }
 
