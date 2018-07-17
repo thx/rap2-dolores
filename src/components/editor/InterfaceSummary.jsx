@@ -123,7 +123,7 @@ class InterfaceSummary extends Component {
             {itf.method}
           </li>
           <li><span className='label'>状态码：</span>
-          {itf.status}
+            {itf.status}
           </li>
           {itf.description &&
             <li><span className='label'>简介：</span>{itf.description}</li>

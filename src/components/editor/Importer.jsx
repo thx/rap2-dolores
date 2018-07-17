@@ -18,13 +18,13 @@ class Importer extends Component {
     rmodal: PropTypes.instanceOf(Component),
     handleAddMemoryProperties: PropTypes.func.isRequired
   }
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       result: JSON.stringify(mockResult(), null, 2)
     }
   }
-  render() {
+  render () {
     const { rmodal } = this.context
     return (
       <section className='Importer'>
@@ -51,7 +51,7 @@ class Importer extends Component {
       </section>
     )
   }
-  componentDidUpdate() {
+  componentDidUpdate () {
     this.context.rmodal.reposition()
   }
   // DONE 2.1 支持格式化
@@ -92,16 +92,16 @@ class Importer extends Component {
       value,
       descripton: ''
     }, {
-        creator: auth.id,
-        repositoryId: repository.id,
-        moduleId: mod.id,
-        interfaceId: itf.id,
-        scope,
-        parentId: parent.id
-      }, {
-        memory: true,
-        id: _.uniqueId('memory-')
-      })
+      creator: auth.id,
+      repositoryId: repository.id,
+      moduleId: mod.id,
+      interfaceId: itf.id,
+      scope,
+      parentId: parent.id
+    }, {
+      memory: true,
+      id: _.uniqueId('memory-')
+    })
     memoryProperties.push(property)
 
     if (schema.properties) {
