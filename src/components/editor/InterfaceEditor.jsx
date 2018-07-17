@@ -65,9 +65,11 @@ class InterfaceEditor extends Component {
     }
   }
   componentDidMount () { }
+
   summaryStateChange (summaryState) {
     this.setState({ summaryState })
   }
+
   componentWillReceiveProps (nextProps) {
     if (
       nextProps.itf.id === this.state.itf.id &&
@@ -88,7 +90,7 @@ class InterfaceEditor extends Component {
     return (
       <article className='InterfaceEditor'>
         <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
-        <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
+        <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={false} stateChangeHandler={this.summaryStateChange} />
         <RequestPropertyList
           properties={this.state.properties}
           editable={editable}

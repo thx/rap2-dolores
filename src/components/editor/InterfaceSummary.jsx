@@ -2,9 +2,8 @@ import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
-import InterfaceForm from './InterfaceForm'
+import InterfaceForm, { METHODS, STATUS_LIST } from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
-import { METHODS } from './InterfaceForm'
 import './InterfaceSummary.css'
 
 export const BODY_OPTION = {
@@ -36,6 +35,7 @@ class InterfaceSummary extends Component {
     this.state = {
       name: props.itf.name,
       method: props.itf.method,
+      status: props.itf.status,
       url: props.itf.url,
       description: props.itf.description,
       bodyOption: BODY_OPTION.FORM_DATA,
@@ -83,6 +83,10 @@ class InterfaceSummary extends Component {
     this.setState({ method })
   }
 
+  changeStatus (status) {
+    this.setState({ status })
+  }
+
   changeHandler (e) {
     this.setState({
       [e.target.name]: e.target.value
@@ -91,7 +95,7 @@ class InterfaceSummary extends Component {
 
   render () {
     const { repository = {}, mod = {}, itf = {}, editable } = this.props
-    const { method, name, url, description, bodyOption, requestParamsType } = this.state
+    const { method, name, url, description, requestParamsType, status } = this.state
     if (!itf.id) return null
 
     return !editable ? (
@@ -113,10 +117,13 @@ class InterfaceSummary extends Component {
         <ul className='body'>
           <li>
             <span className='label'>地址：</span>
-            <Link to={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url)}`} target='_blank'>{itf.url}</Link>
+            <Link to={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`} target='_blank'>{itf.url}</Link>
           </li>
           <li><span className='label'>类型：</span>
             {itf.method}
+          </li>
+          <li><span className='label'>状态码：</span>
+          {itf.status}
           </li>
           {itf.description &&
             <li><span className='label'>简介：</span>{itf.description}</li>
@@ -174,20 +181,42 @@ class InterfaceSummary extends Component {
               </div>
             </div>
             <div className='form-group row'>
+              <label className='col-sm-1 col-form-label'>状态码</label>
+              <div className='dropdown col-sm-10'>
+                <button
+                  className='btn btn-secondary dropdown-toggle'
+                  style={{ width: 160, display: 'block' }}
+                  type='button'
+                  id='btnDropdownStatus'
+                  data-toggle='dropdown'
+                  aria-haspopup='true'
+                  aria-expanded='false'
+                >
+                  {status}
+                </button>
+                <div className='dropdown-menu' aria-labelledby='btnDropdownStatus'>
+                  {STATUS_LIST.map(status =>
+                    <button className='dropdown-item' key={status} onClick={() => { this.changeStatus(status); return false }}>{status}</button>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className='form-group row'>
               <label className='col-sm-1 col-form-label'>简介</label>
               <div className='col-sm-10'>
                 <textarea className='form-control' name='description' onChange={this.changeHandler} value={description || ''} />
               </div>
             </div>
+            {this.renderRoom()}
             <ul className='nav nav-tabs' role='tablist'>
               <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>headers</a>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} role='tab' data-toggle='tab'>headers</a>
               </li>
               <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>Query Params</a>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Query Params</a>
               </li>
               <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}>
-                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} href='#' role='tab' data-toggle='tab'>Body Params</a>
+                <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Body Params</a>
               </li>
             </ul>
           </div>

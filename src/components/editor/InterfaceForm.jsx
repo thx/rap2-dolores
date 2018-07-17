@@ -4,6 +4,8 @@ import { SmartTextarea } from '../utils'
 
 export const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
 
+export const STATUS_LIST = [200, 301, 403, 404, 500, 502, 503, 504]
+
 // 模拟数据
 const mockInterface = process.env.NODE_ENV === 'development'
   ? () => Mock.mock({
@@ -68,6 +70,16 @@ class InterfaceForm extends Component {
                 <select name='method' value={this.state.method} onChange={e => this.setState({ method: e.target.value })} className='form-control'>
                   {METHODS.map(method =>
                     <option key={method} value={method}>{method}</option>
+                  )}
+                </select>
+              </div>
+            </div>
+            <div className='form-group row'>
+              <label className='col-sm-2 control-label'>状态码：</label>
+              <div className='col-sm-10'>
+                <select name='status' value={this.state.status} onChange={e => this.setState({ status: e.target.value })} className='form-control'>
+                  {STATUS_LIST.map(status =>
+                    <option key={status} value={status}>{status}</option>
                   )}
                 </select>
               </div>

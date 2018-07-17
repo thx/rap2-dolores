@@ -3,7 +3,7 @@ export function getRelativeUrl (url) {
     return url
   }
   if (!url) {
-    throw Error('Illegal url:' + url)
+    return ''
   }
   if (url.indexOf('http://') > -1) {
     url = url.substring(url.indexOf('/', 7) + 1)

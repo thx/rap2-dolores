@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { PropTypes, connect, Link, replace, StoreStateRouterLocationURI } from '../../family'
+import { PropTypes, connect, Link } from '../../family'
 import { Tree, SmartTextarea, RModal, RSortable } from '../utils'
 import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
 import { GoMention, GoFileCode, GoEye, GoPlus, GoTrashcan, GoQuestion } from 'react-icons/lib/go'
 import { rptFromStr2Num } from './InterfaceSummary'
+import './PropertyList.css'
 
 export const RequestPropertyListPreviewer = (props) => (
   <Previewer {...props} />
@@ -62,7 +63,7 @@ class SortableTreeTableRow extends Component {
     let { handleClickCreateChildPropertyButton, handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
     return (
       <RSortable group={property.depth} handle='.SortableTreeTableRow' disabled={!editable} onChange={handleSortProperties}>
-        <div className='RSortableWrapper'>
+        <div className={`RSortableWrapper depth${property.depth}`}>
           {property.children.sort((a, b) => a.priority - b.priority).map(item =>
             <div key={item.id} className='SortableTreeTableRow' data-id={item.id}>
               <div className='flex-row'>
@@ -164,7 +165,7 @@ class PropertyList extends Component {
   render () {
     let { title, label, scope, properties = [], repository = {}, mod = {}, itf = {} } = this.props
     if (!itf.id) return null
-    let { editable, bodyOption, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
+    let { editable, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
     const pos = rptFromStr2Num(requestParamsType)
     let scopedProperties = properties.map(property => ({ ...property })).filter(property => property.scope === scope)
     if (scope === 'request' && editable) {

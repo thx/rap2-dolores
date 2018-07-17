@@ -41,7 +41,7 @@ class UpdateForm extends Component {
             <input value={this.state.passwordConfirm} onChange={e => this.setState({ passwordConfirm: e.target.value })} type='password' className='form-control' placeholder='Password' required autoFocus='true' />
           </div>
           <button type='submit' className='btn btn-primary w140 mr20'>提交</button>
-          <a href='#' onClick={e => { e.preventDefault(); window.history.go(-1) }} >取消</a>
+          <a onClick={e => { e.preventDefault(); window.history.go(-1) }} >取消</a>
         </form>
       </section>
     )
