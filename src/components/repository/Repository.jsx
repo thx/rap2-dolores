@@ -36,7 +36,7 @@ class Repository extends Component {
             )}
           </div> */}
           <div className='toolbar'>
-            <Link to={`${serve}/app/plugin/${repository.id}`} target='_blank'><GoPlug /></Link>
+            <a href={`${serve}/app/plugin/${repository.id}`} target='_blank'><GoPlug /></a>
             {/* 编辑权限：拥有者或者成员 */}
             {repository.owner.id === auth.id || repository.members.find(itme => itme.id === auth.id)
               ? <span className='fake-link' onClick={e => this.setState({ update: true })}><GoPencil /></span>
