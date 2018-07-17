@@ -46,6 +46,37 @@ const treeToJson = (tree) => {
         result[item.name + rule] = value
         break
       case 'Function':
+        try {
+          let fn = eval('(' + item.value + ')') // eslint-disable-line no-eval
+          let value
+          try {
+            value = fn()
+          } catch(e) {
+            console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`)
+            result['string'] = item.value
+            break
+          }
+          let type = typeof value
+          if (['string', 'number', 'boolean'].indexOf(type) > -1) {
+            result[type] = value
+          } else if (type === 'object') {
+            let objectType = Object.prototype.toString.call(type)
+            if (objectType === '[object RegExp]') {
+              type = 'regexp'
+            } else if (objectType === '[object Array]') {
+              type = 'array'
+            } else {
+              type = 'object'
+            }
+            result[type] = value
+          } else {
+            result['string'] = item.value
+          }
+        } catch (e) {
+          console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`) // TODO 2.2 初始值异常，应该直接提示到页面上。
+          result[item.name] = item.value
+        }
+        break
       case 'RegExp':
         try {
           result[item.name + rule] = eval('(' + item.value + ')') // eslint-disable-line no-eval
