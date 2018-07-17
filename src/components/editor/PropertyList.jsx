@@ -36,7 +36,7 @@ class SortableTreeTableHeader extends Component {
           {/* TODO 2.3 规则编辑器 */}
           <div className='th rule'>
             生成规则
-            <Link to='https://github.com/nuysoft/Mock/wiki/Syntax-Specification' className='helper' target='_blank'><GoQuestion /></Link>
+            <a href='https://github.com/nuysoft/Mock/wiki/Syntax-Specification' rel="noopener noreferrer" className='helper' target='_blank'><GoQuestion /></a>
           </div>
           <div className='th value'>初始值</div>{/* 对象和数组也允许设置初始值 */}
           <div className='th desc'>简介</div>

@@ -62,7 +62,7 @@ class Previewer extends Component {
           <div className='header'>
             <span className='title'>{label}模板</span>
             {scope === 'response'
-              ? <Link to={`${serve}/app/mock/template/${itf.id}`} target='_blank'><GoLink className='fontsize-14' /></Link>
+              ? <a href={`${serve}/app/mock/template/${itf.id}`} target='_blank'><GoLink className='fontsize-14' /></a>
               : null}
           </div>
           <pre className='body'>{
@@ -77,7 +77,7 @@ class Previewer extends Component {
           <div className='header'>
             <span className='title'>{label}数据</span>
             {scope === 'response'
-              ? <Link to={`${serve}/app/mock/data/${itf.id}`} target='_blank'><GoLink className='mr6 fontsize-14' /></Link>
+              ? <a href={`${serve}/app/mock/data/${itf.id}`} target='_blank'><GoLink className='mr6 fontsize-14' /></a>
               : null}
             <Link to='' onClick={e => this.remock(e)}><GoSync className='mr6 fontsize-14' onAnimationEnd={e => this.removeAnimateClass(e)} /></Link>
           </div>
