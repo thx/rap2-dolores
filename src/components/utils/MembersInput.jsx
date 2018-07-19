@@ -39,7 +39,7 @@ class MembersInput extends Component {
               <div className='dropdown-menu' ref={$optons => { this.$optons = $optons }}>
                 {this.state.options.map(item =>
                   <a key={item.id} href='' className='dropdown-item'
-                    onClick={e => this.handleSelect(e, item)}>{item.fullname}</a>
+                    onClick={e => this.handleSelect(e, item)}>{item.fullname} {item.email}</a>
                 )}
               </div>
             ) : null}
