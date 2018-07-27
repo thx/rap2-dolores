@@ -1,11 +1,15 @@
-import { call, put } from 'redux-saga/effects'
+import {
+  call,
+  put
+} from 'redux-saga/effects'
 import * as InterfaceAction from '../../actions/interface'
 import EditorService from '../services/Editor'
+import * as RepositoryAction from '../../actions/repository'
 
-export function * addInterface (action) {
+export function* addInterface(action) {
   try {
-    const itf = yield call(EditorService.addInterface, action.interface)
-    yield put(InterfaceAction.addInterfaceSucceeded(itf))
+    const payload = yield call(EditorService.addInterface, action.interface)
+    yield put(InterfaceAction.addInterfaceSucceeded(payload))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -13,10 +17,10 @@ export function * addInterface (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * updateInterface (action) {
+export function* updateInterface(action) {
   try {
-    const itf = yield call(EditorService.updateInterface, action.interface)
-    yield put(InterfaceAction.updateInterfaceSucceeded(itf))
+    const result = yield call(EditorService.updateInterface, action.interface)
+    yield put(InterfaceAction.updateInterfaceSucceeded(result))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -24,10 +28,16 @@ export function * updateInterface (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * moveInterface (action) {
+export function* moveInterface(action) {
   try {
-    yield call(EditorService.moveInterface, action.params)
-    yield put(InterfaceAction.updateInterfaceSucceeded())
+    const {
+      repoId,
+      ...params
+    } = action.params
+    yield call(EditorService.moveInterface, params)
+    yield put(RepositoryAction.fetchRepository({
+      id: repoId
+    }))
     action.onResolved && action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -35,17 +45,19 @@ export function * moveInterface (action) {
     action.onRejected && action.onRejected()
   }
 }
-export function * deleteInterface (action) {
+export function* deleteInterface(action) {
   try {
-    const count = yield call(EditorService.deleteInterface, action.id)
-    yield put(InterfaceAction.deleteInterfaceSucceeded(count))
+    yield call(EditorService.deleteInterface, action.id)
+    yield put(InterfaceAction.deleteInterfaceSucceeded({
+      id: action.id
+    }))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.deleteInterfaceFailed(e.message))
   }
 }
-export function * fetchInterfaceCount (action) {
+export function* fetchInterfaceCount(action) {
   try {
     const count = yield call(EditorService.fetchInterfaceCount)
     yield put(InterfaceAction.fetchInterfaceCountSucceeded(count))
@@ -54,27 +66,31 @@ export function * fetchInterfaceCount (action) {
     yield put(InterfaceAction.fetchInterfaceCountFailed(e.message))
   }
 }
-export function * lockInterface (action) {
+export function* lockInterface(action) {
   try {
-    const count = yield call(EditorService.lockInterface, action.id)
-    yield put(InterfaceAction.lockInterfaceSucceeded(count))
+    const payload = yield call(EditorService.lockInterface, action.id)
+    yield put(InterfaceAction.lockInterfaceSucceeded(action.id, payload))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.lockInterfaceFailed(e.message))
   }
 }
-export function * unlockInterface (action) {
+export function* unlockInterface(action) {
   try {
-    const count = yield call(EditorService.unlockInterface, action.id)
-    yield put(InterfaceAction.unlockInterfaceSucceeded(count))
-    if (action.onResolved) action.onResolved()
+    const res = yield call(EditorService.unlockInterface, action.id)
+    if (res.isOk) {
+      yield put(InterfaceAction.unlockInterfaceSucceeded(action.id))
+      if (action.onResolved) action.onResolved()
+    } else {
+      alert(`发生错误：${res.errMsg}`)
+    }
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.unlockInterfaceFailed(e.message))
   }
 }
-export function * sortInterfaceList (action) {
+export function* sortInterfaceList(action) {
   try {
     const count = yield call(EditorService.sortInterfaceList, action.ids)
     yield put(InterfaceAction.sortInterfaceListSucceeded(count))

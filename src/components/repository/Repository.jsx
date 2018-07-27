@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect, PropTypes, Link, replace, StoreStateRouterLocationURI, moment } from '../../family'
+import { connect, PropTypes, Link, replace, moment } from '../../family'
 import { RModal } from '../utils'
 import { serve } from '../../relatives/services/constant'
 import RepositoryForm from './RepositoryForm'
@@ -75,9 +75,6 @@ class Repository extends Component {
     }
   }
   handleUpdateRepository = (e) => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
   }
 }
 

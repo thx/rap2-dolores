@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { PropTypes, connect, replace, StoreStateRouterLocationURI, _ } from '../../family'
+import { PropTypes, connect, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
 import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
 import PropertyList from './PropertyList'
 import { RModal } from '../utils'
-import MoveInterfaceForm from './MovieInterfaceForm'
+import MoveInterfaceForm from './MoveInterfaceForm'
+import { fetchRepository } from '../../actions/repository'
 
 export const RequestPropertyList = (props) => {
   return <PropertyList scope='request' title='请求参数' label='请求' {...props} />
@@ -64,7 +65,6 @@ class InterfaceEditor extends Component {
       editable: !!(itf.locker && (itf.locker.id === auth.id))
     }
   }
-  componentDidMount () { }
 
   summaryStateChange (summaryState) {
     this.setState({ summaryState })
@@ -172,32 +172,22 @@ class InterfaceEditor extends Component {
     })
   }
   handleMoveInterfaceSubmit = () => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
   }
   handleLockInterface = () => {
     let { onLockInterface } = this.context
     let { itf } = this.props
-    onLockInterface(itf.id, () => {
-      let { store } = this.context
-      let uri = StoreStateRouterLocationURI(store)
-      store.dispatch(replace(uri.href()))
-    })
+    onLockInterface(itf.id)
   }
   handleUnlockInterface = () => {
     let { onUnlockInterface } = this.context
     let { itf } = this.props
-    onUnlockInterface(itf.id, () => {
-      let { store } = this.context
-      let uri = StoreStateRouterLocationURI(store)
-      store.dispatch(replace(uri.href()))
-    })
+    onUnlockInterface(itf.id)
   }
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  fetchRepository,
 })
 const mapDispatchToProps = ({})
 export default connect(

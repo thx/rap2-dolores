@@ -56,7 +56,7 @@ class Module extends Component {
         let uri = StoreStateRouterLocationURI(store)
         let deleteHref = this.props.active ? URI(uri).removeSearch('mod').href() : uri.href()
         store.dispatch(replace(deleteHref))
-      })
+      }, this.props.repository.id)
     }
   }
 }

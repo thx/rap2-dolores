@@ -1,11 +1,18 @@
-import { call, put } from 'redux-saga/effects'
+import {
+  call,
+  put
+} from 'redux-saga/effects'
 import * as ModuleAction from '../../actions/module'
+import * as RepositoryAction from '../../actions/repository'
 import EditorService from '../services/Editor'
 
-export function * addModule (action) {
+export function* addModule(action) {
   try {
     const module = yield call(EditorService.addModule, action.module)
     yield put(ModuleAction.addModuleSucceeded(module))
+    yield put(RepositoryAction.fetchRepository({
+      id: action.module.repositoryId
+    }))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -13,10 +20,23 @@ export function * addModule (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * updateModule (action) {
+export function* updateModule(action) {
   try {
-    const module = yield call(EditorService.updateModule, action.module)
-    yield put(ModuleAction.updateModuleSucceeded(module))
+    const {
+      id,
+      name,
+      description
+    } = action.module
+    const payload = yield call(EditorService.updateModule, {
+      id,
+      name,
+      description
+    })
+    yield put(ModuleAction.updateModuleSucceeded({
+      id,
+      name: payload.name,
+      description: payload.description,
+    }))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -24,10 +44,13 @@ export function * updateModule (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * deleteModule (action) {
+export function* deleteModule(action) {
   try {
     const count = yield call(EditorService.deleteModule, action.id)
     yield put(ModuleAction.deleteModuleSucceeded(count))
+    yield put(RepositoryAction.fetchRepository({
+      id: action.repoId
+    }))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -35,7 +58,7 @@ export function * deleteModule (action) {
   }
 }
 
-export function * sortModuleList (action) {
+export function* sortModuleList(action) {
   try {
     const count = yield call(EditorService.sortModuleList, action.ids)
     yield put(ModuleAction.sortModuleListSucceeded(count))

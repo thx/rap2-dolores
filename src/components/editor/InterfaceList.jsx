@@ -68,9 +68,6 @@ class Interface extends Component {
     }
   }
   handleUpdate = (e) => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
   }
 }
 
@@ -122,9 +119,6 @@ class InterfaceList extends Component {
     )
   }
   handleCreate = (e) => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
   }
   handleSort = (e, sortable) => {
     let { onSortInterfaceList } = this.context

@@ -86,7 +86,7 @@ const LogTargetView = ({ log }) => {
         </span>
       )
     default:
-      return undefined
+      return <div></div>
   }
 }
 const FromNow = ({ date }) => (
