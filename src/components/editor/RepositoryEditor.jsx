@@ -8,7 +8,7 @@ import ModuleList from './ModuleList'
 import InterfaceList from './InterfaceList'
 import InterfaceEditor from './InterfaceEditor'
 import DuplicatedInterfacesWarning from './DuplicatedInterfacesWarning'
-import { addRepository, updateRepository, clearRepository } from '../../actions/repository'
+import { addRepository, updateRepository, clearRepository, fetchRepository } from '../../actions/repository'
 import { addModule, updateModule, deleteModule, sortModuleList } from '../../actions/module'
 import { addInterface, updateInterface, deleteInterface, lockInterface, unlockInterface, sortInterfaceList } from '../../actions/interface'
 import { addProperty, updateProperty, deleteProperty, updateProperties, sortPropertyList } from '../../actions/property'
@@ -52,10 +52,18 @@ class RepositoryEditor extends Component {
     onDeleteProperty: PropTypes.func.isRequired,
     onSortPropertyList: PropTypes.func.isRequired
   }
-  getChildContext () {
+  getChildContext() {
     return _.pick(this.props, Object.keys(RepositoryEditor.childContextTypes))
   }
-  constructor (props) {
+
+  componentDidMount() {
+    const id = +this.props.location.params.id
+    if (!this.props.repository.data || this.props.repository.data.id !== id) {
+      this.props.onFetchRepository({ id })
+    }
+  }
+
+  constructor(props) {
     super(props)
     this.state = {
       update: false,
@@ -128,8 +136,8 @@ class RepositoryEditor extends Component {
     let { pathname, hash, search } = store.getState().router.location
     store.dispatch(replace(pathname + search + hash))
   }
-  componentWillUnmount () {
-    this.props.onClearRepository()
+  componentWillUnmount() {
+    // this.props.onClearRepository()
   }
 }
 
@@ -139,6 +147,7 @@ const mapStateToProps = (state) => ({
   repository: state.repository
 })
 const mapDispatchToProps = ({
+  onFetchRepository: fetchRepository,
   onAddRepository: addRepository,
   onUpdateRepository: updateRepository,
   onClearRepository: clearRepository,

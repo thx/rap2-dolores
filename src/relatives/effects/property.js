@@ -1,8 +1,11 @@
-import { call, put } from 'redux-saga/effects'
+import {
+  call,
+  put
+} from 'redux-saga/effects'
 import * as PropertyAction from '../../actions/property'
 import EditorService from '../services/Editor'
 
-export function * addProperty (action) {
+export function* addProperty(action) {
   try {
     const property = yield call(EditorService.addProperty, action.property)
     yield put(PropertyAction.addPropertySucceeded(property))
@@ -13,7 +16,7 @@ export function * addProperty (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * deleteProperty (action) {
+export function* deleteProperty(action) {
   try {
     const count = yield call(EditorService.deleteProperty, action.id)
     yield put(PropertyAction.deletePropertySucceeded(count))
@@ -23,7 +26,7 @@ export function * deleteProperty (action) {
     yield put(PropertyAction.deletePropertyFailed(e.message))
   }
 }
-export function * updateProperty (action) {
+export function* updateProperty(action) {
   try {
     const property = yield call(EditorService.updateProperty, action.property)
     yield put(PropertyAction.updatePropertySucceeded(property))
@@ -34,10 +37,13 @@ export function * updateProperty (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * updateProperties (action) {
+export function* updateProperties(action) {
   try {
-    const properties = yield call(EditorService.updateProperties, action.itf, action.properties, action.summary)
-    yield put(PropertyAction.updatePropertiesSucceeded(properties))
+    const result = yield call(EditorService.updateProperties, action.itf, action.properties, action.summary)
+    yield put(PropertyAction.updatePropertiesSucceeded({
+      itfId: action.itf,
+      properties: result.properties
+    }))
     if (action.onResolved) action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -45,7 +51,7 @@ export function * updateProperties (action) {
     if (action.onRejected) action.onRejected()
   }
 }
-export function * sortPropertyList (action) {
+export function* sortPropertyList(action) {
   try {
     const count = yield call(EditorService.sortPropertyList, action.ids)
     yield put(PropertyAction.sortPropertyListSucceeded(count))

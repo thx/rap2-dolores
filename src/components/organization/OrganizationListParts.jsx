@@ -56,9 +56,6 @@ export class CreateButton extends Component {
     )
   }
   handleUpdate = (e) => {
-    let { store } = this.context
-    let uri = StoreStateRouterLocationURI(store)
-    store.dispatch(replace(uri.href()))
   }
 }
 
@@ -79,8 +76,6 @@ export class OrganizationsTypeDropdown extends Component {
   handlePush = (url) => {
     let { store } = this.context
     store.dispatch(push(url))
-    // let uri = StoreStateRouterLocationURI(store)
-    // store.dispatch(replace(uri.href()))
   }
 }
 

@@ -58,8 +58,9 @@ class ExportPostmanForm extends Component {
     }
     let { owner, newOwner } = this.state
     if (newOwner && newOwner.id !== owner.id) repository.ownerId = newOwner.id
+    let { rmodal } = this.context
+    rmodal.close()
     onAddOrUpdateRepository(repository, () => {
-      let { rmodal } = this.context
       if (rmodal) rmodal.resolve()
     })
   }

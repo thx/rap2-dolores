@@ -236,9 +236,6 @@ class PropertyList extends Component {
     handleChangeProperty({ ...property, [key]: value })
   }
   handleCreatePropertySucceeded = () => {
-    // let { store } = this.context
-    // let uri = StoreStateRouterLocationURI(store)
-    // store.dispatch(replace(uri.href()))
   }
   handleDeleteMemoryProperty = (e, property) => {
     e.preventDefault()
@@ -246,8 +243,6 @@ class PropertyList extends Component {
     handleDeleteMemoryProperty(property)
   }
   handleSortProperties = (e, sortable) => {
-    // let { onSortPropertyList } = this.context
-    // onSortPropertyList(sortable.toArray())
     let { properties } = this.props
     let ids = sortable.toArray()
     ids.forEach((id, index) => {

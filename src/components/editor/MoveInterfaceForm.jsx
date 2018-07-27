@@ -85,7 +85,8 @@ class MoveInterfaceForm extends Component {
     const params = {
       modId: this.state.modId,
       op: this.state.op,
-      itfId: this.props.itfId
+      itfId: this.props.itfId,
+      repoId: this.props.repository.id
     }
     this.props.moveInterface(params, () => {
       let { rmodal } = this.context

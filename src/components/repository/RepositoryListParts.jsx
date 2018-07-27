@@ -102,8 +102,6 @@ export class RepositoriesTypeDropdown extends Component {
   handlePush = (url) => {
     let { store } = this.context
     store.dispatch(push(url))
-    // let uri = StoreStateRouterLocationURI(store)
-    // store.dispatch(replace(uri.href()))
   }
 }
 
@@ -116,12 +114,6 @@ export class SearchGroup extends Component {
     this.state = { name: props.name || '' }
   }
   render () {
-    // <div className='input-group float-right w280'>
-    //   <input type='text' value={this.state.name} className='form-control' placeholder='仓库名称或 ID' autoComplete='off'
-    //     onChange={e => this.setState({ name: e.target.value.trim() })}
-    //     onKeyUp={e => e.which === 13 && this.handleSearch()} />
-    //   <span className='btn input-group-addon' onClick={this.handleSearch}><span className=''>&#xe60b;</span></span>
-    // </div>
     return (
       <input type='text' value={this.state.name} className='form-control float-left w280' placeholder='搜索仓库：输入名称或 ID' autoComplete='off'
         onChange={e => this.setState({ name: e.target.value.trim() })}

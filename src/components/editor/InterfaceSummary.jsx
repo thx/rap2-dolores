@@ -174,9 +174,6 @@ class InterfaceSummary extends Component {
     }
   }
   handleUpdate = () => {
-    let { store } = this.context;
-    let uri = StoreStateRouterLocationURI(store);
-    store.dispatch(replace(uri.href()));
   }
 }
 

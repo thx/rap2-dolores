@@ -76,8 +76,9 @@ class ModuleForm extends Component {
       creatorId: auth.id,
       repositoryId: repository.id
     })
+    let { rmodal } = this.context
+    rmodal.close()
     onAddOrUpdateModule(mod, () => {
-      let { rmodal } = this.context
       if (rmodal) rmodal.resolve()
     })
   }
