@@ -12,88 +12,96 @@ class Previewer extends Component {
     properties: PropTypes.array.isRequired,
     itf: PropTypes.object.isRequired
   }
-  render () {
+  render() {
+    let scopedTemplate
+    let scopedProperties
+    let scopedData
+    let scopedKeys
+    let extraKeys
     let { label, scope, properties, itf } = this.props
 
-    // DONE 2.2 支持引用请求参数
-    let scopedProperties = {
-      request: properties.map(property => ({ ...property })).filter(property => property.scope === 'request'),
-      response: properties.map(property => ({ ...property })).filter(property => property.scope === 'response')
-    }
-    let scopedTemplate = {
-      request: Tree.treeToJson(Tree.arrayToTree(scopedProperties.request)),
-      response: Tree.treeToJson(Tree.arrayToTree(scopedProperties.response))
-    }
-    let scopedKeys = {
-      request: Object.keys(scopedTemplate.request).map(item => item.replace(RE_KEY, '$1')),
-      response: Object.keys(scopedTemplate.response).map(item => item.replace(RE_KEY, '$1'))
-    }
-    let extraKeys = _.difference(scopedKeys.request, scopedKeys.response)
-    let scopedData = {
-      request: Mock.mock(scopedTemplate.request)
-    }
     try {
+
+      // DONE 2.2 支持引用请求参数
+      scopedProperties = {
+        request: properties.map(property => ({ ...property })).filter(property => property.scope === 'request'),
+        response: properties.map(property => ({ ...property })).filter(property => property.scope === 'response')
+      };
+      scopedTemplate = {
+        request: Tree.treeToJson(Tree.arrayToTree(scopedProperties.request)),
+        response: Tree.treeToJson(Tree.arrayToTree(scopedProperties.response))
+      };
+      scopedKeys = {
+        request: Object.keys(scopedTemplate.request).map(item => item.replace(RE_KEY, '$1')),
+        response: Object.keys(scopedTemplate.response).map(item => item.replace(RE_KEY, '$1'))
+      }
+      extraKeys = _.difference(scopedKeys.request, scopedKeys.response)
+      scopedData = {
+        request: Mock.mock(scopedTemplate.request)
+      }
       scopedData.response = Mock.mock(
         Object.assign({}, _.pick(scopedData.request, extraKeys), scopedTemplate.response)
       )
       scopedData.response = _.pick(scopedData.response, scopedKeys.response)
+
+
+      let template = scopedTemplate[scope]
+      let data = scopedData[scope]
+      if (data._root_) {
+        data = data._root_
+      }
+
+      // DONE 2.1 支持虚拟属性 __root__ √服务端 √前端 √迁移测试
+      let keys = Object.keys(data)
+      if (keys.length === 1 && keys[0] === '__root__') data = data.__root__
+
+      let { Assert } = Mock.valid
+      let valid = Mock.valid(template, data)
+      for (var i = 0; i < valid.length; i++) {
+        console.warn(Assert.message(valid[i]))
+      }
+      return (
+        <div className='Previewer row'>
+          <div className='result-template col-6'>
+            <div className='header'>
+              <span className='title'>{label}模板</span>
+              {scope === 'response'
+                ? <a href={`${serve}/app/mock/template/${itf.id}`} target='_blank'><GoLink className='fontsize-14' /></a>
+                : null}
+            </div>
+            <pre className='body'>{
+              JSON.stringify(template, (k, v) => {
+                if (typeof v === 'function') return v.toString()
+                if (v !== undefined && v !== null && v.exec) return v.toString()
+                else return v
+              }, 2)
+            }</pre>
+          </div>
+          <div className='result-mocked col-6'>
+            <div className='header'>
+              <span className='title'>{label}数据</span>
+              {scope === 'response'
+                ? <a href={`${serve}/app/mock/data/${itf.id}`} target='_blank'><GoLink className='mr6 fontsize-14' /></a>
+                : null}
+              <Link to='' onClick={e => this.remock(e)}><GoSync className='mr6 fontsize-14' onAnimationEnd={e => this.removeAnimateClass(e)} /></Link>
+            </div>
+            <pre className='body'>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+          {scope === 'response'
+            ? <div className='result-valid col-12'>
+              {!valid.length
+                ? <span><GoBeer className='mr6 fontsize-20' />模板与数据匹配 √</span>
+                : <span><GoBug className='mr6 fontsize-20' />模板与数据不匹配</span>
+              }
+            </div>
+            : null
+          }
+        </div>
+      )
     } catch (ex) {
       scopedData.response = `无法预览Mock数据，因为您编写规则导致如下错误：${ex.message}`
     }
-
-    let template = scopedTemplate[scope]
-    let data = scopedData[scope]
-    if (data._root_) {
-      data = data._root_
-    }
-
-    // DONE 2.1 支持虚拟属性 __root__ √服务端 √前端 √迁移测试
-    let keys = Object.keys(data)
-    if (keys.length === 1 && keys[0] === '__root__') data = data.__root__
-
-    let { Assert } = Mock.valid
-    let valid = Mock.valid(template, data)
-    for (var i = 0; i < valid.length; i++) {
-      console.warn(Assert.message(valid[i]))
-    }
-    return (
-      <div className='Previewer row'>
-        <div className='result-template col-6'>
-          <div className='header'>
-            <span className='title'>{label}模板</span>
-            {scope === 'response'
-              ? <a href={`${serve}/app/mock/template/${itf.id}`} target='_blank'><GoLink className='fontsize-14' /></a>
-              : null}
-          </div>
-          <pre className='body'>{
-            JSON.stringify(template, (k, v) => {
-              if (typeof v === 'function') return v.toString()
-              if (v !== undefined && v !== null && v.exec) return v.toString()
-              else return v
-            }, 2)
-          }</pre>
-        </div>
-        <div className='result-mocked col-6'>
-          <div className='header'>
-            <span className='title'>{label}数据</span>
-            {scope === 'response'
-              ? <a href={`${serve}/app/mock/data/${itf.id}`} target='_blank'><GoLink className='mr6 fontsize-14' /></a>
-              : null}
-            <Link to='' onClick={e => this.remock(e)}><GoSync className='mr6 fontsize-14' onAnimationEnd={e => this.removeAnimateClass(e)} /></Link>
-          </div>
-          <pre className='body'>{JSON.stringify(data, null, 2)}</pre>
-        </div>
-        {scope === 'response'
-          ? <div className='result-valid col-12'>
-            {!valid.length
-              ? <span><GoBeer className='mr6 fontsize-20' />模板与数据匹配 √</span>
-              : <span><GoBug className='mr6 fontsize-20' />模板与数据不匹配</span>
-            }
-          </div>
-          : null
-        }
-      </div>
-    )
+    return <div>发生错误...</div>
   }
   remock = (e) => {
     e.preventDefault()

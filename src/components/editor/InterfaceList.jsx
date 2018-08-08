@@ -3,6 +3,7 @@ import { PropTypes, connect, Link, replace, StoreStateRouterLocationURI } from '
 import { RModal, RSortable } from '../utils'
 import InterfaceForm from './InterfaceForm'
 import { GoPencil, GoTrashcan, GoRocket, GoLock } from 'react-icons/lib/go'
+import { getCurrentInterface } from '../../selectors/interface';
 
 class Interface extends Component {
   static contextTypes = {
@@ -14,13 +15,14 @@ class Interface extends Component {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
-    active: PropTypes.bool.isRequired
+    active: PropTypes.bool.isRequired,
+    curItf: PropTypes.object,
   }
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = { update: false }
   }
-  render () {
+  render() {
     let { store } = this.context
     let { auth, repository, mod, itf } = this.props
     let selectHref = StoreStateRouterLocationURI(store).setSearch('itf', itf.id).href()
@@ -32,7 +34,11 @@ class Interface extends Component {
         {/* TODO 2.3 <a> 的范围应该扩大至整个 Interface，否则只有点击到 <a> 才能切换，现在不容易点击到 <a> */}
         <span className='name'>
           {itf.locker ? <span className='locked mr5'><GoLock /></span> : null}
-          <Link to={selectHref}><span>{itf.name}</span></Link>
+          <Link to={selectHref} onClick={(e) => {
+            if (this.props.curItf && this.props.curItf.locker && !window.confirm('编辑模式下切换接口，会导致编辑中的资料丢失，是否确定切换接口？')) {
+              e.preventDefault()
+            }
+          }}><span>{itf.name}</span></Link>
         </span>
         {isOwned || isJoined
           ? <div className='toolbar'>
@@ -81,14 +87,15 @@ class InterfaceList extends Component {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itfs: PropTypes.array,
-    itf: PropTypes.object
+    itf: PropTypes.object,
+    curItf: PropTypes.object,
   }
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = { create: false }
   }
-  render () {
-    let { auth, repository, mod, itfs = [], itf } = this.props
+  render() {
+    let { auth, repository, mod, itfs = [], itf, curItf } = this.props
     if (!mod.id) return null
     let isOwned = repository.owner.id === auth.id
     let isJoined = repository.members.find(itme => itme.id === auth.id)
@@ -98,7 +105,7 @@ class InterfaceList extends Component {
           <ul className='body'>
             {itfs.map(item =>
               <li key={item.id} className={item.id === itf.id ? 'active sortable' : 'sortable'} data-id={item.id}>
-                <Interface repository={repository} mod={mod} itf={item} active={item.id === itf.id} auth={auth} />
+                <Interface repository={repository} mod={mod} itf={item} active={item.id === itf.id} auth={auth} curItf={curItf} />
               </li>
             )}
           </ul>
@@ -127,9 +134,12 @@ class InterfaceList extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  auth: state.auth
+  auth: state.auth,
+  curItf: getCurrentInterface(state),
 })
+
 const mapDispatchToProps = ({})
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps

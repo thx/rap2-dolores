@@ -60,13 +60,13 @@ class PropertyForm extends Component {
             <div className='form-group row' style={{}}>
               <label className='col-sm-2 control-label'>名称：</label>
               <div className='col-sm-10'>
-                <input name='name' value={this.state.name} onChange={e => this.setState({ name: e.target.value })} className='form-control' placeholder='Name' spellCheck='false' autoFocus='true' required />
+                <input name='name' tabIndex={1} value={this.state.name} onChange={e => this.setState({ name: e.target.value })} className='form-control' placeholder='Name' spellCheck='false' autoFocus='true' required />
               </div>
             </div>
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>类型：</label>
               <div className='col-sm-10'>
-                <select name='type' value={this.state.type} onChange={e => this.setState({ type: e.target.value })} className='form-control'>
+                <select name='type' tabIndex={2} value={this.state.type} onChange={e => this.setState({ type: e.target.value })} className='form-control'>
                   {TYPES.map(type =>
                     <option key={type} value={type}>{type}</option>
                   )}
@@ -76,19 +76,19 @@ class PropertyForm extends Component {
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>生成规则：</label>
               <div className='col-sm-10'>
-                <input name='rule' value={this.state.rule} onChange={e => this.setState({ rule: e.target.value })} className='form-control' placeholder='Rule' spellCheck='false' />
+                <input name='rule' tabIndex={3} value={this.state.rule} onChange={e => this.setState({ rule: e.target.value })} className='form-control' placeholder='Rule' spellCheck='false' />
               </div>
             </div>
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>初始值：</label>
               <div className='col-sm-10'>
-                <input name='value' value={this.state.value} onChange={e => this.setState({ value: e.target.value })} className='form-control' placeholder='Value' spellCheck='false' />
+                <input name='value' tabIndex={4} value={this.state.value} onChange={e => this.setState({ value: e.target.value })} className='form-control' placeholder='Value' spellCheck='false' />
               </div>
             </div>
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>简介：</label>
               <div className='col-sm-10'>
-                <SmartTextarea name='description' value={this.state.description} onChange={e => this.setState({ description: e.target.value })} className='form-control' placeholder='Description' spellCheck='false' rows='5' />
+                <SmartTextarea tabIndex={5} name='description' value={this.state.description} onChange={e => this.setState({ description: e.target.value })} className='form-control' placeholder='Description' spellCheck='false' rows='5' />
               </div>
             </div>
           </div>

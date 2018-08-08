@@ -52,6 +52,7 @@
     "react-router-redux": "5.0.0-alpha.6",
     "redux": "4.0.0",
     "redux-saga": "0.16.0",
+    "reselect": "^3.0.1",
     "sortablejs": "1.7.0",
     "urijs": "1.19.1"
   },
