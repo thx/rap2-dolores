@@ -44,13 +44,13 @@ class ModuleForm extends Component {
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>名称：</label>
               <div className='col-sm-10'>
-                <input name='name' value={this.state.name} onChange={e => this.setState({ name: e.target.value })} className='form-control' placeholder='Name' spellCheck='false' autoFocus='true' required />
+                <input name='name' tabIndex={1} value={this.state.name} onChange={e => this.setState({ name: e.target.value })} className='form-control' placeholder='Name' spellCheck='false' autoFocus='true' required />
               </div>
             </div>
             <div className='form-group row'>
               <label className='col-sm-2 control-label'>简介：</label>
               <div className='col-sm-10'>
-                <SmartTextarea name='description' value={this.state.description} onChange={e => this.setState({ description: e.target.value })} className='form-control' placeholder='Description' spellCheck='false' rows='5' />
+                <SmartTextarea tabIndex={2} name='description' value={this.state.description} onChange={e => this.setState({ description: e.target.value })} className='form-control' placeholder='Description' spellCheck='false' rows='5' />
               </div>
             </div>
           </div>
