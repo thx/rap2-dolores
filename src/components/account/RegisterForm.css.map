@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,aAAa,CAAC;EACZ,KAAK,EAAE,KAAK;EACZ,MAAM,EAAE,MAAM;CAMF;;AARd,AAGE,aAHW,CAGX,OAAO,CAAC;EACN,aAAa,EAAE,IAAI;CAEG;;AAN1B,AAKI,aALS,CAGX,OAAO,CAEL,MAAM,CAAC;EACL,SAAS,EAAE,IAAI;CAAG",
+    "sources": [
+        "RegisterForm.sass"
+    ],
+    "names": [],
+    "file": "RegisterForm.css"
+}
