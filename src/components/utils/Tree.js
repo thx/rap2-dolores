@@ -33,9 +33,12 @@ const treeToJson = (tree) => {
   const parse = (item, result) => {
     let rule = item.rule ? ('|' + item.rule) : ''
     let value = item.value
+    if (value[0] === '[' || value.indexOf('function(') === 0) {
+      value = tryToCalculateValue(value)
+    }
     switch (item.type) {
       case 'String':
-        result[item.name + rule] = item.value
+        result[item.name + rule] = value
         break
       case 'Number': // √ BUG Number 如果没有输入初始值，会导致值变成字符串，所以需要对每种类型做特殊的初始值处理
         if (value === '') value = 1 // 如果未填初始值，则默认为 1
@@ -51,39 +54,9 @@ const treeToJson = (tree) => {
         result[item.name + rule] = value
         break
       case 'Function':
-        try {
-          let fn = eval('(' + item.value + ')') // eslint-disable-line no-eval
-          let value
-          try {
-            value = fn()
-          } catch (e) {
-            console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`)
-            result['string'] = item.value
-            break
-          }
-          let type = typeof value
-          if (['string', 'number', 'boolean'].indexOf(type) > -1) {
-            result[type] = value
-          } else if (type === 'object') {
-            let objectType = Object.prototype.toString.call(type)
-            if (objectType === '[object RegExp]') {
-              type = 'regexp'
-            } else if (objectType === '[object Array]') {
-              type = 'array'
-            } else {
-              type = 'object'
-            }
-            result[type] = value
-          } else {
-            result['string'] = item.value
-          }
-        } catch (e) {
-          console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`) // TODO 2.2 初始值异常，应该直接提示到页面上。
-          result[item.name] = item.value
-        }
-        break
       case 'RegExp':
         try {
+          // eslint-disable-next-line
           result[item.name + rule] = eval('(' + item.value + ')') // eslint-disable-line no-eval
         } catch (e) {
           console.warn(`{ ${item.name}: ${item.value} } => ${e.message}`) // TODO 2.2 初始值异常，应该直接提示到页面上。
@@ -93,6 +66,7 @@ const treeToJson = (tree) => {
       case 'Object':
         if (item.value) {
           try {
+            // eslint-disable-next-line
             result[item.name + rule] = eval(`(${item.value})`) // eslint-disable-line no-eval
           } catch (e) {
             result[item.name + rule] = item.value
@@ -107,6 +81,7 @@ const treeToJson = (tree) => {
       case 'Array':
         if (item.value) {
           try {
+            // eslint-disable-next-line
             result[item.name + rule] = eval(`(${item.value})`) // eslint-disable-line no-eval
           } catch (e) {
             result[item.name + rule] = item.value
@@ -120,6 +95,17 @@ const treeToJson = (tree) => {
         break
       default:
         result[item.name + rule] = item.value
+    }
+  }
+
+  function tryToCalculateValue(val) {
+    try {
+      // eslint-disable-next-line
+      const v = eval('({ "val" :' + val + '})')
+      return v.val
+    } catch (ex) {
+      console.error(ex)
+      return val
     }
   }
   var result = {}

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,WAAW,CAAC;EACV,MAAM,EAAE,iBAAiB;CAAG",
+    "sources": [
+        "RCodeMirror.sass"
+    ],
+    "names": [],
+    "file": "RCodeMirror.css"
+}
