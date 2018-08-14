@@ -34,12 +34,13 @@ class InterfaceSummary extends Component {
     super(props)
     this.state = {
       bodyOption: BODY_OPTION.FORM_DATA,
-      requestParamsType: props.method === 'POST' ? REQUEST_PARAMS_TYPE.BODY_PARAMS : REQUEST_PARAMS_TYPE.QUERY_PARAMS
+      requestParamsType: props.itf.method === 'POST' ? REQUEST_PARAMS_TYPE.BODY_PARAMS : REQUEST_PARAMS_TYPE.QUERY_PARAMS
     }
     this.changeMethod = this.changeMethod.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.switchBodyOptions = this.switchBodyOption.bind(this)
     this.switchRequestParamsType = this.switchRequestParamsType.bind(this)
+    this.state.requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS && props.stateChangeHandler(this.state)
   }
   static contextTypes = {
     store: PropTypes.object.isRequired,
