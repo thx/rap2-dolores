@@ -33,11 +33,11 @@ const treeToJson = (tree) => {
   const parse = (item, result) => {
     let rule = item.rule ? ('|' + item.rule) : ''
     let value = item.value
-    if (value[0] === '[' || value.indexOf('function(') === 0) {
-      value = tryToCalculateValue(value)
-    }
     switch (item.type) {
       case 'String':
+        if (value[0] === '[' || value.indexOf('function(') === 0) {
+          value = tryToCalculateValue(value)
+        }
         result[item.name + rule] = value
         break
       case 'Number': // √ BUG Number 如果没有输入初始值，会导致值变成字符串，所以需要对每种类型做特殊的初始值处理
