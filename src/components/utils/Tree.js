@@ -33,7 +33,7 @@ const treeToJson = (tree) => {
   const parse = (item, result) => {
     let rule = item.rule ? ('|' + item.rule) : ''
     let value = item.value
-    if (value[0] === '[' || value.indexOf('function(') === 0) {
+    if (typeof value === 'string' && (value[0] === '[' || value.indexOf('function(') === 0)) {
       value = tryToCalculateValue(value)
     }
     switch (item.type) {
