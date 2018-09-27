@@ -24,7 +24,7 @@ export const ResponsePropertyListPreviewer = (props) => (
 // TODO 2.3 检测重复属性
 
 class SortableTreeTableHeader extends Component {
-  render () {
+  render() {
     let { editable } = this.props
     return (
       <div className='SortableTreeTableHeader'>
@@ -32,6 +32,7 @@ class SortableTreeTableHeader extends Component {
           {/* DONE 2.1 每列增加帮助 Tip */}
           {editable && <div className='th operations' />}
           <div className='th name'>名称</div>
+          <div className='th type'>必选</div>
           <div className='th type'>类型</div>
           {/* TODO 2.3 规则编辑器 */}
           <div className='th rule'>
@@ -58,7 +59,7 @@ const PropertyLabel = (props) => {
 }
 
 class SortableTreeTableRow extends Component {
-  render () {
+  render() {
     let { property, editable } = this.props
     let { handleClickCreateChildPropertyButton, handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
     return (
@@ -81,6 +82,13 @@ class SortableTreeTableRow extends Component {
                     : <input value={item.name} onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)} className='form-control editable' spellCheck='false' placeholder='' />
                   }
                 </div>
+                <div className={`td payload type depth-${item.depth} nowrap`}>
+                  {!editable
+                    ? <span className='nowrap'>{item.required ? '✔️' : ''}</span>
+                    : <input type='checkbox' checked={!!item.required} onChange={e => handleChangePropertyField(item.id, 'required', e.target.checked)} />
+                  }
+                </div>
+
                 <div className='td payload type'>
                   {!editable
                     ? <span className='nowrap'>{item.type}</span>
@@ -110,7 +118,7 @@ class SortableTreeTableRow extends Component {
                   }
                 </div>
               </div>
-              {item.children && item.children.length ? <SortableTreeTableRow {...this.props} property={item} /> : null }
+              {item.children && item.children.length ? <SortableTreeTableRow {...this.props} property={item} /> : null}
             </div>
           )}
         </div>
@@ -120,7 +128,7 @@ class SortableTreeTableRow extends Component {
 }
 
 class SortableTreeTable extends Component {
-  render () {
+  render() {
     let { root, editable } = this.props
     return (
       <div className={`SortableTreeTable ${editable ? 'editable' : ''}`}>
@@ -153,7 +161,7 @@ class PropertyList extends Component {
     bodyOption: PropTypes.string,
     requestParamsType: PropTypes.string
   }
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       createProperty: false,
@@ -162,7 +170,7 @@ class PropertyList extends Component {
       importer: false
     }
   }
-  render () {
+  render() {
     let { title, label, scope, properties = [], repository = {}, mod = {}, itf = {} } = this.props
     if (!itf.id) return null
     let { editable, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
