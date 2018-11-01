@@ -10,12 +10,14 @@ const mockUser = process.env.NODE_ENV === 'development'
   ? () => Mock.mock({
     fullname: '@CNAME',
     email: '@email',
-    password: '@string(6)'
+    password: '@string(6)',
+    errMsg: '',
   })
   : () => ({
     fullname: '',
     email: '',
-    password: ''
+    password: '',
+    errMsg: '',
   })
 
 // 展示组件
@@ -25,6 +27,7 @@ class RegisterForm extends Component {
     this.state = mockUser()
   }
   render () {
+    const { errMsg } = this.state
     return (
       <section className='RegisterForm'>
         <div className='header'>
@@ -43,6 +46,7 @@ class RegisterForm extends Component {
             <label>密码：</label>
             <input value={this.state.password} onChange={e => this.setState({ password: e.target.value })} type='password' className='form-control' placeholder='Password' required />
           </div>
+          {errMsg && <div className='alert alert-danger'>{errMsg}</div>}
           <button type='submit' className='btn btn-primary w140 mr20'>提交</button>
           <Link to='/account' className=''>取消</Link>
         </form>
@@ -52,8 +56,14 @@ class RegisterForm extends Component {
   handleSubmit = (e) => {
     let { history, onAddUser } = this.props
     e.preventDefault()
-    onAddUser(this.state, () => {
+    onAddUser(this.state, (errorOccurred, errMsg) => {
+      if (errorOccurred) {
+        this.setState({
+          errMsg,
+        })
+      } else {
       history.push('/') // 另一种方式是 <Redirect to="/somewhere/else"/>
+      }
     })
   }
 }

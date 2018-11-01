@@ -3,6 +3,11 @@ export const login = (user, onResolved) => ({ type: 'USER_LOGIN', user, onResolv
 export const loginSucceeded = (user) => ({ type: 'USER_LOGIN_SUCCEEDED', user })
 export const loginFailed = (message) => ({ type: 'USER_LOGIN_FAILED', message })
 
+// 重置
+export const reset = (email, password, onResolved) => ({ type: 'USER_RESET', email, password, onResolved })
+export const resetSucceeded = () => ({ type: 'USER_RESET_SUCCEEDED' })
+export const resetFailed = (message) => ({ type: 'USER_RESET_FAILED', message })
+
 // 登出
 export const logout = () => ({ type: 'USER_LOGOUT' })
 export const logoutSucceeded = () => ({ type: 'USER_LOGOUT_SUCCEEDED' })

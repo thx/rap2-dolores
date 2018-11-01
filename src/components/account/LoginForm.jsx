@@ -54,8 +54,9 @@ class LoginForm extends Component {
             </div>
           </div>
           <div className='footer'>
-            <button type='submit' className='btn btn-primary w140 mr20'>提交</button>
-            <Link to='/account/register'>注册</Link>
+            <button type='submit' className='btn btn-primary w80 mr10'>提交</button>
+            <Link to='/account/register' className='mr10'>注册</Link>
+            <Link to='/account/reset'>密码找回</Link>
           </div>
           {this.props.auth.message &&
             <div className='alert alert-danger fade show' role='alert'>
