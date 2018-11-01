@@ -63,6 +63,16 @@ export default {
         }
       } catch (e) {
         yield put(AccountAction.addUserFailed(e.message))
+        if (action.onResolved) action.onResolved(true, e.message)
+      }
+    },
+    * [AccountAction.reset().type] (action) {
+      try {
+        const result = yield call(AccountService.resetUser, action.email, action.password)
+        action.onResolved && action.onResolved(result)
+      } catch (e) {
+        yield put(AccountAction.resetFailed(e.message))
+        if (action.onResolved) action.onResolved(true, e.message)
       }
     },
     * [AccountAction.updateUser().type] (action) {

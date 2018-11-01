@@ -10,6 +10,7 @@ import Home from './components/home/Home'
 import LoginForm from './components/account/LoginForm'
 import RegisterForm from './components/account/RegisterForm'
 import UpdateForm from './components/account/UpdateForm'
+import ResetForm from './components/account/ResetForm'
 
 const UserList = (props) => (
   <Bundle load={cb => require.ensure([], require => cb(require('./components/account/UserList')))}>
@@ -92,6 +93,7 @@ const Routes = ({ match, location }, { store }) => {
         {/* <Route component={Header}/> */}
         <Switch>
           <Route path='/account/register' component={RegisterForm} />
+          <Route path='/account/reset' component={ResetForm} />
           <Route component={LoginForm} />
         </Switch>
         {/* <Footer/> */}
