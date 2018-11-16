@@ -24,7 +24,9 @@ RAP2是在RAP1基础上重做的新项目，它包含两个组件(对应两个Gi
 ```sh
 
 # initialize 初始化
+# 中国大陆地区安装若失败，可以尝试安装 cnpm 执行 cnpm install 代替下行命令
 npm install
+
 
 # config development mode server API path in /src/config/config.dev.js
 # 配置开发模式后端服务器的地址。 /src/config/config.dev.js
