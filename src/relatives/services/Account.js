@@ -56,6 +56,7 @@ export default {
   login({
     email,
     password,
+    isldap,
     captcha
   }) {
     return fetch(`${serve}/account/login`, {
@@ -64,6 +65,7 @@ export default {
         body: JSON.stringify({
           email,
           password,
+          isldap,
           captcha
         }),
         headers: {

@@ -7,14 +7,17 @@ import Mock from 'mockjs'
 import './LoginForm.css'
 
 // 模拟数据
+const ldap_default = true
 const mockUser = process.env.NODE_ENV === 'development'
   ? () => Mock.mock({
     email: 'admin@rap2.com',
-    password: 'admin'
+    password: 'admin',
+    isldap: ldap_default
   })
   : () => ({
     email: '',
-    password: ''
+    password: '',
+    isldap: ldap_default
   })
 
 mockUser.captchaId = Date.now()
@@ -52,6 +55,10 @@ class LoginForm extends Component {
               <input onChange={e => this.setState({ captcha: e.target.value })} className='form-control' placeholder='验证码' required />
               <img src={`${serve}/captcha?t=${this.state.captchaId || ''}`} onClick={e => this.setState({ captchaId: Date.now() })} alt='captcha' />
             </div>
+            <div className='form-group'>
+              <label>ldap认证</label>
+              <input type="checkbox" onClick={e => this.setState({ isldap: e.target.checked })} checked={this.state.isldap}/>
+            </div>
           </div>
           <div className='footer'>
             <button type='submit' className='btn btn-primary w80 mr10'>提交</button>
@@ -68,6 +75,10 @@ class LoginForm extends Component {
     )
   }
   handleSubmit = (e) => {
+    console.log("111111111111111")
+    console.log(e.target)
+    console.log(e.target.value)
+    console.log("222222222222222")
     let { history, onLogin } = this.props
     e.preventDefault()
     onLogin(this.state, () => {
