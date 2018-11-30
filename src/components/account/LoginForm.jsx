@@ -7,17 +7,17 @@ import Mock from 'mockjs'
 import './LoginForm.css'
 
 // 模拟数据
-const ldap_default = true
+const ldapDefault = true
 const mockUser = process.env.NODE_ENV === 'development'
   ? () => Mock.mock({
     email: 'admin@rap2.com',
     password: 'admin',
-    isldap: ldap_default
+    isldap: ldapDefault
   })
   : () => ({
     email: '',
     password: '',
-    isldap: ldap_default
+    isldap: ldapDefault
   })
 
 mockUser.captchaId = Date.now()
