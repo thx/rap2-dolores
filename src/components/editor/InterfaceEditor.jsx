@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { PropTypes, connect, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
 import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
+import InterfaceProxy from './InterfaceProxy'
 import PropertyList from './PropertyList'
 import { RModal } from '../utils'
 import MoveInterfaceForm from './MoveInterfaceForm'
@@ -42,6 +43,8 @@ class InterfaceEditor extends Component {
   }
   constructor (props) {
     super(props)
+    console.log(`------InterfaceEditor-------`)
+    console.log(props)
     this.state = {
       ...InterfaceEditor.mapPropsToState(props),
       summaryState: {
@@ -91,6 +94,7 @@ class InterfaceEditor extends Component {
       <article className='InterfaceEditor'>
         <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
         <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
+        <InterfaceProxy repository={repository} editable={editable} />
         <RequestPropertyList
           properties={this.state.properties}
           editable={editable}
