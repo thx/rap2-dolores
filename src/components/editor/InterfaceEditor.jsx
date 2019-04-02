@@ -94,7 +94,7 @@ class InterfaceEditor extends Component {
       <article className='InterfaceEditor'>
         <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
         <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
-        <InterfaceProxy repository={repository} editable={editable} />
+        <InterfaceProxy itf={itf} auth={auth} />
         <RequestPropertyList
           properties={this.state.properties}
           editable={editable}

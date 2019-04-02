@@ -77,11 +77,13 @@ class RepositoryEditor extends Component {
     }
     if (!repository.fetching && !repository.data) return <div className='p100 fontsize-40 text-center'>404</div>
 
+    // repository 仓库对象是个超级大对象：包含仓库下的所有模块 & 每个模块下的所有接口 等数据对象集合
     repository = repository.data
     if (!repository.id) return <Spin /> // // DONE 2.2 每次获取仓库都显示加载动画不合理，应该只在初始加载时显示动画。
-
+    // 解析 repository 下当前用户选择的 模块数据。方便使用
     let mod = repository && repository.modules && repository.modules.length
       ? (repository.modules.find(item => item.id === +params.mod) || repository.modules[0]) : {}
+    // 解析 当前模块下 用户选择的当前接口数据。方便使用
     let itf = mod.interfaces && mod.interfaces.length
       ? (mod.interfaces.find(item => item.id === +params.itf) || mod.interfaces[0]) : {}
     let properties = itf.properties || []
