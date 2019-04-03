@@ -54,7 +54,7 @@ export default class InterfaceProxyModal extends React.Component {
               <div className='col-sm-10'>
                 <input name='name' tabIndex={1} value={this.state.proxyDev}
                        onChange={e => this.setState({proxyDev: e.target.value})} className='form-control'
-                       placeholder='dev' spellCheck='false' required autoFocus='true'/>
+                       placeholder='dev' spellCheck='false' autoFocus='true' />
               </div>
             </div>
 
@@ -67,7 +67,7 @@ export default class InterfaceProxyModal extends React.Component {
               <div className='col-sm-10'>
                 <input name='name' tabIndex={2} value={this.state.proxyUat}
                        onChange={e => this.setState({proxyUat: e.target.value})} className='form-control'
-                       placeholder='uat' spellCheck='false' required/>
+                       placeholder='uat' spellCheck='false' />
               </div>
             </div>
 
@@ -80,7 +80,7 @@ export default class InterfaceProxyModal extends React.Component {
               <div className='col-sm-10'>
                 <input name='name' tabIndex={2} value={this.state.proxyProd}
                        onChange={e => this.setState({proxyProd: e.target.value})} className='form-control'
-                       placeholder='prod' spellCheck='false' required/>
+                       placeholder='prod' spellCheck='false' />
               </div>
             </div>
 

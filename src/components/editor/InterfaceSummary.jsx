@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
+import { GoPencil,GoLink } from 'react-icons/lib/go'
 import { serve } from '../../relatives/services/constant'
 import InterfaceForm from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
@@ -99,6 +100,7 @@ class InterfaceSummary extends Component {
         <div className='header'>
           <span className='title'>
             {itf.name}
+            <a href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`} target='_blank'><GoLink /></a>
           </span>
           {/* TODO 2.2 √模板接口、√数据接口、JSONSchema 接口 */}
           {/* TODO 2.2 权限控制，被别人锁定时不能编辑和删除 */}
@@ -113,7 +115,7 @@ class InterfaceSummary extends Component {
         <ul className='body'>
           <li>
             <span className='label'>地址：</span>
-            <a href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`} target='_blank'>{itf.url}</a>
+            <a href={`${serve}/app/mock/all${getRelativeUrl(itf.url || '')}`} target='_blank'>{itf.url}</a>
           </li>
           <li><span className='label'>类型：</span>
             {itf.method}
