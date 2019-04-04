@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { PropTypes, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import { DialogController } from '../utils'
-import { GoPencil,GoLink } from 'react-icons/lib/go'
+import { GoLink } from 'react-icons/lib/go'
 import { serve } from '../../relatives/services/constant'
 import InterfaceForm from './InterfaceForm'
 import { getRelativeUrl } from '../../utils/URLUtils'
@@ -127,7 +127,7 @@ class InterfaceSummary extends Component {
             <li><span className='label'>简介：</span>{itf.description}</li>
           }
           {editable &&
-          <ul className='nav nav-tabs' role='tablist'>
+          <ul className='nav nav-tabs hide' role='tablist'>
             <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
               <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''}`} role='tab' data-toggle='tab'>headers</a>
             </li>
