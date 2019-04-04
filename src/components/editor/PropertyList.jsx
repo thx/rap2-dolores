@@ -24,22 +24,24 @@ export const ResponsePropertyListPreviewer = (props) => (
 // TODO 2.3 检测重复属性
 
 class SortableTreeTableHeader extends Component {
-  render() {
-    let { editable } = this.props
+  render () {
+    let {editable} = this.props
     return (
       <div className='SortableTreeTableHeader'>
         <div className='flex-row'>
           {/* DONE 2.1 每列增加帮助 Tip */}
-          {editable && <div className='th operations' />}
+          {editable && <div className='th operations'/>}
           <div className='th name'>名称</div>
           <div className='th type'>必选</div>
           <div className='th type'>类型</div>
           {/* TODO 2.3 规则编辑器 */}
           <div className='th rule'>
             生成规则
-            <a href='https://github.com/nuysoft/Mock/wiki/Syntax-Specification' rel="noopener noreferrer" className='helper' target='_blank'><GoQuestion /></a>
+            <a href='https://github.com/nuysoft/Mock/wiki/Syntax-Specification' rel="noopener noreferrer"
+               className='helper' target='_blank'><GoQuestion/></a>
           </div>
-          <div className='th value'>初始值</div>{/* 对象和数组也允许设置初始值 */}
+          <div className='th value'>初始值</div>
+          {/* 对象和数组也允许设置初始值 */}
           <div className='th desc'>简介</div>
         </div>
       </div>
@@ -48,7 +50,7 @@ class SortableTreeTableHeader extends Component {
 }
 
 const PropertyLabel = (props) => {
-  const { pos } = props
+  const {pos} = props
   if (pos === 1) {
     return <label className='ml5 badge badge-danger'>HEAD</label>
   } else if (pos === 3) {
@@ -59,40 +61,50 @@ const PropertyLabel = (props) => {
 }
 
 class SortableTreeTableRow extends Component {
-  render() {
-    let { property, editable } = this.props
-    let { handleClickCreateChildPropertyButton, handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
+  render () {
+    let {property, editable} = this.props
+    let {handleClickCreateChildPropertyButton, handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties} = this.props
     return (
-      <RSortable group={property.depth} handle='.SortableTreeTableRow' disabled={!editable} onChange={handleSortProperties}>
+      <RSortable group={property.depth} handle='.SortableTreeTableRow' disabled={!editable}
+                 onChange={handleSortProperties}>
         <div className={`RSortableWrapper depth${property.depth}`}>
           {property.children.sort((a, b) => a.priority - b.priority).map(item =>
             <div key={item.id} className='SortableTreeTableRow' data-id={item.id}>
               <div className='flex-row'>
                 {editable &&
-                  <div className='td operations nowrap'>
-                    {(item.type === 'Object' || item.type === 'Array')
-                      ? <Link to='' onClick={e => { e.preventDefault(); handleClickCreateChildPropertyButton(item) }}><GoPlus className='fontsize-14 color-6' /></Link>
-                      : null}
-                    <Link to='' onClick={e => handleDeleteMemoryProperty(e, item)}><GoTrashcan className='fontsize-14 color-6' /></Link>
-                  </div>
+                <div className='td operations nowrap'>
+                  {(item.type === 'Object' || item.type === 'Array') ?
+                    <Link to='' onClick={e => {e.preventDefault();handleClickCreateChildPropertyButton(item)}}>
+                      <GoPlus className='fontsize-14 color-6'/>
+                    </Link>
+                    : null}
+                  <Link to='' onClick={e => handleDeleteMemoryProperty(e, item)}><GoTrashcan
+                    className='fontsize-14 color-6'/></Link>
+                </div>
                 }
                 <div className={`td payload name depth-${item.depth} nowrap`}>
                   {!editable
-                    ? <span className='nowrap'>{item.name}{item.scope === 'request' && item.depth === 0 ? <PropertyLabel pos={item.pos} /> : null}</span>
-                    : <input value={item.name} onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)} className='form-control editable' spellCheck='false' placeholder='' />
+                    ? <span className='nowrap'>{item.name}
+                      {item.scope === 'request' && item.depth === 0 ? <PropertyLabel pos={item.pos}/> : null}
+                      </span>
+                    : <input value={item.name}
+                             onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)}
+                             className='form-control editable' spellCheck='false' placeholder=''/>
                   }
                 </div>
                 <div className={`td payload type depth-${item.depth} nowrap`}>
                   {!editable
                     ? <span className='nowrap'>{item.required ? '✔️' : ''}</span>
-                    : <input type='checkbox' checked={!!item.required} onChange={e => handleChangePropertyField(item.id, 'required', e.target.checked)} />
+                    : <input type='checkbox' checked={!!item.required}
+                             onChange={e => handleChangePropertyField(item.id, 'required', e.target.checked)}/>
                   }
                 </div>
-
                 <div className='td payload type'>
                   {!editable
                     ? <span className='nowrap'>{item.type}</span>
-                    : <select value={item.type} onChange={e => handleChangePropertyField(item.id, 'type', e.target.value)} className='form-control editable'>
+                    : <select value={item.type}
+                              onChange={e => handleChangePropertyField(item.id, 'type', e.target.value)}
+                              className='form-control editable'>
                       {['String', 'Number', 'Boolean', 'Object', 'Array', 'Function', 'RegExp'].map(type =>
                         <option key={type} value={type}>{type}</option>
                       )}
@@ -102,23 +114,29 @@ class SortableTreeTableRow extends Component {
                 <div className='td payload rule nowrap'>
                   {!editable
                     ? <span className='nowrap'>{item.rule}</span>
-                    : <input value={item.rule || ''} onChange={e => handleChangePropertyField(item.id, 'rule', e.target.value)} className='form-control editable' spellCheck='false' placeholder='' />
+                    : <input value={item.rule || ''}
+                             onChange={e => handleChangePropertyField(item.id, 'rule', e.target.value)}
+                             className='form-control editable' spellCheck='false' placeholder=''/>
                   }
                 </div>
                 <div className='td payload value'>
                   {!editable
                     ? <span>{item.value}</span>
-                    : <SmartTextarea value={item.value || ''} onChange={e => handleChangePropertyField(item.id, 'value', e.target.value)} rows='1' className='form-control editable' spellCheck='false' placeholder='' />
+                    : <SmartTextarea value={item.value || ''}
+                                     onChange={e => handleChangePropertyField(item.id, 'value', e.target.value)}
+                                     rows='1' className='form-control editable' spellCheck='false' placeholder=''/>
                   }
                 </div>
                 <div className='td payload desc'>
                   {!editable
                     ? <span>{item.description}</span>
-                    : <SmartTextarea value={item.description || ''} onChange={e => handleChangePropertyField(item.id, 'description', e.target.value)} rows='1' className='form-control editable' spellCheck='false' placeholder='' />
+                    : <SmartTextarea value={item.description || ''}
+                                     onChange={e => handleChangePropertyField(item.id, 'description', e.target.value)}
+                                     rows='1' className='form-control editable' spellCheck='false' placeholder=''/>
                   }
                 </div>
               </div>
-              {item.children && item.children.length ? <SortableTreeTableRow {...this.props} property={item} /> : null}
+              {item.children && item.children.length ? <SortableTreeTableRow {...this.props} property={item}/> : null}
             </div>
           )}
         </div>
@@ -128,12 +146,12 @@ class SortableTreeTableRow extends Component {
 }
 
 class SortableTreeTable extends Component {
-  render() {
-    let { root, editable } = this.props
+  render () {
+    let {root, editable} = this.props
     return (
       <div className={`SortableTreeTable ${editable ? 'editable' : ''}`}>
         <SortableTreeTableHeader {...this.props} />
-        <SortableTreeTableRow {...this.props} property={root} />
+        <SortableTreeTableRow {...this.props} property={root}/>
       </div>
     )
   }
@@ -156,26 +174,41 @@ class PropertyList extends Component {
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
     editable: PropTypes.bool.isRequired,
+    groupId: PropTypes.number.isRequired,
 
     /** optional */
     bodyOption: PropTypes.string,
     requestParamsType: PropTypes.string
   }
-  constructor(props) {
+
+  constructor (props) {
     super(props)
     this.state = {
       createProperty: false,
       createChildProperty: false,
+      // 默认 response mock 数据预览
       previewer: props.scope === 'response',
       importer: false
     }
   }
-  render() {
-    let { title, label, scope, properties = [], repository = {}, mod = {}, itf = {} } = this.props
+
+  /**
+   *  组件销毁时重写 setState or this.willUnmount=true,然后所有的 this.setState 调用前加逻辑控制
+   */
+  componentWillUnmount () {
+    // Warning: Can't call setState (or forceUpdate) on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+    this.setState = (state, callback) => {
+      return
+    }
+  }
+
+  render () {
+    let {title, label, scope, properties = [], repository = {}, mod = {}, itf = {}, groupId = -1} = this.props
     if (!itf.id) return null
-    let { editable, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
+    let {editable, requestParamsType} = this.props // itf.locker && (itf.locker.id === auth.id)
     const pos = rptFromStr2Num(requestParamsType)
-    let scopedProperties = properties.map(property => ({ ...property })).filter(property => property.scope === scope)
+    let scopedProperties = properties.map(property => ({...property})).filter(property => property.scope === scope && property.groupId === groupId)
+    // 匹配 header & request
     if (scope === 'request' && editable) {
       scopedProperties = scopedProperties.filter(s => s.pos === pos)
     }
@@ -189,69 +222,72 @@ class PropertyList extends Component {
             <div className='btn-group'>
               {editable && (
                 <button type='button' className='btn btn-secondary' onClick={this.handleClickCreatePropertyButton}>
-                  <GoMention /> 新建
+                  <GoMention/> 新建
                 </button>
               )}
               {editable && (
                 <button type='button' className='btn btn-secondary' onClick={this.handleClickImporterButton}>
-                  <GoFileCode className='fontsize-14 color-6' /> 导入
+                  <GoFileCode className='fontsize-14 color-6'/> 导入
                 </button>
               )}
               <button type='button' className={`btn btn-secondary ${this.state.previewer && 'btn-success'}`} onClick={this.handleClickPreviewerButton}>
-                <GoEye className='fontsize-14' /> 预览
+                <GoEye className='fontsize-14'/> 预览
               </button>
             </div>
           </div>
         </div>
         <div className='body'>
-          <SortableTreeTable root={Tree.arrayToTree(scopedProperties)} editable={editable}
+          <SortableTreeTable
+            root={Tree.arrayToTree(scopedProperties)} editable={editable}
             handleClickCreateChildPropertyButton={this.handleClickCreateChildPropertyButton}
             handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             handleChangePropertyField={this.handleChangePropertyField}
-            handleSortProperties={this.handleSortProperties} />
+            handleSortProperties={this.handleSortProperties}
+          />
         </div>
         <div className='footer'>
-          {this.state.previewer && <Previewer scope={scope} label={label} properties={properties} itf={itf} />}
+          {this.state.previewer && <Previewer scope={scope} label={label} properties={properties} itf={itf} groupId={groupId}/>}
         </div>
-        <RModal when={this.state.createProperty} onClose={e => this.setState({ createProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} />
+        <RModal when={this.state.createProperty} onClose={e => this.setState({createProperty: false})} onResolve={this.handleCreatePropertySucceeded}>
+          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} groupId={groupId}/>
         </RModal>
-        <RModal when={!!this.state.createChildProperty} onClose={e => this.setState({ createChildProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} parent={this.state.createChildProperty} />
+        <RModal when={!!this.state.createChildProperty} onClose={e => this.setState({createChildProperty: false})} onResolve={this.handleCreatePropertySucceeded}>
+          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} groupId={groupId} parent={this.state.createChildProperty}/>
         </RModal>
-        <RModal when={this.state.importer} onClose={e => this.setState({ importer: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <Importer title={`导入${label}属性`} repository={repository} mod={mod} itf={itf} scope={scope} />
+        <RModal when={this.state.importer} onClose={e => this.setState({importer: false})} onResolve={this.handleCreatePropertySucceeded}>
+          <Importer title={`导入${label}属性`} repository={repository} mod={mod} itf={itf} scope={scope} groupId={groupId}/>
         </RModal>
       </section>
     )
   }
+
   handleClickCreatePropertyButton = () => {
-    this.setState({ createProperty: true })
+    this.setState({createProperty: true})
   }
   handleClickCreateChildPropertyButton = (item) => {
-    this.setState({ createChildProperty: item })
+    this.setState({createChildProperty: item})
   }
   handleClickImporterButton = () => {
-    this.setState({ importer: true })
+    this.setState({importer: true})
   }
   handleClickPreviewerButton = () => {
-    this.setState({ previewer: !this.state.previewer })
+    this.setState({previewer: !this.state.previewer})
   }
   handleChangePropertyField = (id, key, value) => {
-    let { handleChangeProperty } = this.context
-    let { properties } = this.props
+    let {handleChangeProperty} = this.context
+    let {properties} = this.props
     let property = properties.find(property => property.id === id)
-    handleChangeProperty({ ...property, [key]: value })
+    handleChangeProperty({...property, [key]: value})
   }
   handleCreatePropertySucceeded = () => {
   }
   handleDeleteMemoryProperty = (e, property) => {
     e.preventDefault()
-    let { handleDeleteMemoryProperty } = this.context
+    let {handleDeleteMemoryProperty} = this.context
     handleDeleteMemoryProperty(property)
   }
   handleSortProperties = (e, sortable) => {
-    let { properties } = this.props
+    let {properties} = this.props
     let ids = sortable.toArray()
     ids.forEach((id, index) => {
       let property = properties.find(item => item.id === id || item.id === +id)
@@ -259,6 +295,7 @@ class PropertyList extends Component {
     })
   }
 }
+
 const mapStateToProps = (state) => ({})
 const mapDispatchToProps = ({})
 export default connect(
