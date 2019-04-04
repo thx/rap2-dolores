@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { PropTypes, connect } from '../../family'
-import { GoPencil, GoGitPullRequest, GoX, GoMoveRight } from 'react-icons/lib/go'
+import { GoPencil, GoGitPullRequest, GoX, GoMoveRight, GoPlus } from 'react-icons/lib/go'
 
 // TODO 2.1 BUG 快速点击编辑和保存时显示的操作按钮错误
 class InterfaceEditorToolbar extends Component {
@@ -14,10 +14,11 @@ class InterfaceEditorToolbar extends Component {
     handleLockInterface: PropTypes.func.isRequired,
     handleUnlockInterface: PropTypes.func.isRequired,
     handleSaveInterface: PropTypes.func.isRequired,
-    handleMoveInterface: PropTypes.func.isRequired
+    handleMoveInterface: PropTypes.func.isRequired,
+    handleAddInterfaceMock: PropTypes.func.isRequired
   }
   render () {
-    let { handleLockInterface, handleUnlockInterface, handleSaveInterface, handleMoveInterface } = this.context
+    let { handleLockInterface, handleUnlockInterface, handleSaveInterface, handleMoveInterface, handleAddInterfaceMock } = this.context
     let { editable, locker, auth, repository } = this.props
     let isOwned = repository.owner.id === auth.id
     let isJoined = repository.members.find(itme => itme.id === auth.id)
@@ -26,7 +27,8 @@ class InterfaceEditorToolbar extends Component {
       return (
         <div className='InterfaceEditorToolbar'>
           <button className='btn btn-success save w130' onClick={handleSaveInterface}><GoGitPullRequest /> 保存</button>
-          <button className='btn btn-default cancel w130' onClick={handleUnlockInterface}><GoX /> 取消</button>
+          <button className='btn btn-secondary cancel w130' onClick={handleUnlockInterface}><GoX /> 取消</button>
+          <button className='btn btn-warning cancel w130' onClick={handleAddInterfaceMock}><GoPlus /> 新增</button>
           <span className='locker-warning hide'>已经锁定当前接口！</span>
           {/* 这个提示让界面有点混乱，暂时隐藏掉 */}
           {/* .locker-success .locker-success */}

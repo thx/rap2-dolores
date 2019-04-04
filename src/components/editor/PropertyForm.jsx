@@ -38,7 +38,8 @@ class PropertyForm extends Component {
     parent: PropTypes.object,
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
-    itf: PropTypes.object.isRequired
+    itf: PropTypes.object.isRequired,
+    groupId: PropTypes.number.isRequired
   }
   static contextTypes = {
     rmodal: PropTypes.instanceOf(Component),
@@ -110,7 +111,7 @@ class PropertyForm extends Component {
   }
   handleSubmit = (e) => {
     e.preventDefault()
-    let { auth, repository, mod, itf, scope, parent = { id: -1 } } = this.props
+    let { auth, repository, mod, itf, scope, parent = { id: -1 } , groupId = -1} = this.props
     let { handleAddMemoryProperty } = this.context
     let property = Object.assign({}, this.state, {
       creatorId: auth.id,
@@ -118,7 +119,8 @@ class PropertyForm extends Component {
       moduleId: mod.id,
       interfaceId: itf.id,
       scope,
-      parentId: parent.id
+      parentId: parent.id,
+      groupId: groupId
     })
     handleAddMemoryProperty(property, () => {
       let { rmodal } = this.context

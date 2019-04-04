@@ -1,19 +1,13 @@
 import React, { Component } from 'react'
 import { PropTypes, connect, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
-import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
+import InterfaceSummary from './InterfaceSummary'
+import InterfaceHeader, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceHeader'
 import InterfaceProxy from './InterfaceProxy'
-import PropertyList from './PropertyList'
+import InterfaceMocks from './InterfaceMocks'
 import { RModal } from '../utils'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
-
-export const RequestPropertyList = (props) => {
-  return <PropertyList scope='request' title='请求参数' label='请求' {...props} />
-}
-export const ResponsePropertyList = (props) => (
-  <PropertyList scope='response' title='响应内容' label='响应' {...props} />
-)
 
 // TODO 2.x 参考 MySQL Workbench 的字段编辑器
 // TODO 2.x 支持复制整个接口到其他模块、其他项目
@@ -39,38 +33,44 @@ class InterfaceEditor extends Component {
     handleAddMemoryProperty: PropTypes.func.isRequired,
     handleAddMemoryProperties: PropTypes.func.isRequired,
     handleDeleteMemoryProperty: PropTypes.func.isRequired,
-    handleChangeProperty: PropTypes.func.isRequired
+    handleChangeProperty: PropTypes.func.isRequired,
+    handleAddInterfaceMock: PropTypes.func.isRequired
   }
+
   constructor (props) {
     super(props)
     console.log(`------InterfaceEditor-------`)
     console.log(props)
     this.state = {
       ...InterfaceEditor.mapPropsToState(props),
+      // todo 请求头的控制信息暂时 只处理 requestParamsType（Property 数据库存储）
       summaryState: {
         bodyOption: BODY_OPTION.FORM_DATA,
         requestParamsType: REQUEST_PARAMS_TYPE.QUERY_PARAMS
       },
-      moveInterfaceDialogOpen: false
+      moveInterfaceDialogOpen: false,
+      isAddMocks: false
     }
     this.summaryStateChange = this.summaryStateChange.bind(this)
     // { itf: {}, properties: [] }
   }
+
   getChildContext () {
     return _.pick(this, Object.keys(InterfaceEditor.childContextTypes))
   }
+
   static mapPropsToState (prevProps, prevStates) {
-    let { auth, itf, properties } = prevProps
+    let {auth, itf, properties} = prevProps
     return {
       ...prevStates,
       itf,
-      properties: properties.map(property => ({ ...property })),
+      properties: properties.map(property => ({...property})),
       editable: !!(itf.locker && (itf.locker.id === auth.id))
     }
   }
 
   summaryStateChange (summaryState) {
-    this.setState({ summaryState })
+    this.setState({summaryState})
   }
 
   componentWillReceiveProps (nextProps) {
@@ -81,21 +81,27 @@ class InterfaceEditor extends Component {
     const prevStates = this.state
     this.setState(InterfaceEditor.mapPropsToState(nextProps, prevStates))
   }
+
   // Use shouldComponentUpdate() to let React know if a component's output is not affected by the current change in state or props.
   // TODO 2.2
   // shouldComponentUpdate (nextProps, nextState) {}
 
   render () {
-    const { auth, repository, mod, itf } = this.props
-    const { editable } = this.state
-    const { id, locker } = this.state.itf
+    const {auth, repository, mod, itf} = this.props
+    const {editable} = this.state
+    const {id, locker} = this.state.itf
     if (!id) return null
     return (
       <article className='InterfaceEditor'>
-        <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
-        <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
-        <InterfaceProxy itf={itf} auth={auth} />
-        <RequestPropertyList
+        <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable}/>
+
+        <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable}
+                          stateChangeHandler={this.summaryStateChange}/>
+        <InterfaceProxy itf={itf} auth={auth}/>
+        <InterfaceHeader itf={itf} active editable={editable}
+                         stateChangeHandler={this.summaryStateChange}/>
+
+        <InterfaceMocks
           properties={this.state.properties}
           editable={editable}
           repository={repository}
@@ -103,19 +109,20 @@ class InterfaceEditor extends Component {
           itf={this.state.itf}
           bodyOption={this.state.summaryState.bodyOption}
           requestParamsType={this.state.summaryState.requestParamsType}
+          isAddMocks={this.state.isAddMocks}
         />
-        <ResponsePropertyList properties={this.state.properties} editable={editable}
-          repository={repository} mod={mod} itf={this.state.itf} />
+
         <RModal
           when={this.state.moveInterfaceDialogOpen}
-          onClose={e => this.setState({ moveInterfaceDialogOpen: false })}
+          onClose={e => this.setState({moveInterfaceDialogOpen: false})}
           onResolve={this.handleMoveInterfaceSubmit}
         >
-          <MoveInterfaceForm title='移动接口' repository={repository} itfId={itf.id} />
+          <MoveInterfaceForm title='移动接口' repository={repository} itfId={itf.id}/>
         </RModal>
       </article>
     )
   }
+
   handleAddMemoryProperty = (property, cb) => {
     this.handleAddMemoryProperties([property], cb)
   }
@@ -128,7 +135,7 @@ class InterfaceEditor extends Component {
       if (item.id === undefined) item.id = _.uniqueId('memory-')
       item.pos = rpt
     })
-    let nextState = { properties: [...this.state.properties, ...properties] }
+    let nextState = {properties: [...this.state.properties, ...properties]}
     this.setState(nextState, () => {
       if (cb) cb(properties)
     })
@@ -149,7 +156,7 @@ class InterfaceEditor extends Component {
         }
       }
 
-      this.setState({ properties }, () => {
+      this.setState({properties}, () => {
         if (cb) cb()
       })
     }
@@ -159,12 +166,17 @@ class InterfaceEditor extends Component {
     let index = properties.findIndex(item => item.id === property.id)
     if (index >= 0) {
       properties.splice(index, 1, property)
-      this.setState({ properties }, () => { })
+      this.setState({properties}, () => { })
     }
+  }
+  handleAddInterfaceMock = (e) => {
+    this.setState({
+      isAddMocks: true
+    })
   }
   handleSaveInterface = (e) => {
     e.preventDefault()
-    const { onUpdateProperties } = this.context
+    const {onUpdateProperties} = this.context
     onUpdateProperties(this.state.itf.id, this.state.properties, this.state.summaryState, () => {
       this.handleUnlockInterface()
     })
@@ -178,13 +190,13 @@ class InterfaceEditor extends Component {
   handleMoveInterfaceSubmit = () => {
   }
   handleLockInterface = () => {
-    let { onLockInterface } = this.context
-    let { itf } = this.props
+    let {onLockInterface} = this.context
+    let {itf} = this.props
     onLockInterface(itf.id)
   }
   handleUnlockInterface = () => {
-    let { onUnlockInterface } = this.context
-    let { itf } = this.props
+    let {onUnlockInterface} = this.context
+    let {itf} = this.props
     onUnlockInterface(itf.id)
   }
 }
