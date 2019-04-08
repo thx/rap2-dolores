@@ -12,7 +12,7 @@ export function* addInterface(action) {
     yield put(InterfaceAction.addInterfaceSucceeded(payload))
     if (action.onResolved) action.onResolved()
   } catch (e) {
-    console.error(e.message)
+    console.error(e)
     yield put(InterfaceAction.addInterfaceFailed(e.message))
     if (action.onRejected) action.onRejected(e)
   }
