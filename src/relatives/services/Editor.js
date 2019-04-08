@@ -107,7 +107,7 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())
-      .then(json => json.data)
+      .then(json => json.code === 10000 ? json.data : Promise.reject(json))
   },
   updateInterface (itf) {
     return fetch(`${serve}/interface/update`, {
@@ -117,7 +117,7 @@ export default {
       headers: { 'Content-Type': 'application/json' }
     })
       .then(res => res.json())
-      .then(json => json.data)
+      .then(json => json.code === 10000 ? json.data : Promise.reject(json))
   },
   moveInterface (params) {
     return fetch(`${serve}/interface/move`, {

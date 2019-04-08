@@ -14,7 +14,7 @@ export function* addInterface(action) {
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.addInterfaceFailed(e.message))
-    if (action.onRejected) action.onRejected()
+    if (action.onRejected) action.onRejected(e)
   }
 }
 export function* updateInterface(action) {
@@ -23,9 +23,9 @@ export function* updateInterface(action) {
     yield put(InterfaceAction.updateInterfaceSucceeded(result))
     if (action.onResolved) action.onResolved()
   } catch (e) {
-    console.error(e.message)
+    console.error(e)
     yield put(InterfaceAction.updateInterfaceFailed(e.message))
-    if (action.onRejected) action.onRejected()
+    if (action.onRejected) action.onRejected(e)
   }
 }
 export function* moveInterface(action) {

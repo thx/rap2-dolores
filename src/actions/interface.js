@@ -12,10 +12,11 @@ export const addInterfaceFailed = (message) => ({
   message
 })
 
-export const updateInterface = (itf, onResolved) => ({
+export const updateInterface = (itf, onResolved, onRejected) => ({
   type: 'INTERFACE_UPDATE',
   interface: itf,
-  onResolved
+  onResolved,
+  onRejected
 })
 export const updateInterfaceSucceeded = (payload) => ({
   type: 'INTERFACE_UPDATE_SUCCEEDED',
