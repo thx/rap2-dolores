@@ -108,15 +108,15 @@ export default class InterfaceProxyModal extends React.Component {
   }
 
   updateProxy = (env, e) => {
-    // this.setState({
-    //   proxy: env
-    // })
-  }
-
-  changeProxy = (env, e) => {
     this.setState({
       proxy: env
     })
+  }
+
+  changeProxy = (env, e) => {
+    // this.setState({
+    //   proxy: env
+    // })
   }
 
   handleSubmit = (e) => {

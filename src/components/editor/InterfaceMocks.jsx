@@ -3,7 +3,11 @@
  */
 import React from 'react'
 import PropTypes from 'prop-types'
+import { RModal } from '../utils'
+import { GoPencil, GoPlus } from 'react-icons/lib/go'
 import PropertyList from './PropertyList'
+
+import InterfaceMocksModal from './InterfaceMocksModal'
 import './InterfaceMocks.css'
 
 export const RequestPropertyList = (props) =>
@@ -13,41 +17,27 @@ export const ResponsePropertyList = (props) => (
   <PropertyList scope='response' title='响应内容' label='响应' {...props} />
 )
 
-class RequestAndResponsePropertyList extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      show: props.groupId === -1
-    }
-  }
+export const RequestAndResponsePropertyList = (props) =>
+  <div className={`mock_group_item mock_groupId_${props.groupId} ${props.tabGroupId === props.groupId ? '' : 'hide'}`}>
+    <p>groupName : {props.groupName}</p>
 
-  toggle = () => {
-    this.setState({
-      show: !this.state.show
-    })
-  }
-
-  render () {
-    return <div
-      className={`mock_group_item mock_groupId_${this.props.groupId} ${this.props.tabGroupId === this.props.groupId ? '' : 'hide'}`}>
-      <p>{this.props.groupName}</p>
-
-      <RequestPropertyList
-        {...this.props}
-      />
-      <ResponsePropertyList
-        {...this.props}
-      />
-    </div>
-  }
-}
+    <RequestPropertyList
+      {...props}
+    />
+    <ResponsePropertyList
+      {...props}
+    />
+  </div>
 
 export default class InterfaceMocks extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      newGroupId: 0,
-      tabGroupId: -1
+      // newGroupId: 0,
+      update: false,
+      tabGroupId: -1,
+      groupIds: [],
+      _propGroup: {}
     }
   };
 
@@ -57,7 +47,6 @@ export default class InterfaceMocks extends React.Component {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
-    isAddMocks: PropTypes.bool.isRequired,
 
     /** optional */
     bodyOption: PropTypes.string,
@@ -65,17 +54,9 @@ export default class InterfaceMocks extends React.Component {
   }
 
   getNewGroupId = (groupIdArr) => {
-    // 已经分配好 newGroupId 。避免触发页面死循环渲染
-    if (this.state.newGroupId) {
-      return true
-    }
     let _max = Math.max.apply(null, groupIdArr)
     let _newGroupId = _max < -1 ? -1 : _max + 1 || 1
-    this.setState({
-      newGroupId: _newGroupId,
-      tabGroupId: _newGroupId
-    })
-    return true
+    return _newGroupId
   }
 
   tabSwitch = (groupId) => {
@@ -84,84 +65,66 @@ export default class InterfaceMocks extends React.Component {
     })
   }
 
-  mockPropertiesMap = (properties) => {
-    let _groupIdArr = []
-    let _mockDoms = []
-    _mockDoms = properties.map(item =>
-      _groupIdArr.includes(item.groupId) ? null : _groupIdArr.push(item.groupId) &&
-        <div className={`mock_groupId_${item.groupId}`} key={item.groupId}>
-          <div className='header'>
-            <p>{item.groupName}</p>
-          </div>
+  addMockModule = () => {
+    if (!this.props.editable) {
+      return
+    }
+    let _newGroupId = this.getNewGroupId(this.state.groupIds)
+    this.setState({
+      tabGroupId: _newGroupId,
+      groupIds: [...this.state.groupIds, _newGroupId]
+    })
+  }
 
-          <RequestPropertyList
-            {...this.props}
-            groupId={item.groupId}
-          />
-          <ResponsePropertyList
-            {...this.props}
-            groupId={item.groupId}
-          />
-        </div>
-    )
+  updateHandleMocks = (e) => {
 
-    this.getNewGroupId(_groupIdArr)
+  }
 
-    // 首次新增模块
-    _mockDoms.push(this.props.isAddMocks && !this.state.newGroupId ?
-      <div className={`mock_groupId_temp`}>
-        <div className='header'>
-          <p>new mock group</p>
-        </div>
+  mockPropertiesMap = (properties = this.props.properties) => {
+    let _groupIds = []
+    let _propGroup = {}
 
-        <RequestPropertyList
-          {...this.props}
-          groupId={this.state.newGroupId}
-        />
-        <ResponsePropertyList
-          {...this.props}
-          groupId={this.state.newGroupId}
-        />
-      </div> : null)
+    for (let item of properties) {
+      if (!_groupIds.includes(item.groupId)) {
+        _groupIds.push(item.groupId)
+        _propGroup[item.groupId] = []
+      }
+      _propGroup[item.groupId].push(item)
+    }
 
-    return _mockDoms
+    this.setState({
+      groupIds: _groupIds,
+      propertiesGroup: _propGroup
+    })
   }
 
   componentDidMount () {
     console.log('componentDidMount')
-    // this.props.isAddMocks && this.getNewGroupId(this.state._groupIdArr)
-    if (this.props.isAddMocks) {
-      // this.getNewGroupId(this.state._groupIdArr)
-    } else {
-      this.setState({
-        newGroupId: 0
-      })
-    }
+    this.mockPropertiesMap()
   }
 
   componentWillUnmount () {
   }
 
   render () {
-    let _groupIdArr = []
-
     return <div className='r-interfaceMocks'>
-      {
-        this.props.properties.map(item => {
-          console.log(_groupIdArr)
-          return _groupIdArr.includes(item.groupId) ? null : _groupIdArr.push(item.groupId) &&
-            <RequestAndResponsePropertyList
-              key={item.groupId}
-              {...this.props}
-              groupId={item.groupId}
-              groupName={item.groupName}
-              tabGroupId={this.state.tabGroupId}
-            />
-        })
-      }
+      <div className='header'>
+        mocks 边界
+        <span className='fake-link' onClick={e => this.setState({update: true})}><GoPencil/></span>
+        <button type='button' onClick={e => this.addMockModule(e)}
+                className={`btn btn-success float-right ${this.props.editable ? '' : 'hide'}`}>
+          <GoPlus/> 新增
+        </button>
+      </div>
+      <p>当前 mock（{this.props.itf.mockGroupId}） ：default mock</p>
+      <RModal when={this.state.update}
+              onClose={e => this.setState({update: false})}
+              onResolve={e => this.updateHandleMocks(e)}>
+        <InterfaceMocksModal itf={this.props.itf} groupIds={this.state.groupIds} title='更新边界'/>
+      </RModal>
       <ul className='nav nav-tabs' role='tablist'>
         {
-          _groupIdArr.map(item =>
+          this.state.groupIds.map(item =>
             <li className='nav-item' key={item}>
               <a className={`nav-link ${item === this.state.tabGroupId ? 'active' : ''}`}
                  onClick={e => this.tabSwitch(item)}
@@ -170,33 +133,20 @@ export default class InterfaceMocks extends React.Component {
                  aria-selected='true' aria-disabled={!this.props.editable}>mock {item}</a>
             </li>)
         }
-        {
-          this.props.isAddMocks && !_groupIdArr.includes(this.state.newGroupId) ?
-            <li className='nav-item'>
-              <a className={`nav-link ${this.state.newGroupId === this.state.tabGroupId ? 'active' : ''}`}
-                 onClick={e => this.tabSwitch(this.state.newGroupId)}
-                 data-toggle='tab' role='tab' aria-controls={this.state.newGroupId}
-                 aria-selected='true' aria-disabled={!this.props.editable}>mock {this.state.newGroupId}</a>
-            </li> : null
-        }
       </ul>
-      {
-        // 新增模块初始化无数据情况下（_groupIdArr 没有对应 id） & 保存 newGroupId
-        this.props.isAddMocks && !_groupIdArr.includes(this.state.newGroupId) ? this.getNewGroupId(_groupIdArr) &&
-          <div
-            className={`mock_groupId_${this.state.newGroupId} ${this.state.tabGroupId === this.state.newGroupId ? '' : 'hide'}`}>
-            <p>new mock group</p>
-
-            <RequestPropertyList
+      <div className='mockModules'>
+        {
+          this.state.groupIds.map(item =>
+            <RequestAndResponsePropertyList
+              key={item}
               {...this.props}
-              groupId={this.state.newGroupId}
+              groupId={item}
+              groupName={item}
+              tabGroupId={this.state.tabGroupId}
             />
-            <ResponsePropertyList
-              {...this.props}
-              groupId={this.state.newGroupId}
-            />
-          </div> : null
-      }
+          )
+        }
+      </div>
     </div>
   }
 }

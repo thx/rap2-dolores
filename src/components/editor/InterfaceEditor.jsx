@@ -33,8 +33,7 @@ class InterfaceEditor extends Component {
     handleAddMemoryProperty: PropTypes.func.isRequired,
     handleAddMemoryProperties: PropTypes.func.isRequired,
     handleDeleteMemoryProperty: PropTypes.func.isRequired,
-    handleChangeProperty: PropTypes.func.isRequired,
-    handleAddInterfaceMock: PropTypes.func.isRequired
+    handleChangeProperty: PropTypes.func.isRequired
   }
 
   constructor (props) {
@@ -48,8 +47,7 @@ class InterfaceEditor extends Component {
         bodyOption: BODY_OPTION.FORM_DATA,
         requestParamsType: REQUEST_PARAMS_TYPE.QUERY_PARAMS
       },
-      moveInterfaceDialogOpen: false,
-      isAddMocks: false
+      moveInterfaceDialogOpen: false
     }
     this.summaryStateChange = this.summaryStateChange.bind(this)
     // { itf: {}, properties: [] }
@@ -106,10 +104,10 @@ class InterfaceEditor extends Component {
           editable={editable}
           repository={repository}
           mod={mod}
+          auth={auth}
           itf={this.state.itf}
           bodyOption={this.state.summaryState.bodyOption}
           requestParamsType={this.state.summaryState.requestParamsType}
-          isAddMocks={this.state.isAddMocks}
         />
 
         <RModal
@@ -169,11 +167,7 @@ class InterfaceEditor extends Component {
       this.setState({properties}, () => { })
     }
   }
-  handleAddInterfaceMock = (e) => {
-    this.setState({
-      isAddMocks: true
-    })
-  }
+
   handleSaveInterface = (e) => {
     e.preventDefault()
     const {onUpdateProperties} = this.context
