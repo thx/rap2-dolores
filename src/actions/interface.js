@@ -1,7 +1,8 @@
-export const addInterface = (itf, onResolved) => ({
+export const addInterface = (itf, onResolved, onRejected) => ({
   type: 'INTERFACE_ADD',
   interface: itf,
-  onResolved
+  onResolved,
+  onRejected
 })
 export const addInterfaceSucceeded = (payload) => ({
   type: 'INTERFACE_ADD_SUCCEEDED',
