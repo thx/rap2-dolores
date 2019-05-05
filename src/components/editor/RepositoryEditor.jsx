@@ -71,8 +71,8 @@ class RepositoryEditor extends Component {
     }
   }
   render() {
-    let { location: { params }, auth, repository } = this.props
-    if (repository.data.name) {
+    let { location: { params }, auth, repository = {} } = this.props
+    if (repository.data && repository.data.name) {
       document.title = `RAP2 ${repository.data.name}`
     }
     if (!repository.fetching && !repository.data) return <div className='p100 fontsize-40 text-center'>404</div>
