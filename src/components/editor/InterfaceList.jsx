@@ -4,6 +4,7 @@ import { RModal, RSortable } from '../utils'
 import InterfaceForm from './InterfaceForm'
 import { GoPencil, GoTrashcan, GoRocket, GoLock } from 'react-icons/lib/go'
 import { getCurrentInterface } from '../../selectors/interface';
+import './InterfaceList.css'
 
 class Interface extends Component {
   static contextTypes = {

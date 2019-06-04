@@ -102,6 +102,9 @@ const Routes = ({ match, location }, { store }) => {
   }
   return (
     <article className='Routes'>
+      <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}>
+        回到顶部
+      </div>
       <Route component={Header} />
       <div className='body'>
         <Switch>
