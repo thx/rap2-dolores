@@ -68,11 +68,11 @@ class LoginForm extends Component {
     )
   }
   handleSubmit = (e) => {
-    let { history, onLogin } = this.props
+    let { location, history, onLogin } = this.props
     e.preventDefault()
     onLogin(this.state, () => {
-      let { pathname } = history.location
-      if (pathname !== '/account/login') history.push(pathname) // 如果用户在其他业务页面，则不跳转
+      let { pathname, search} = location
+      if (pathname !== '/account/login') history.push(pathname + search) // 如果用户在其他业务页面，则不跳转
       else history.push('/') // 跳转到用户面板
     })
   }
