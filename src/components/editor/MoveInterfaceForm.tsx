@@ -71,6 +71,7 @@ export default function MoveInterfaceForm(props: Props) {
       modId,
       op,
       itfId,
+      repoId: repository.id,
     }
     dispatch(moveInterface(params, () => {
       rmodal && rmodal.resolve()
