@@ -6,6 +6,8 @@ import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
 import { GoMention, GoFileCode, GoEye, GoPlus, GoTrashcan, GoQuestion } from 'react-icons/lib/go'
 import { rptFromStr2Num } from './InterfaceSummary'
+import { CheckTypeText } from './InterfaceEditor'
+
 import './PropertyList.css'
 
 export const RequestPropertyListPreviewer = (props) => (
@@ -15,6 +17,40 @@ export const RequestPropertyListPreviewer = (props) => (
 export const ResponsePropertyListPreviewer = (props) => (
   <Previewer {...props} />
 )
+
+// postman 新增
+class TextAreaShowBox extends Component {
+  render() {
+    let { scopedProperties = [] } = this.props
+    let sectionList = scopedProperties.map((item, index) => {
+      let title = 'Pre-Request-Script'
+      if (item.pos === 5) {
+        title = 'Tests'
+      }
+      return <section className='PropertyList' key={index}>
+        <div className='header clearfix'>
+          <span className='title'>{title} (用于Postman脚本)</span>
+        </div>
+        <div className='body'>
+          <SmartTextarea
+            className='form-control'
+            placeholder=''
+            spellCheck='false' rows='20'
+            data-parsley-trigger='change keyup'
+            data-parsley-maxlength='100000'
+            value={item.value}
+            disabled={true}
+          />
+        </div>
+      </section>
+    })
+    return (
+      <div>
+        {sectionList}
+      </div>
+    )
+  }
+}
 
 // DONE 2.2 请求属性有什么用？有必要吗？有，用于订制响应数据。
 // DONE 2.2 如何过滤模拟 URL 中额外的请求属性？解析 URL 中的参数到请求属性列表吗？可以在响应数据中引用 配置的请求参数 和 URL 中的额外参数。
@@ -145,7 +181,8 @@ class PropertyList extends Component {
     handleDeleteMemoryProperty: PropTypes.func.isRequired,
     handleChangeProperty: PropTypes.func.isRequired,
     onDeleteProperty: PropTypes.func.isRequired,
-    onSortPropertyList: PropTypes.func.isRequired
+    onSortPropertyList: PropTypes.func.isRequired,
+    handleAddMemoryProperty: PropTypes.func.isRequired
   }
   static propTypes = {
     title: PropTypes.string.isRequired,
@@ -179,50 +216,72 @@ class PropertyList extends Component {
     if (scope === 'request' && editable) {
       scopedProperties = scopedProperties.filter(s => s.pos === pos)
     }
+    // postman 新增 ------ start -----
+    if (scope === 'script' && editable) {
+      scopedProperties = scopedProperties.filter(s => s.pos === pos)
+    }
+    if (scope === 'script' && !editable) {
+      return (<TextAreaShowBox scopedProperties={scopedProperties} />)
+    }
+    if ( requestParamsType && CheckTypeText(requestParamsType) && editable) {
+      let val = scopedProperties && scopedProperties.length && scopedProperties[0].value || ''
+      return (
+        <SmartTextarea
+          name='description' value={val}
+          onChange={e => this.handelChangeTextValue({ value: e.target.value, pos})}
+          className='form-control'
+          placeholder=''
+          spellCheck='false' rows='20'
+          data-parsley-trigger='change keyup'
+          data-parsley-maxlength='100000'
+        />
+      )
+    }
+    // postman 新增 ------ end -----
 
     return (
-      <section className='PropertyList'>
-        <div className='header clearfix'>
-          <span className='title'>{title || `${label}属性`}</span>
-          {/* DONE 2.2 新建按钮暂时合并到按扭组中，单独放出来有点混乱 */}
-          <div className='toolbar'>
-            <div className='btn-group'>
-              {editable && (
-                <button type='button' className='btn btn-secondary' onClick={this.handleClickCreatePropertyButton}>
-                  <GoMention /> 新建
+        <section className='PropertyList'>
+          <div className='header clearfix'>
+            <span className='title'>{title || `${label}属性`}</span>
+            {/* DONE 2.2 新建按钮暂时合并到按扭组中，单独放出来有点混乱 */}
+            <div className='toolbar'>
+              <div className='btn-group'>
+                {editable && (
+                  <button type='button' className='btn btn-secondary' onClick={this.handleClickCreatePropertyButton}>
+                    <GoMention /> 新建
+                  </button>
+                )}
+                {editable && (
+                  <button type='button' className='btn btn-secondary' onClick={this.handleClickImporterButton}>
+                    <GoFileCode className='fontsize-14 color-6' /> 导入
+                  </button>
+                )}
+                <button type='button' className={`btn btn-secondary ${this.state.previewer && 'btn-success'}`} onClick={this.handleClickPreviewerButton}>
+                  <GoEye className='fontsize-14' /> 预览
                 </button>
-              )}
-              {editable && (
-                <button type='button' className='btn btn-secondary' onClick={this.handleClickImporterButton}>
-                  <GoFileCode className='fontsize-14 color-6' /> 导入
-                </button>
-              )}
-              <button type='button' className={`btn btn-secondary ${this.state.previewer && 'btn-success'}`} onClick={this.handleClickPreviewerButton}>
-                <GoEye className='fontsize-14' /> 预览
-              </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className='body'>
-          <SortableTreeTable root={Tree.arrayToTree(scopedProperties)} editable={editable}
-            handleClickCreateChildPropertyButton={this.handleClickCreateChildPropertyButton}
-            handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
-            handleChangePropertyField={this.handleChangePropertyField}
-            handleSortProperties={this.handleSortProperties} />
-        </div>
-        <div className='footer'>
-          {this.state.previewer && <Previewer scope={scope} label={label} properties={properties} itf={itf} />}
-        </div>
-        <RModal when={this.state.createProperty} onClose={e => this.setState({ createProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} />
-        </RModal>
-        <RModal when={!!this.state.createChildProperty} onClose={e => this.setState({ createChildProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} parent={this.state.createChildProperty} />
-        </RModal>
-        <RModal when={this.state.importer} onClose={e => this.setState({ importer: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <Importer title={`导入${label}属性`} repository={repository} mod={mod} itf={itf} scope={scope} />
-        </RModal>
-      </section>
+          <div className='body'>
+            <SortableTreeTable root={Tree.arrayToTree(scopedProperties)} editable={editable}
+              handleClickCreateChildPropertyButton={this.handleClickCreateChildPropertyButton}
+              handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
+              handleChangePropertyField={this.handleChangePropertyField}
+              handleSortProperties={this.handleSortProperties} />
+          </div>
+          <div className='footer'>
+            {this.state.previewer && <Previewer scope={scope} label={label} properties={properties} itf={itf} />}
+          </div>
+          <RModal when={this.state.createProperty} onClose={e => this.setState({ createProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
+            <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} />
+          </RModal>
+          <RModal when={!!this.state.createChildProperty} onClose={e => this.setState({ createChildProperty: false })} onResolve={this.handleCreatePropertySucceeded}>
+            <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} parent={this.state.createChildProperty} />
+          </RModal>
+          <RModal when={this.state.importer} onClose={e => this.setState({ importer: false })} onResolve={this.handleCreatePropertySucceeded}>
+            <Importer title={`导入${label}属性`} repository={repository} mod={mod} itf={itf} scope={scope} />
+          </RModal>
+        </section>
     )
   }
   handleClickCreatePropertyButton = () => {
@@ -243,6 +302,36 @@ class PropertyList extends Component {
     let property = properties.find(property => property.id === id)
     handleChangeProperty({ ...property, [key]: value })
   }
+  // postman 新增 ------ start -----
+  handelChangeTextValue = ({ value, pos }) => {
+    let { handleChangeProperty, handleAddMemoryProperty } = this.context
+    let { properties } = this.props
+    let property = properties.find(property => property.pos === pos)
+    console.log('******', property, properties, pos, this.context)
+
+    if (property) {
+      handleChangeProperty({ ...property, value })
+    } else {
+      let { auth = {}, repository = {}, mod = {}, itf = {}, parent = { id: -1 } } = this.props
+      let property = {
+        scope: 'script',
+        name: 'script',
+        type: 'String',
+        value: value,
+        description: '',
+        interfaceId: itf.id,
+        moduleId: mod.id,
+        repositoryId: repository.id,
+        creatorId: auth.id,
+        parentId: parent.id
+      }
+      handleAddMemoryProperty(property, () => {
+        let { rmodal } = this.context
+        if (rmodal) rmodal.resolve()
+      })
+    }
+  }
+  // postman 新增 ------ end -----
   handleCreatePropertySucceeded = () => {
   }
   handleDeleteMemoryProperty = (e, property) => {
@@ -259,6 +348,7 @@ class PropertyList extends Component {
     })
   }
 }
+
 const mapStateToProps = (state) => ({})
 const mapDispatchToProps = ({})
 export default connect(

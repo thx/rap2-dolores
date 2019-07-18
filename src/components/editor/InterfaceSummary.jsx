@@ -16,16 +16,20 @@ export const BODY_OPTION = {
 export const REQUEST_PARAMS_TYPE = {
   HEADERS: 'HEADERS',
   QUERY_PARAMS: 'QUERY_PARAMS',
-  BODY_PARAMS: 'BODY_PARAMS'
+  BODY_PARAMS: 'BODY_PARAMS',
+  PRE_REQUEST_SCRIPT: 'PRE_REQUEST_SCRIPT',
+  TESTS: 'TESTS'
 }
 
 export function rptFromStr2Num(rpt) {
-  let pos = 2
-  if (rpt === 'HEADERS') {
-    pos = 1
-  } else if (rpt === 'BODY_PARAMS') {
-    pos = 3
-  }
+  let pos = 0
+  Object.keys(REQUEST_PARAMS_TYPE).every((item, index) => {
+    if (REQUEST_PARAMS_TYPE[item] === rpt) {
+      pos = index + 1
+      return false
+    }
+    return true
+  })
   return pos
 }
 
@@ -134,6 +138,12 @@ class InterfaceSummary extends Component {
             </li>
             <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}>
               <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''}`} role='tab' data-toggle='tab'>Body Params</a>
+            </li>
+            <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.PRE_REQUEST_SCRIPT)}>
+              <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.PRE_REQUEST_SCRIPT ? 'active' : ''}`} role='tab' data-toggle='tab'>Pre-Request-Script</a>
+            </li>
+            <li className='nav-item' onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.TESTS)}>
+              <a className={`nav-link ${requestParamsType === REQUEST_PARAMS_TYPE.TESTS ? 'active' : ''}`} role='tab' data-toggle='tab'>Tests</a>
             </li>
           </ul>
           }

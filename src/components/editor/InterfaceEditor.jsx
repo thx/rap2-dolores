@@ -6,6 +6,7 @@ import PropertyList from './PropertyList'
 import { RModal } from '../utils'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
+import SmartTextarea from '../utils/SmartTextarea'
 
 export const RequestPropertyList = (props) => {
   return <PropertyList scope='request' title='请求参数' label='请求' {...props} />
@@ -13,6 +14,18 @@ export const RequestPropertyList = (props) => {
 export const ResponsePropertyList = (props) => (
   <PropertyList scope='response' title='响应内容' label='响应' {...props} />
 )
+export const OtherPropertyList = (props) => (
+  <PropertyList scope='script' title='脚本' label='脚本'  {...props} />
+)
+
+export const REQUEST_PARAMS_TYPE_TEXT = {
+  PRE_REQUEST_SCRIPT: 'PRE_REQUEST_SCRIPT',
+  TESTS: 'TESTS'
+}
+
+export const CheckTypeText = (type) => {
+  return REQUEST_PARAMS_TYPE_TEXT[type] ? true : false
+}
 
 // TODO 2.x 参考 MySQL Workbench 的字段编辑器
 // TODO 2.x 支持复制整个接口到其他模块、其他项目
@@ -67,6 +80,7 @@ class InterfaceEditor extends Component {
   }
 
   summaryStateChange (summaryState) {
+    console.log('summaryState', summaryState)
     this.setState({ summaryState })
   }
 
@@ -84,24 +98,49 @@ class InterfaceEditor extends Component {
 
   render () {
     const { auth, repository, mod, itf } = this.props
-    const { editable } = this.state
+    const { editable, summaryState } = this.state
     const { id, locker } = this.state.itf
     if (!id) return null
     return (
       <article className='InterfaceEditor'>
         <InterfaceEditorToolbar locker={locker} auth={auth} repository={repository} editable={editable} />
         <InterfaceSummary repository={repository} mod={mod} itf={itf} active editable={editable} stateChangeHandler={this.summaryStateChange} />
-        <RequestPropertyList
-          properties={this.state.properties}
-          editable={editable}
-          repository={repository}
-          mod={mod}
-          itf={this.state.itf}
-          bodyOption={this.state.summaryState.bodyOption}
-          requestParamsType={this.state.summaryState.requestParamsType}
-        />
-        <ResponsePropertyList properties={this.state.properties} editable={editable}
-          repository={repository} mod={mod} itf={this.state.itf} />
+        {
+          CheckTypeText(summaryState.requestParamsType) && editable ? <OtherPropertyList
+            properties={this.state.properties}
+            editable={editable}
+            repository={repository}
+            mod={mod}
+            itf={this.state.itf}
+            bodyOption={this.state.summaryState.bodyOption}
+            requestParamsType={this.state.summaryState.requestParamsType}
+          />
+            :
+            <div>
+              <RequestPropertyList
+                properties={this.state.properties}
+                editable={editable}
+                repository={repository}
+                mod={mod}
+                itf={this.state.itf}
+                bodyOption={this.state.summaryState.bodyOption}
+                requestParamsType={this.state.summaryState.requestParamsType}
+              />
+              <ResponsePropertyList properties={this.state.properties} editable={editable}
+                repository={repository} mod={mod} itf={this.state.itf} />
+                {
+                  !editable ? <OtherPropertyList
+                    properties={this.state.properties}
+                    editable={editable}
+                    repository={repository}
+                    mod={mod}
+                    itf={this.state.itf}
+                    bodyOption={this.state.summaryState.bodyOption}
+                    requestParamsType={this.state.summaryState.requestParamsType} /> : ''
+                }
+
+          </div>
+        }
         <RModal
           when={this.state.moveInterfaceDialogOpen}
           onClose={e => this.setState({ moveInterfaceDialogOpen: false })}
