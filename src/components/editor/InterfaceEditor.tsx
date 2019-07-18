@@ -206,6 +206,7 @@ class InterfaceEditor extends Component<
     })
   }
   handleMoveInterfaceSubmit = () => {
+    console.log('submit')
     /** empty */
   }
   handleLockInterface = () => {
