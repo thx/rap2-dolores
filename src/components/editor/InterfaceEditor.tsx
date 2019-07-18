@@ -127,6 +127,7 @@ class InterfaceEditor extends Component<
           itf={this.state.itf}
           bodyOption={this.state.summaryState.bodyOption}
           requestParamsType={this.state.summaryState.requestParamsType}
+          handleChangeProperty={this.handleChangeProperty}
         />
         <ResponsePropertyList
           properties={this.state.properties}
@@ -134,6 +135,7 @@ class InterfaceEditor extends Component<
           repository={repository}
           mod={mod}
           itf={this.state.itf}
+          handleChangeProperty={this.handleChangeProperty}
         />
         <RModal
           when={this.state.moveInterfaceDialogOpen}
