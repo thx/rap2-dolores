@@ -285,7 +285,7 @@ class PropertyList extends Component<any, any> {
     this.setState({ previewer: !this.state.previewer })
   }
   handleChangePropertyField = (id: any, key: any, value: any) => {
-    const { handleChangeProperty } = this.context
+    const { handleChangeProperty } = this.props
     const { properties } = this.props
     const property = properties.find((property: any) => property.id === id)
     handleChangeProperty({ ...property, [key]: value })
