@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "npm run start",
-    "build-css": "node-sass src/ -o build/",
-    "watch-css": "npm run build-css && node-sass src/ -o build/ --watch --recursive",
+    "build-css": "node-sass src/ -o src/",
+    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js --max-old-space-size=4096",
     "build": "npm run lint && npm run build-css && react-scripts build",
