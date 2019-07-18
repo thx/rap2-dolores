@@ -4,8 +4,6 @@ import { Link, replace, StoreStateRouterLocationURI, PropTypes } from '../../fam
 import { DialogController } from '../utils'
 import { serve } from '../../relatives/services/constant'
 import InterfaceForm from './InterfaceForm'
-import { GoDiffAdded } from 'react-icons/go'
-import SpinInline from '../utils/SpinInline'
 import { getRelativeUrl } from '../../utils/URLUtils'
 import './InterfaceSummary.css'
 import { RootState } from 'actions/types'
@@ -81,70 +79,6 @@ class InterfaceSummary extends Component<InterfaceSummaryProps, InterfaceSummary
       )
     }
   }
-  renderRoom() {
-    const { itf = {}, room = {}, repository = {} } = this.props
-    if (!room || !room[repository.id + '_' + itf.id] || !room[repository.id] || room[repository.id] === 'pending') {
-      return
-    }
-    if (room[repository.id + '_' + itf.id] === 'pending') {
-      return (
-        <li>
-          <span className="label">Room用例：</span>
-          <SpinInline />
-        </li>
-      )
-    }
-    const roomData = room[repository.id + '_' + itf.id]
-    const requestStatus = room['+' + repository.id + '_' + itf.id]
-    return (
-      <li>
-        <span className="label">Room用例：</span>
-        {roomData.coverage ? (
-          <Link target="_blank" to={`http://room.daily.taobao.net/index.html#/design?projectId=${roomData.roomProjectId}`}>
-            存在
-          </Link>
-        ) : (
-            !requestStatus && <span>不存在</span>
-          )}
-        {!requestStatus && (
-          <span>
-            <Link to="" className="ml10" onClick={e => this.createCase(e, repository.id, itf.id, '普通')}>
-              <GoDiffAdded /> 创建普通用例
-            </Link>
-            <Link to="" className="ml10" onClick={e => this.createCase(e, repository.id, itf.id, '边界')}>
-              <GoDiffAdded /> 创建边界用例
-            </Link>
-          </span>
-        )}
-        {requestStatus === 'pending' && (
-          <span>
-            <span className="ml10">
-              <GoDiffAdded /> 创建{this.state.name}用例{' '}
-            </span>
-            <SpinInline />
-          </span>
-        )}
-        {requestStatus === 'failed' && (
-          <span className="ml10">
-            <GoDiffAdded />
-            创建{this.state.name}用例失败
-             <Link to="" className="ml10" onClick={e => this.createCase(e, repository.id, itf.id, this.state.name)}>
-              {' '}
-              重试
-            </Link>
-          </span>
-        )}
-        {requestStatus === 'success' && (
-          <span className="ml10">
-            <GoDiffAdded /> 创建{this.state.name}用例成功
-            <Link target="_blank" to={`http://room.daily.taobao.net/index.html#/design?projectId=${roomData.roomProjectId}`}>
-              查看
-            </Link>
-          </span>
-        )}
-      </li>
-    )
-  }
   changeMethod(method: any) {
     this.setState({ method })
   }
@@ -197,7 +131,6 @@ class InterfaceSummary extends Component<InterfaceSummaryProps, InterfaceSummary
               {itf.description}
             </li>
           )}
-          {this.renderRoom()}
           {editable && (
             <ul className="nav nav-tabs" role="tablist">
               <li className="nav-item" onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}>
