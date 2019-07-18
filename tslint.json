@@ -1,0 +1,127 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-react-hooks"
+  ],
+  "rules": {
+    "arrow-parens": false,
+    "arrow-return-shorthand": [
+      false
+    ],
+    "prefer-const": true,
+    "comment-format": [
+      true,
+      "check-space"
+    ],
+    "import-blacklist": [
+      true
+    ],
+    "interface-over-type-literal": false,
+    "interface-name": false,
+    "max-line-length": [
+      true,
+      {
+        "limit": 150,
+        "ignore-pattern": "^import |^export {(.*?)}|^[ ]*export const |`.*`"
+      }
+    ],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      {
+        "order": "fields-first"
+      }
+    ],
+    "newline-before-return": false,
+    "no-any": false,
+    "no-empty-interface": false,
+    "no-import-side-effect": [
+      false
+    ],
+    "no-inferrable-types": [
+      true,
+      "ignore-params",
+      "ignore-properties"
+    ],
+    "no-invalid-this": [
+      false
+    ],
+    "no-null-keyword": false,
+    "no-require-imports": false,
+    "no-this-assignment": [
+      true,
+      {
+        "allow-destructuring": true
+      }
+    ],
+    "no-trailing-whitespace": true,
+    "object-literal-key-quotes": false,
+    "object-literal-sort-keys": false,
+    "object-literal-shorthand": false,
+    "no-var-requires": false,
+    "max-classes-per-file": false,
+    "one-variable-per-declaration": [
+      false
+    ],
+    "no-console": false,
+    "no-eval": false,
+    "only-arrow-functions": [
+      true,
+      "allow-declarations"
+    ],
+    "ordered-imports": [
+      false
+    ],
+    "prefer-method-signature": false,
+    "prefer-template": [
+      false
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "jsx-double"
+    ],
+    "semicolon": [
+      true,
+      "never",
+      "ignore-bound-class-methods"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "singleline": "never",
+        "multiline": {
+          "objects": "always",
+          "arrays": "always",
+          "functions": "never",
+          "typeLiterals": "ignore"
+        },
+        "esSpecCompliant": true
+      }
+    ],
+    "triple-equals": [
+      true,
+      "allow-null-check"
+    ],
+    "type-literal-delimiter": false,
+    "typedef": [
+      true,
+      "parameter",
+      "property-declaration"
+    ],
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-pascal-case",
+      "allow-leading-underscore"
+    ],
+    "jsx-no-multiline-js": false,
+    "Jsx-alignment": false,
+    "no-unused-expression": false,
+    "jsx-no-lambda": false,
+    "no-shadowed-variable": false,
+    "react-hooks-nesting": "error"
+  }
+}
