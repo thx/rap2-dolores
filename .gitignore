@@ -16,3 +16,4 @@ yarn-error.log*
 # css
 src/**/*.css
 build
+build.zip
