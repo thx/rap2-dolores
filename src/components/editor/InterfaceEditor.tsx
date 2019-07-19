@@ -128,7 +128,6 @@ class InterfaceEditor extends Component<
           bodyOption={this.state.summaryState.bodyOption}
           requestParamsType={this.state.summaryState.requestParamsType}
           handleChangeProperty={this.handleChangeProperty}
-          handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
         />
         <ResponsePropertyList
           properties={this.state.properties}
@@ -137,7 +136,6 @@ class InterfaceEditor extends Component<
           mod={mod}
           itf={this.state.itf}
           handleChangeProperty={this.handleChangeProperty}
-          handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
         />
         <RModal
           when={this.state.moveInterfaceDialogOpen}

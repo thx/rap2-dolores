@@ -295,7 +295,7 @@ class PropertyList extends Component<any, any> {
   }
   handleDeleteMemoryProperty = (e: any, property: any) => {
     e.preventDefault()
-    const { handleDeleteMemoryProperty } = this.props
+    const { handleDeleteMemoryProperty } = this.context
     handleDeleteMemoryProperty(property)
   }
   handleSortProperties = (_: any, sortable: any) => {

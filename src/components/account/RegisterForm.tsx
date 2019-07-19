@@ -84,10 +84,10 @@ class RegisterForm extends Component<Props, State> {
     )
   }
   handleSubmit = (e: any) => {
-    const { history, onAddUser } = this.props
+    const { onAddUser } = this.props
     e.preventDefault()
     onAddUser(this.state, () => {
-      history.push('/')
+      window.location.href = '/'
     })
   };
 }
