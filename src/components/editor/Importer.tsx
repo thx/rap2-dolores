@@ -118,7 +118,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
   };
   // TODO 2.1 待完整测试各种输入
   // DONE 2.1 BUG 类型 Number，初始值 ''，被解析为随机字符串
-  handleJSONSchema = (schema: any, parent = { id: '-1' }, memoryProperties: any, siblings?: any) => {
+  handleJSONSchema = (schema: any, parent = { id: -1 }, memoryProperties: any, siblings?: any) => {
     if (!schema) { return }
     const { auth, repository, mod, itf, scope } = this.props
     const hasSiblings = siblings instanceof Array && siblings.length > 0
@@ -153,7 +153,23 @@ class Importer extends Component<ImporterProps, ImporterState> {
         }
       }
     }
-    const property = Object.assign(
+
+    type Property = {
+        name: any;
+        type: any;
+        rule: string;
+        value: any;
+        descripton: string;
+        creator: any;
+        repositoryId: any;
+        moduleId: any;
+        interfaceId: any;
+        scope: any;
+        parentId: number;
+        memory: boolean;
+        id: any;
+    }
+    const property: Property = Object.assign(
       {
         name: schema.name,
         type,
