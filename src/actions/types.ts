@@ -17,6 +17,7 @@ export interface RootState {
   logs: any
   foreign: any
   loading: boolean
+  message: IMessage
 }
 
 export interface Organization {

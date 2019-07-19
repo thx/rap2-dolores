@@ -1,109 +1,158 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { login } from '../../actions/account'
-import { Link } from 'react-router-dom'
-import Mock from 'mockjs'
-import './LoginForm.css'
-import { RootState } from 'actions/types'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import config from '../../config'
-import { Button, Card } from '@material-ui/core'
-import { getBGImageUrl } from 'utils/ImageUtils'
+import { Button, createStyles, makeStyles, List, ListItem, InputLabel, Input, FormControl, InputAdornment, IconButton, Paper } from '@material-ui/core'
 import Logo from 'components/layout/Logo'
+import { green } from '@material-ui/core/colors'
+import { getBGImageUrl } from 'utils/ImageUtils'
+import PhoneIcon from '@material-ui/icons/PhoneIphone'
+import CodeIcon from '@material-ui/icons/Code'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import Refresh from '@material-ui/icons/Refresh'
+import { login } from 'actions/account'
+import { showMessage } from 'actions/common'
+import { MSG_TYPE } from '../common/Message'
+import { push } from 'connected-react-router'
 
 const { serve } = config
 
-// 模拟数据
-const mockUser: any = process.env.NODE_ENV === 'development'
-  ? () => Mock.mock({
-    email: 'admin@rap2.com',
-    password: 'admin',
-  })
-  : () => ({
-    email: '',
-    password: '',
-  })
+const useStyles = makeStyles(() => createStyles({
+  root: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    overflow: 'hidden',
+    backgroundSize: 'cover',
+  },
+  container: {
+    width: 350,
+    margin: 'auto',
+    marginTop: 150,
+    opacity: 0.85,
+  },
+  ctl: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  captcha: {
+    width: 108,
+    height: 36,
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
+  buttonWrapper: {
+    position: 'relative',
+  },
+}))
 
-mockUser.captchaId = Date.now()
+export default function LoginForm() {
+  const [bg] = useState(getBGImageUrl())
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [captchaId, setCaptchaId] = useState(0)
+  const [captcha, setCaptcha] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const classes = useStyles()
+  const dispatch = useDispatch()
 
-// 展示组件
-class LoginForm extends Component<any, any> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      ...mockUser(),
-      bg: getBGImageUrl(),
+  const handleSubmit = (e?: any) => {
+    e && e.preventDefault()
+    if (!email || !password || !captcha) {
+      dispatch(showMessage(`请输入账号、密码、验证码`, MSG_TYPE.WARNING))
+    } else {
+      dispatch(login({ email, password, captcha }, () => {
+        window.location.href = '/'
+      }))
     }
   }
-  render() {
-    return (
-      <div className="wrapper" style={{ background: this.state.bg }}>
-        <Card className="LoginForm">
-          <div className="header">
-            <Logo color="#3f51b5" />
-          </div>
-          <form onSubmit={this.handleSubmit}>
-            <div className="body">
-              <div className="form-group">
-                <label>邮箱：</label>
-                <input
-                  value={this.state.email}
-                  onChange={e => this.setState({ email: e.target.value })}
-                  className="form-control"
-                  placeholder="Email"
-                  autoFocus={true}
-                  required={true}
-                />
-              </div>
-              <div className="form-group">
-                <label>密码：</label>
-                <input
-                  value={this.state.password}
-                  type="password"
-                  onChange={e => this.setState({ password: e.target.value })}
-                  className="form-control"
-                  placeholder="Password"
-                  required={true}
-                />
-              </div>
-              <div className="form-group">
-                <label>验证码：</label>
-                <input onChange={e => this.setState({ captcha: e.target.value })} className="form-control" placeholder="验证码" required={true} />
-                <img src={`${serve}/captcha?t=${this.state.captchaId || ''}`} onClick={() => this.setState({ captchaId: Date.now() })} alt="captcha" />
-              </div>
-            </div>
-            <div className="footer">
-              <Button type="submit" className="mr10" variant="contained" color="primary" style={{ marginRight: 10 }}>登录</Button>
-              <Link to="/account/register" className="mr10">注册</Link>
-              {/* <Link to="/account/reset">密码找回</Link> */}
-            </div>
-            {this.props.auth.message &&
-              <div className="alert alert-danger fade show" role="alert">
-                {this.props.auth.message}
-              </div>
-            }
-          </form>
-        </Card>
-      </div>
-    )
-  }
-  handleSubmit = (e: any) => {
-    const { onLogin } = this.props
-    e.preventDefault()
-    const { email, password, captcha } = this.state
-    onLogin({ email, password, captcha }, () => {
-      window.location.href = '/'
-    })
-  }
-}
 
-// 容器组件
-const mapStateToProps = (state: RootState) => ({
-  auth: state.auth,
-})
-const mapDispatchToProps = ({
-  onLogin: login,
-})
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginForm)
+  return (
+    <div className={classes.root} style={{ background: bg }}>
+      <Paper className={classes.container}>
+        <List>
+          <ListItem>
+            <Logo color="#3f51b5" />
+          </ListItem>
+          <ListItem>
+            <FormControl fullWidth={true}>
+              <InputLabel htmlFor="email">邮箱</InputLabel>
+              <Input
+                tabIndex={0}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Email"
+                autoFocus={true}
+                required={true}
+                endAdornment={
+                  <InputAdornment position="end" tabIndex={100}>
+                    <IconButton>
+                      <PhoneIcon />
+                    </IconButton>
+                  </InputAdornment>}
+              />
+            </FormControl>
+          </ListItem>
+          <ListItem>
+            <FormControl fullWidth={true}>
+              <InputLabel htmlFor="password">密码</InputLabel>
+              <Input
+                tabIndex={1}
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                autoComplete="current-password"
+                onChange={e => setPassword(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end" tabIndex={101}>
+                    <IconButton
+                      aria-label="Toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>}
+              />
+            </FormControl>
+          </ListItem>
+          <ListItem>
+            <FormControl fullWidth={true}>
+              <InputLabel htmlFor="captcha">验证码</InputLabel>
+              <Input
+                tabIndex={2}
+                name="captcha"
+                value={captcha}
+                autoComplete="new-password"
+                onKeyDown={e => e.keyCode === 13 && handleSubmit()}
+                onChange={e => setCaptcha(e.target.value)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <CodeIcon />
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+          </ListItem>
+          <ListItem className={classes.ctl} onClick={() => setCaptchaId(Date.now())}>
+            <div>
+              <img src={`${serve}/captcha?t=${captchaId || ''}`} className={classes.captcha} alt="captcha" />
+              <Refresh />
+            </div>
+            <div className={classes.buttonWrapper}>
+              <Button variant="outlined" color="default" style={{ marginRight: 8 }} onClick={() => dispatch(push('/account/register'))}>注册</Button>
+              <Button variant="contained" color="primary" tabIndex={3} onClick={handleSubmit}>登陆</Button>
+            </div>
+          </ListItem>
+        </List>
+      </Paper>
+    </div>
+  )
+}

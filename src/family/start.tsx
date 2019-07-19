@@ -34,7 +34,7 @@ const start = (container: any, { reducers,  listeners }: any, callback: any) => 
   history.location.params = URI(history.location.search || '').search(true)
   history.listen((location, action: any) => handleLocation({ store, listeners, location, action }))
 
-  class RootBase extends Component {
+  class RootBase extends Component<any> {
     static childContextTypes = {
       store: PropTypes.object,
     }

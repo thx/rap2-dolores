@@ -2,9 +2,17 @@ import { call, put } from 'redux-saga/effects'
 import * as AccountAction from '../actions/account'
 import * as RepositoryAction from '../actions/repository'
 import AccountService from './services/Account'
-
+import { SHOW_MESSAGE } from 'actions/common'
+import { MSG_TYPE } from 'components/common/Message'
 export default {
   reducers: {
+    message(state: IMessage = { message: '', type: MSG_TYPE.INFO, timestamp: new Date().getTime() }, action: any) {
+      switch (action.type) {
+        case SHOW_MESSAGE:
+          return { ...action.payload, timestamp: new Date().getTime() }
+      }
+      return state
+    },
     logs(state: any = { data: [], pagination: { total: 0, limit: 100 }, fetching: false }, action: any) {
       switch (action.type) {
         case AccountAction.fetchLogList().type:

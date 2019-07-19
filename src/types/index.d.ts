@@ -5,3 +5,9 @@ declare interface IConfig {
     key: string
   }
 }
+
+declare interface IMessage {
+  message: string
+  type: MSG_TYPE
+  timestamp: number
+}

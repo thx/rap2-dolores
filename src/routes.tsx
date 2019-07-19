@@ -1,14 +1,14 @@
 import React from 'react'
 import { Bundle, Switch, Route } from './family'
-
 import { NoMatch, Spin } from './components/utils'
-
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
 import Home from './components/home/Home'
-
 import LoginForm from './components/account/LoginForm'
 import RegisterForm from './components/account/RegisterForm'
+import Message from 'components/common/Message'
+import { connect } from 'react-redux'
+import { RootState } from 'actions/types'
 
 const UserList = (props: any) => (
   <Bundle load={(cb: any) => import('./components/account/UserList').then(comp => cb(comp))}>
@@ -82,12 +82,13 @@ const Utils = (props: any) => (
   </Bundle>
 )
 
-const Routes = ({ store }: any) => {
+const Routes = ({ store, message }: any) => {
   const auth = store.getState().auth
   if (!auth) { return <Spin /> } // 渲染整站开屏动画，已经在 src/index 中实现。这里的代码用于支持没有接入 SSO 的情况。
   if (!auth.id) { // 引导用户登陆，已经在 src/index 中实现。这里的代码用于支持没有接入 SSO 的情况。
     return (
       <article>
+         <Message messageInfo={message} />
         <Switch>
           <Route path="/account/register" component={RegisterForm} />
           <Route component={LoginForm} />
@@ -97,9 +98,8 @@ const Routes = ({ store }: any) => {
   }
   return (
     <article className="Routes">
-      <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}>
-        回到顶部
-      </div>
+      <Message messageInfo={message} />
+      <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}> 回到顶部 </div>
       <Route component={Header} />
       <div className="body">
         <Switch>
@@ -179,4 +179,6 @@ const Routes = ({ store }: any) => {
   )
 }
 
-export default Routes
+export default connect((state: RootState) => ({
+  message: state.message,
+}), null)(Routes)
