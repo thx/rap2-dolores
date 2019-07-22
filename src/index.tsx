@@ -4,9 +4,8 @@ import './assets/index.css'
 import 'animate.css'
 
 import React from 'react'
-import Family, { render, push } from './family'
+import Family, { render } from './family'
 import { call, put } from 'redux-saga/effects'
-import Routes from './routes'
 import AccountRelative from './relatives/AccountRelative'
 import HomeRelative from './relatives/HomeRelative'
 import StatusRelative from './relatives/StatusRelative'
@@ -41,13 +40,20 @@ function* authenticate() {
   if (auth) {
     yield put(AccountAction.fetchLoginInfoSucceeded(auth))
   } else {
-    yield put(push(`/account/login`))
+    const { pathname, search, hash } = window.location
+    // const uri = URI(pathname + search + hash)
+    if (pathname.indexOf('/account/login') > -1) {
+      yield Promise.resolve()
+      return
+    }
+    const hasOriginal = pathname !== '/'
+    window.location.href = `/account/login${hasOriginal ? `?original=${encodeURIComponent(pathname + search + hash)}` : ''}`
+    yield Promise.reject()
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   Family
-    .setRoutes(Routes)
     .addRelative(AccountRelative)
     .addRelative(HomeRelative)
     .addRelative(StatusRelative)
