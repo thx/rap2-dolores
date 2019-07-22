@@ -55,7 +55,7 @@ export default function MainMenu(props: Props) {
       <AppBar position="static">
         <Toolbar className={classes.toolbar}>
           <div>
-            <div className={classes.logo}> <Logo /> </div>
+            <Link to="/" className={classes.logo}><Logo /> </Link>
             <Link to="/" className={classes.link}><Button color="inherit"> 首页</Button></Link>
             <Link to="/repository/joined" className={classes.link}><Button color="inherit"> 仓库 </Button></Link>
             <Link to="/organization/joined" className={classes.link}><Button color="inherit"> 团队 </Button></Link>

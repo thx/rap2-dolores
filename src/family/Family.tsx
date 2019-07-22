@@ -138,17 +138,6 @@ const Family: {
     Family.store = store
     Family.history = history
 
-    handleLocation({
-      store,
-      listeners: _listeners,
-      location: { pathname: '*' },
-    })
-    handleLocation({
-      store,
-      listeners: _listeners,
-      location: store.getState().router.location,
-    })
-
     /** init store end */
 
     function* rootSaga() {
@@ -163,6 +152,17 @@ const Family: {
 
       // 在执行 prefilter 之后再开始渲染主UI
       start(container, { store, history })
+
+      // handleLocation({
+      //   store,
+      //   listeners: _listeners,
+      //   location: { pathname: '*' },
+      // })
+      handleLocation({
+        store,
+        listeners: _listeners,
+        location: history.location,
+      })
       // tslint:disable-next-line: forin
       for (const pattern in _sagas) {
         for (const saga of _sagas[pattern]) {
