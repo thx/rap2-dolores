@@ -4,6 +4,7 @@ import { RModal, RSortable } from '../utils'
 import ModuleForm from './ModuleForm'
 import { GoPencil, GoTrashcan, GoPackage } from 'react-icons/go'
 import { RootState } from 'actions/types'
+import { deleteModule } from '../../actions/module'
 
 class ModuleBase extends Component<any, any> {
   constructor(props: any) {
@@ -42,19 +43,24 @@ class ModuleBase extends Component<any, any> {
     e.preventDefault()
     const message = `模块被删除后不可恢复，并且会删除相关的接口！\n确认继续删除『#${mod.id} ${mod.name}』吗？`
     if (window.confirm(message)) {
-      this.context.onDeleteModule(this.props.mod.id, () => {
-        const { store } = this.context
+      this.props.onDeleteModule(this.props.mod.id, () => {
         const uri = StoreStateRouterLocationURI(router)
         const deleteHref = this.props.active ? uri.removeSearch('mod').href() : uri.href()
-        store.dispatch(replace(deleteHref))
+        this.props.replace(deleteHref)
       }, this.props.repository.id)
     }
   }
 }
 
-const Module = connect((state: any) => ({
+const mapStateToModuleBaseProps = (state: any) => ({
   router: state.router,
-}))(ModuleBase)
+})
+const mapDispatchToModuleBaseProps = ({
+  onDeleteModule: deleteModule,
+  replace,
+})
+
+const Module = connect(mapStateToModuleBaseProps, mapDispatchToModuleBaseProps)(ModuleBase)
 
 class ModuleList extends Component<any, any> {
   constructor(props: any) {
