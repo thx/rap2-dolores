@@ -22,6 +22,8 @@ export function showMessage(message: string, type?: MSG_TYPE): ShowMessageAction
   return result
 }
 
+export { MSG_TYPE } from 'components/common/Message'
+
 export interface ShowMessageAction {
   type: SHOW_MESSAGE
   payload: {

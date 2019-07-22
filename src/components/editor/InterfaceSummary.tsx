@@ -41,7 +41,7 @@ type InterfaceSummaryState = {
 }
 class InterfaceSummary extends Component<InterfaceSummaryProps, InterfaceSummaryState> {
   static contextTypes = {
-    onAddForeignRoomCase: PropTypes.func.isRequired,
+    // onAddForeignRoomCase: PropTypes.func.isRequired,
     onDeleteInterface: PropTypes.func.isRequired,
   }
   constructor(props: any) {
@@ -197,17 +197,17 @@ class InterfaceSummary extends Component<InterfaceSummaryProps, InterfaceSummary
     }
   }
   handleUpdate = () => { /** empty */ }
-  createCase = (e: any, repositoryId: any, interfaceId: any, name: any) => {
-    e.preventDefault()
-    this.setState({ name })
-    const { onAddForeignRoomCase } = this.context
-    onAddForeignRoomCase({
-      id: repositoryId,
-      itf: interfaceId,
-      name,
-    })
-    // itf.repositoryId
-  }
+  // createCase = (e: any, repositoryId: any, interfaceId: any, name: any) => {
+  //   e.preventDefault()
+  //   this.setState({ name })
+  //   const { onAddForeignRoomCase } = this.context
+  //   onAddForeignRoomCase({
+  //     id: repositoryId,
+  //     itf: interfaceId,
+  //     name,
+  //   })
+  //   // itf.repositoryId
+  // }
 }
 const mapStateToProps = (state: RootState) => ({
   room: state.foreign,

@@ -7,7 +7,7 @@ import Home from './components/home/Home'
 import LoginForm from './components/account/LoginForm'
 import RegisterForm from './components/account/RegisterForm'
 import Message from 'components/common/Message'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { RootState } from 'actions/types'
 
 const UserList = (props: any) => (
@@ -82,8 +82,9 @@ const Utils = (props: any) => (
   </Bundle>
 )
 
-const Routes = ({ store, message }: any) => {
-  const auth = store.getState().auth
+const Routes = () => {
+  const auth = useSelector((state: RootState) => state.auth)
+  const message = useSelector((state: RootState) => state.message)
   if (!auth) { return <Spin /> } // 渲染整站开屏动画，已经在 src/index 中实现。这里的代码用于支持没有接入 SSO 的情况。
   if (!auth.id) { // 引导用户登陆，已经在 src/index 中实现。这里的代码用于支持没有接入 SSO 的情况。
     return (
@@ -179,6 +180,4 @@ const Routes = ({ store, message }: any) => {
   )
 }
 
-export default connect((state: RootState) => ({
-  message: state.message,
-}), null)(Routes)
+export default Routes
