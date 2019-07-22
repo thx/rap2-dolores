@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import config from '../../config'
 import { Button, createStyles, makeStyles, List, ListItem, InputLabel, Input, FormControl, InputAdornment, IconButton, Paper } from '@material-ui/core'
 import Logo from 'components/layout/Logo'
@@ -11,9 +11,10 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Refresh from '@material-ui/icons/Refresh'
 import { login } from 'actions/account'
-import { showMessage } from 'actions/common'
-import { MSG_TYPE } from '../common/Message'
+import URI from 'urijs'
+import { showMessage, MSG_TYPE } from 'actions/common'
 import { push } from 'connected-react-router'
+import { getRouter } from 'selectors/router'
 
 const { serve } = config
 
@@ -34,6 +35,9 @@ const useStyles = makeStyles(() => createStyles({
   ctl: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  captchaWrapper: {
+    cursor: 'pointer',
   },
   captcha: {
     width: 108,
@@ -56,20 +60,29 @@ export default function LoginForm() {
   const [bg] = useState(getBGImageUrl())
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [captchaId, setCaptchaId] = useState(0)
+  const [captchaId, setCaptchaId] = useState(Date.now())
   const [captcha, setCaptcha] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const classes = useStyles()
   const dispatch = useDispatch()
-
+  const router = useSelector(getRouter)
+  const { pathname, hash, search } = router.location
   const handleSubmit = (e?: any) => {
     e && e.preventDefault()
     if (!email || !password || !captcha) {
       dispatch(showMessage(`请输入账号、密码、验证码`, MSG_TYPE.WARNING))
     } else {
-      dispatch(login({ email, password, captcha }, () => {
-        window.location.href = '/'
-      }))
+      dispatch(
+        login({ email, password, captcha }, () => {
+          const uri = URI(pathname + hash + search)
+          const original = uri.search(true).original
+          if (original) {
+            dispatch(push(decodeURIComponent(original)))
+          } else {
+            dispatch(push('/'))
+          }
+        })
+      )
     }
   }
 
@@ -128,7 +141,7 @@ export default function LoginForm() {
                 tabIndex={2}
                 name="captcha"
                 value={captcha}
-                autoComplete="new-password"
+                autoComplete="off"
                 onKeyDown={e => e.keyCode === 13 && handleSubmit()}
                 onChange={e => setCaptcha(e.target.value)}
                 endAdornment={
@@ -141,9 +154,9 @@ export default function LoginForm() {
               />
             </FormControl>
           </ListItem>
-          <ListItem className={classes.ctl} onClick={() => setCaptchaId(Date.now())}>
-            <div>
-              <img src={`${serve}/captcha?t=${captchaId || ''}`} className={classes.captcha} alt="captcha" />
+          <ListItem className={classes.ctl}>
+            <div className={classes.captchaWrapper} onClick={() => setCaptchaId(Date.now())}>
+              <img src={`${serve}/captcha?t=${captchaId}`} className={classes.captcha} alt="captcha" />
               <Refresh />
             </div>
             <div className={classes.buttonWrapper}>

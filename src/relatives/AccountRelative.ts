@@ -4,6 +4,7 @@ import * as CommonAction from '../actions/common'
 import AccountService from './services/Account'
 import { StoreStateRouterLocationURI, replace, push } from '../family'
 import { RootState } from '../actions/types'
+import { showMessage, MSG_TYPE } from 'actions/common'
 
 const relatives = {
   reducers: {
@@ -54,14 +55,26 @@ const relatives = {
           return state
       }
     },
-    users(state: any = { data: [], pagination: { total: 0, limit: 100, cursor: 1 } }, action: any) {
+    users(
+      state: any = {
+        data: [],
+        pagination: { total: 0, limit: 100, cursor: 1 },
+      },
+      action: any
+    ) {
       switch (action.type) {
         case '...':
           return state
         case AccountAction.addUserSucceeded({}).type:
-          return { data: [...state.data, action.user], pagination: state.pagination }
+          return {
+            data: [...state.data, action.user],
+            pagination: state.pagination,
+          }
         case AccountAction.fetchUserCountSucceeded(0).type:
-          return { data: [...state.data], pagination: { ...state.pagination, total: action.count } }
+          return {
+            data: [...state.data],
+            pagination: { ...state.pagination, total: action.count },
+          }
         case AccountAction.fetchUserListSucceeded([]).type:
           return action.users
         default:
@@ -78,7 +91,9 @@ const relatives = {
     *[AccountAction.fetchLoginInfo().type]() {
       try {
         const user = yield call(AccountService.fetchLoginInfo)
-        if (user.id) { yield put(AccountAction.fetchLoginInfoSucceeded(user)) }
+        if (user.id) {
+          yield put(AccountAction.fetchLoginInfoSucceeded(user))
+        }
       } catch (e) {
         yield put(AccountAction.fetchLoginInfoFailed(e.message))
       }
@@ -90,7 +105,9 @@ const relatives = {
           yield put(AccountAction.addUserSucceeded(user))
           try {
             const user = yield call(AccountService.fetchLoginInfo)
-            if (user.id) { yield put(AccountAction.fetchLoginInfoSucceeded(user)) }
+            if (user.id) {
+              yield put(AccountAction.fetchLoginInfoSucceeded(user))
+            }
           } catch (e) {
             yield put(AccountAction.fetchLoginInfoFailed(e.message))
           }
@@ -98,22 +115,32 @@ const relatives = {
         } else {
           yield put(AccountAction.addUserFailed('注册失败'))
         }
-        if (action.onResolved) { action.onResolved() }
+        if (action.onResolved) {
+          action.onResolved()
+        }
       } catch (e) {
         yield put(AccountAction.addUserFailed(e.message))
       }
     },
-    *[AccountAction.login({}, () => { /** empty */ }).type](action: any) {
+    *[AccountAction.login({}, () => {
+      /** empty */
+    }).type](action: any) {
       try {
         const user = yield call(AccountService.login, action.user)
+        if (user.errMsg) {
+          throw new Error(user.errMsg)
+        }
         if (user) {
           yield put(AccountAction.loginSucceeded(user))
           // yield put(AccountAction.fetchLoginInfo()) // 注意：更好的方式是在 rootSaga 中控制跳转，而不是在这里重再次请求。
-          if (action.onResolved) { action.onResolved() }
+          if (action.onResolved) {
+            action.onResolved()
+          }
         } else {
           yield put(AccountAction.loginFailed(undefined))
         }
       } catch (e) {
+        yield put(showMessage(e.message, MSG_TYPE.WARNING))
         yield put(AccountAction.loginFailed(e.message))
       }
     },
