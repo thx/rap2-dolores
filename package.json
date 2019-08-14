@@ -10,8 +10,8 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js --max-old-space-size=4096",
     "build": "npm run lint && npm run build-css && react-scripts build",
-    "test-backup": "npm run linter && react-scripts test --env=jsdom",
-    "test": "npm run linter",
+    "test-backup": "npm run lint && react-scripts test --env=jsdom",
+    "test": "npm run lint",
     "eject": "react-scripts eject",
     "lint": "tslint --project ./ -c tslint.json"
   },
