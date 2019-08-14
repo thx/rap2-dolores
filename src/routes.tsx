@@ -42,7 +42,7 @@ const OrganizationRepositoryList =
 
 const Status = lazy(() => import(/* webpackChunkName: "./components/status/Status" */ './components/status/Status'))
 
-const API = lazy(() => import(/* webpackChunkName: "./components/api/API */ './components/api/API'))
+const API = lazy(() => import(/* webpackChunkName: "./components/api/API" */ './components/api/API'))
 
 const Utils = lazy(() => import(/* webpackChunkName: "./components/utils/Utils" */ './components/utils/Utils'))
 
