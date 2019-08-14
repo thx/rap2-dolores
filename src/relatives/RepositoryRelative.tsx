@@ -172,6 +172,42 @@ export default {
               ),
             },
           }
+        case 'INTERFACE_LIST_SORT_SUCCEEDED':
+            modules = state.data.modules
+            const iftIds = action.ids
+            const itfIdsMap: any = {}
+            iftIds.forEach((id: number, index: number) => {
+              itfIdsMap[id] = index
+            })
+            const moduleId = action.moduleId
+            return {
+              ...state,
+              data: {
+                ...state.data,
+                modules: modules.map((mod: any) =>
+                  mod.id === moduleId
+                    ? {
+                      ...mod,
+                      interfaces: [...mod.interfaces].sort((a: any, b: any) => itfIdsMap[a.id] - itfIdsMap[b.id]),
+                    }
+                    : mod
+                ),
+              },
+            }
+        case 'MODULE_LIST_SORT_SUCCEEDED':
+            modules = state.data.modules
+            const moduleIds = action.ids
+            const moduleIdsMap: any = {}
+            moduleIds.forEach((id: number, index: number) => {
+              moduleIdsMap[id] = index
+            })
+            return {
+              ...state,
+              data: {
+                ...state.data,
+                modules: [...modules].sort((a: any, b: any) => moduleIdsMap[a.id] - moduleIdsMap[b.id]),
+              },
+            }
         default:
           return state
       }
@@ -406,6 +442,8 @@ export default {
       RepositoryEffects.updateRepository,
     [RepositoryAction.fetchRepository({ id: undefined, repository: undefined })
       .type]: RepositoryEffects.fetchRepository,
+    REPOSITORY_LOCATION_CHANGE:
+      RepositoryEffects.handleRepositoryLocationChange,
     [RepositoryAction.fetchRepositoryCount().type]:
       RepositoryEffects.fetchRepositoryCount,
     [RepositoryAction.fetchRepositoryList().type]:
@@ -420,18 +458,33 @@ export default {
       ModuleEffects.sortModuleList,
     [InterfaceAction.fetchInterfaceCount().type]:
       InterfaceEffects.fetchInterfaceCount,
-    [InterfaceAction.sortInterfaceList(undefined, undefined).type]:
+    INTERFACE_LIST_SORT:
       InterfaceEffects.sortInterfaceList,
     [PropertyAction.sortPropertyList(undefined, undefined).type]:
       PropertyEffects.sortPropertyList,
   },
   listeners: {
-    '/repository': [RepositoryAction.fetchOwnedRepositoryList, RepositoryAction.fetchJoinedRepositoryList],
-    '/repository/joined': [RepositoryAction.fetchOwnedRepositoryList, RepositoryAction.fetchJoinedRepositoryList],
+    '/repository': [
+      RepositoryAction.fetchOwnedRepositoryList,
+      RepositoryAction.fetchJoinedRepositoryList,
+    ],
+    '/repository/joined': [
+      RepositoryAction.fetchOwnedRepositoryList,
+      RepositoryAction.fetchJoinedRepositoryList,
+    ],
+    '/repository/editor': [
+      // REPOSITORY_LOCATION_CHANGE 判断了如果是当前 repo 的模块或接口切换就不重新获取
+      // 如果 repo 的 id 发生变化再进行 repo 的重新拉取
+      RepositoryAction.repositoryLocationChange,
+    ],
+    '/organization/repository/editor': [
+      // REPOSITORY_LOCATION_CHANGE 判断了如果是当前 repo 的模块或接口切换就不重新获取
+      // 如果 repo 的 id 发生变化再进行 repo 的重新拉取
+      RepositoryAction.repositoryLocationChange,
+    ],
     '/repository/all': [RepositoryAction.fetchRepositoryList],
     '/repository/tester': [RepositoryAction.fetchRepository],
     '/repository/checker': [RepositoryAction.fetchRepository],
     '/organization/repository': [RepositoryAction.fetchRepositoryList],
-    '/organization/repository/editor': [RepositoryAction.fetchRepository],
   },
 }

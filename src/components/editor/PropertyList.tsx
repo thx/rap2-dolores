@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { PropTypes, Link } from '../../family'
-import { Tree, SmartTextarea, RModal, RSortable } from '../utils'
+import { Tree, SmartTextarea, RModal, RSortable, CopyToClipboard } from '../utils'
 import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
 import { GoPlus, GoTrashcan, GoQuestion } from 'react-icons/go'
 import { rptFromStr2Num } from './InterfaceSummary'
 import './PropertyList.css'
-import { ButtonGroup, Button } from '@material-ui/core'
+import { ButtonGroup, Button, Checkbox } from '@material-ui/core'
+import JSON5 from 'json5'
 
 export const RequestPropertyListPreviewer = (props: any) => (
   <Previewer {...props} />
@@ -26,12 +27,24 @@ export const ResponsePropertyListPreviewer = (props: any) => (
 
 class SortableTreeTableHeader extends Component<any, any> {
   render() {
-    const { editable } = this.props
+    const { editable, handleClickCreatePropertyButton } = this.props
     return (
       <div className="SortableTreeTableHeader">
         <div className="flex-row">
           {/* DONE 2.1 每列增加帮助 Tip */}
-          {editable && <div className="th operations" />}
+          {editable && (
+            <div className="th operations">
+              <Link
+                to=""
+                onClick={e => {
+                  e.preventDefault()
+                  handleClickCreatePropertyButton()
+                }}
+              >
+                <GoPlus className="fontsize-14 color-6" />
+              </Link>
+            </div>
+          )}
           <div className="th name">名称</div>
           <div className="th type">必选</div>
           <div className="th type">类型</div>
@@ -47,7 +60,8 @@ class SortableTreeTableHeader extends Component<any, any> {
               <GoQuestion />
             </a>
           </div>
-          <div className="th value">初始值</div>{/* 对象和数组也允许设置初始值 */}
+          <div className="th value">初始值</div>
+          {/* 对象和数组也允许设置初始值 */}
           <div className="th desc">简介</div>
         </div>
       </div>
@@ -58,11 +72,24 @@ class SortableTreeTableHeader extends Component<any, any> {
 const PropertyLabel = (props: any) => {
   const { pos } = props
   if (pos === 1) {
-    return <label className="ml5 badge badge-danger">HEAD</label>
+    return <span className="badge badge-danger">HEAD</span>
   } else if (pos === 3) {
-    return <label className="ml5 badge badge-primary">BODY</label>
+    return <span className="badge badge-primary">BODY</span>
   } else {
-    return <label className="ml5 badge badge-secondary">QUERY</label>
+    return <span className="badge badge-secondary">QUERY</span>
+  }
+}
+
+const getFormattedValue = (itf: any) => {
+  if ((itf.type === 'Array' || itf.type === 'Object' || itf.type === 'String') && itf.value) {
+    try {
+      const formatted = JSON5.stringify(JSON5.parse(itf.value), undefined, 2)
+      return formatted
+    } catch (error) {
+      return itf.value || ''
+    }
+  } else {
+    return itf.value || ''
   }
 }
 
@@ -91,10 +118,12 @@ class SortableTreeTableRow extends Component<any, any> {
                 }
                 <div className={`td payload name depth-${item.depth} nowrap`}>
                   {!editable
-                    ? <span className="nowrap">
-                      {item.name}
-                      {item.scope === 'request' && item.depth === 0 ? <PropertyLabel pos={item.pos} /> : null}
-                    </span>
+                    ?
+                    <>
+                      <CopyToClipboard text={item.name}><span className="nowrap">{item.name}</span></CopyToClipboard>
+                      {item.scope === 'request' && item.depth === 0 ?
+                        <div style={{ float: 'right' }}><PropertyLabel pos={item.pos} /></div> : null}
+                    </>
                     : <input
                       value={item.name}
                       onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)}
@@ -104,20 +133,27 @@ class SortableTreeTableRow extends Component<any, any> {
                     />
                   }
                 </div>
-                <div className={`td payload type depth-${item.depth} nowrap`}>
-                  {!editable
-                    ? <span className="nowrap">{item.required ? '✔️' : ''}</span>
-                    : <input
-                      type="checkbox"
-                      checked={!!item.required}
-                      onChange={e => handleChangePropertyField(item.id, 'required', e.target.checked)}
-                    />
-                  }
+                <div className={`td payload required type depth-${item.depth} nowrap`}>
+                  <Checkbox
+                    checked={!!item.required}
+                    disabled={!editable}
+                    onChange={e =>
+                      handleChangePropertyField(
+                        item.id,
+                        'required',
+                        e.target.checked
+                      )
+                    }
+                    color="primary"
+                    inputProps={{
+                      'aria-label': '必选',
+                    }}
+                  />
                 </div>
 
                 <div className="td payload type">
                   {!editable
-                    ? <span className="nowrap">{item.type}</span>
+                    ? <CopyToClipboard text={item.type.toLowerCase()}><span className="nowrap">{item.type}</span></CopyToClipboard>
                     : <select
                       value={item.type}
                       onChange={e => handleChangePropertyField(item.id, 'type', e.target.value)}
@@ -143,7 +179,7 @@ class SortableTreeTableRow extends Component<any, any> {
                 </div>
                 <div className="td payload value">
                   {!editable
-                    ? <span>{item.value}</span>
+                    ? <CopyToClipboard text={item.value}><span className="value-container">{getFormattedValue(item)}</span></CopyToClipboard>
                     : <SmartTextarea
                       value={item.value || ''}
                       onChange={(e: any) => handleChangePropertyField(item.id, 'value', e.target.value)}
@@ -156,7 +192,7 @@ class SortableTreeTableRow extends Component<any, any> {
                 </div>
                 <div className="td payload desc">
                   {!editable
-                    ? <span>{item.description}</span>
+                    ? <CopyToClipboard text={item.description}><span>{item.description}</span></CopyToClipboard>
                     : <SmartTextarea
                       value={item.description || ''}
                       onChange={(e: any) => handleChangePropertyField(item.id, 'description', e.target.value)}
@@ -233,7 +269,7 @@ class PropertyList extends Component<any, any> {
                 <Button key={1} onClick={this.handleClickCreatePropertyButton}>新建</Button>,
                 <Button key={2} onClick={this.handleClickImporterButton}>导入</Button>,
               ]}
-              <Button onClick={this.handleClickPreviewerButton}>
+              <Button className={this.state.previewer ? 'checked-button' : ''} onClick={this.handleClickPreviewerButton}>
                 预览
               </Button>
             </ButtonGroup>
@@ -247,6 +283,7 @@ class PropertyList extends Component<any, any> {
             handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             handleChangePropertyField={this.handleChangePropertyField}
             handleSortProperties={this.handleSortProperties}
+            handleClickCreatePropertyButton={this.handleClickCreatePropertyButton}
           />
         </div>
         <div className="footer">

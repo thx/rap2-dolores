@@ -46,9 +46,10 @@ export const sortModuleList = (ids: any, onResolved: any) => ({
   ids,
   onResolved,
 })
-export const sortModuleListSucceeded = (count: any) => ({
+export const sortModuleListSucceeded = (count: any, ids: any) => ({
   type: 'MODULE_LIST_SORT_SUCCEEDED',
   count,
+  ids,
 })
 export const sortModuleListFailed = (message: any) => ({
   type: 'MODULE_LIST_SORT_FAILED',

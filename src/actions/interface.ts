@@ -98,14 +98,17 @@ export const unlockInterfaceFailed = (message: any) => ({
   message,
 })
 
-export const sortInterfaceList = (ids: any, onResolved: any) => ({
+export const sortInterfaceList = (ids: any, moduleId: number, onResolved: any) => ({
   type: 'INTERFACE_LIST_SORT',
   ids,
+  moduleId,
   onResolved,
 })
-export const sortInterfaceListSucceeded = (count: any) => ({
+export const sortInterfaceListSucceeded = (count: any, ids: any, moduleId: number) => ({
   type: 'INTERFACE_LIST_SORT_SUCCEEDED',
   count,
+  ids,
+  moduleId,
 })
 export const sortInterfaceListFailed = (message: any) => ({
   type: 'INTERFACE_LIST_SORT_FAILED',

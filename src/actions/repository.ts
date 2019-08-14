@@ -18,6 +18,8 @@ export const fetchRepository = ({ id, repository }: any) => ({ type: 'REPOSITORY
 export const fetchRepositorySucceeded = (repository: any) => ({ type: 'REPOSITORY_FETCH_SUCCEEDED', repository })
 export const fetchRepositoryFailed = (message: any) => ({ type: 'REPOSITORY_FETCH_FAILED', message })
 
+export const repositoryLocationChange = ({ id, repository }: any) => ({ type: 'REPOSITORY_LOCATION_CHANGE', id, repository })
+
 export const clearRepository = () => ({ type: 'REPOSITORY_CLEAR' })
 
 export const fetchRepositoryCount = () => ({ type: 'REPOSITORY_COUNT_FETCH' })

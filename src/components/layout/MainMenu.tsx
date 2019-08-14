@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
     toolbar: {
       display: 'flex',
       justifyContent: 'space-between',
+      '& :not(.logo)': {
+        fontSize: '1.4rem',
+      },
     },
     logo: {
       marginRight: theme.spacing(2),
@@ -56,7 +59,7 @@ export default function MainMenu(props: Props) {
         <Toolbar className={classes.toolbar}>
           <div>
             <Link to="/" className={classes.logo}><Logo /> </Link>
-            <Link to="/" className={classes.link}><Button color="inherit"> 首页</Button></Link>
+            <Link to="/" className={classes.link}><Button color="inherit"> 首页 </Button></Link>
             <Link to="/repository/joined" className={classes.link}><Button color="inherit"> 仓库 </Button></Link>
             <Link to="/organization/joined" className={classes.link}><Button color="inherit"> 团队 </Button></Link>
             <Link to="/api" className={classes.link}><Button color="inherit"> 接口 </Button></Link>

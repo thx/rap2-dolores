@@ -94,7 +94,7 @@ export function* unlockInterface(action: any) {
 export function* sortInterfaceList(action: any) {
   try {
     const count = yield call(EditorService.sortInterfaceList, action.ids)
-    yield put(InterfaceAction.sortInterfaceListSucceeded(count))
+    yield put(InterfaceAction.sortInterfaceListSucceeded(count, action.ids, action.moduleId))
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     console.error(e.message)

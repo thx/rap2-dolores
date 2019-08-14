@@ -62,8 +62,8 @@ class Previewer extends Component<any, any> {
         console.warn(Assert.message(i))
       }
       return (
-        <div className="Previewer row">
-          <div className="result-template col-6">
+        <div className="Previewer">
+          <div className="result-template">
             <div className="header">
               <span className="title">{label}模板</span>
               {scope === 'response'
@@ -76,8 +76,9 @@ class Previewer extends Component<any, any> {
                 if (v !== undefined && v !== null && v.exec) { return v.toString() } else { return v }
               }, 2)
             }</pre>
+
           </div>
-          <div className="result-mocked col-6">
+          <div className="result-mocked">
             <div className="header">
               <span className="title">{label}数据</span>
               {scope === 'response'

@@ -32,7 +32,7 @@ interface Props {
   editable: boolean,
   itfId: number,
   moveInterface: any
-  handleSaveInterface: any
+  handleSaveInterfaceAndProperties: any
   handleUnlockInterface: any
   handleMoveInterface: any
   handleLockInterface: any
@@ -40,7 +40,7 @@ interface Props {
 
 function InterfaceEditorToolbar(props: Props) {
   const { editable, locker, auth, repository, handleLockInterface, handleMoveInterface,
-    handleSaveInterface, handleUnlockInterface } = props
+    handleSaveInterfaceAndProperties, handleUnlockInterface } = props
   const isOwned = repository.owner.id === auth.id
   const isJoined = repository.members.find((item: any) => item.id === auth.id)
   const loading = useSelector((state: RootState) => state.loading)
@@ -50,7 +50,14 @@ function InterfaceEditorToolbar(props: Props) {
   if (editable) {
     return (
       <div className="InterfaceEditorToolbar">
-        <LoadingButton className={classes.button} onClick={handleSaveInterface} variant="contained" color="primary" disabled={loading} label="保存">
+        <LoadingButton
+          className={classes.button}
+          onClick={handleSaveInterfaceAndProperties}
+          variant="contained"
+          color="primary"
+          disabled={loading}
+          label="保存"
+        >
           <Save className={classes.rightIcon} />
         </LoadingButton>
         <Button className={classes.button} onClick={handleUnlockInterface} variant="contained">

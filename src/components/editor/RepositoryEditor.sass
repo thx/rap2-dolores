@@ -15,10 +15,32 @@
       a, .fake-link
         margin-right: 1rem;
     > .desc
-      margin-top: .5rem;
+      margin: 1rem 0 .5rem;
       color: #666;
   > .body
     // padding: 0 2rem;
+
+.RelatedProjects 
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin: 1rem 0 -1rem;
+  color: #888;
+  > .Project
+    border: 1px solid #E6E6E6;
+    background: #FFF;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    line-height: 2.44;
+    .title
+      margin-right: .7rem;
+    svg
+      transform: scale(1.2) translateY(-1px);
+  i
+    color: #888;
+    font-style: normal;
+    margin-left: .5rem
 
 .RepositorySearcher.dropdown
   position: absolute;
@@ -101,7 +123,7 @@
       border-bottom-color: transparent;
       background-color: white;
       cursor: default;
-      border-color: #e36209 #e1e4e8 transparent #e1e4e8;
+      border-color: #3f51b5 #e1e4e8 transparent #e1e4e8;
     &.active:hover
       background-color: white;
     > .Module
@@ -133,35 +155,50 @@
   background-color: #FFFFFF;
   padding: 2rem;
   .InterfaceList
-    flex-basis: 16rem;
+    width: 23rem;
     flex-shrink: 0;
   .InterfaceEditor
+    overflow-x: hidden;
+    padding: 0 1px;
     flex-grow: 1;
 
 .InterfaceList
+  .header
+    margin-bottom: 1rem;
   ul.body
     margin: 0;
     padding: 0;
-    border: 1px solid #d1d5da;
+    border: 1px solid rgba(63, 81, 181, 0.5);
     border-radius: .4rem;
     list-style: none;
+    max-height: 150vh;
+    overflow-y: auto;
     > li
       position: relative;
       padding: 1rem 1rem;
-      border-bottom: 1px solid #d1d5da;
+      border-bottom: 1px solid rgba(63, 81, 181, 0.5);
+      &:first-child
+        border-top-left-radius: .3rem;
       &:last-child
         border-bottom: 0;
+        border-bottom-left-radius: .3rem;
       .Interface
         position: relative;
         padding-right: 4rem;
         .name
           position: relative;
-          float: left;
-          // width: 10rem;
-          max-width: 30rem;
+          font-size: 1.3rem;
+          width: 100%;
           overflow: hidden;
           white-space: nowrap;
           text-overflow: ellipsis;
+        .url 
+          font-size: 1rem;
+          width: 100%;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          color: rgba(0, 0, 0, 0.54);
         .toolbar
           display: none;
           position: absolute;
@@ -188,16 +225,15 @@
         .toolbar
           display: block;
     > li.active
-      &::before
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        width: 2px;
-        content: "";
-        background-color: #e36209;
-  .footer
-    padding: 0.75rem 1rem;
+      border-left: 2px solid #3f51b5;
+      // &::before
+      //   position: absolute;
+      //   top: 0;
+      //   bottom: 0;
+      //   left: 0;
+      //   width: 2px;
+      //   content: "";
+      //   background-color: #3f51b5;
 
 .InterfaceEditor
   margin-left: 2rem;
@@ -223,7 +259,6 @@
 
 .InterfaceSummary
   margin-bottom: 2rem;
-  padding-right: 13rem;
   > .header
     margin-bottom: .5rem;
     > .title
@@ -253,6 +288,8 @@
       margin-right: 1rem;
     > .toolbar
       float: right;
+      .checked-button
+        background-color: rgba(63, 81, 181, 0.17)
       .preview
         margin: 0;
         input
@@ -261,14 +298,20 @@
     margin-bottom: 1rem;
   > .footer
     > .Previewer
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
       margin-top: 1rem;
       > .result-template,
       > .result-mocked
+        width: 49%;
         > .header
           margin-bottom: .5rem;
           .title
-            margin-right: .75rem
+            margin-right: .75rem;
         > pre.body
+          max-height: 90vh;
+          overflow: auto;
       > .result-valid
         padding-top: 2.5rem;
         text-align: center;
@@ -334,10 +377,21 @@
         height: auto;
         line-height: 1.5;
       &.payload.name
+        justify-content: space-between
         @for $i from 0 through 42
           &.depth-#{$i}
             padding-left: $i * 1rem + 0.75rem;
       &.payload.value
+        max-height: 30vh;
+        overflow: auto;
+        hyphens: auto;
+        overflow-wrap: break-word;
+        span.value-container
+          white-space: pre;
+          margin: auto 0;
+      &.payload.required
+        padding: 0;
+      &.payload.desc
         word-break: break-word;
 .SortableTreeTable.editable
   .flex-row
@@ -348,6 +402,9 @@
         @for $i from 0 through 10
           &.depth-#{$i}
             padding-left: $i * 1rem;
+      &.payload.value
+        max-height: unset;
+        overflow-wrap: break-word;
   input.editable, 
   select.editable, 
   textarea.editable

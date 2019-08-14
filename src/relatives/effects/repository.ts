@@ -1,6 +1,7 @@
-import { call, put } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
 import RepositoryService from '../services/Repository'
+import { RootState } from 'actions/types'
 
 //
 export function* fetchRepositoryCount(action: any) {
@@ -73,6 +74,13 @@ export function* fetchRepository(action: any) {
     yield put(RepositoryAction.fetchRepositorySucceeded(count))
   } catch (e) {
     yield put(RepositoryAction.fetchRepositoryFailed(e.message))
+  }
+}
+
+export function* handleRepositoryLocationChange(action: any) {
+  const repositoryId = yield select((state: RootState) => state.repository && state.repository.data && state.repository.data.id)
+  if (Number(action.id) !== repositoryId) {
+    yield put(RepositoryAction.fetchRepository(action))
   }
 }
 

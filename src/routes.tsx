@@ -1,5 +1,7 @@
-import React from 'react'
-import { Bundle, Switch, Route } from './family'
+import React, { lazy, Suspense } from 'react'
+
+import { Switch, Route } from './family'
+
 import { NoMatch, Spin } from './components/utils'
 import Header from './components/common/Header'
 import Footer from './components/common/Footer'
@@ -10,77 +12,39 @@ import Message from 'components/common/Message'
 import { useSelector } from 'react-redux'
 import { RootState } from 'actions/types'
 
-const UserList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/account/UserList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const UserList = lazy(() => import(/* webpackChunkName: "./components/account/UserList" */ './components/account/UserList'))
 
-const JoinedRepositoryList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/repository/JoinedRepositoryList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const JoinedRepositoryListWithCreateForm = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/repository/JoinedRepositoryList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} create={true} /> : null}
-  </Bundle>
-)
-const AllRepositoryList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/repository/AllRepositoryList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const RepositoryEditor = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/editor/RepositoryEditor').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const RepositoryTester = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/tester/Tester').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const RepositoryChecker = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/checker/Checker').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const JoinedRepositoryList =
+  lazy(() => import(/* webpackChunkName: "./components/repository/JoinedRepositoryList" */ './components/repository/JoinedRepositoryList'))
 
-const JoinedOrganizationList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/organization/JoinedOrganizationList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const AllOrganizationList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/organization/AllOrganizationList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
-const OrganizationRepositoryList = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/organization/OrganizationRepositoryList').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const JoinedRepositoryListWithCreateForm =
+  lazy(() => import(/* webpackChunkName: "./components/repository/JoinedRepositoryList" */ './components/repository/JoinedRepositoryList'))
 
-const Status = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/status/Status').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const AllRepositoryList =
+  lazy(() => import(/* webpackChunkName: "./components/repository/AllRepositoryList" */ './components/repository/AllRepositoryList'))
 
-const API = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/api/API').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const RepositoryEditor =
+  lazy(() => import(/* webpackChunkName: "./components/repository/RepositoryEditor" */ './components/editor/RepositoryEditor'))
 
-// import Utils from './components/utils/Utils'
-const Utils = (props: any) => (
-  <Bundle load={(cb: any) => import('./components/utils/Utils').then(comp => cb(comp))}>
-    {(CustomComponent: any) => CustomComponent ? <CustomComponent {...props} /> : null}
-  </Bundle>
-)
+const RepositoryTester = lazy(() => import(/* webpackChunkName: "./components/tester/Tester" */ './components/tester/Tester'))
+
+const RepositoryChecker = lazy(() => import(/* webpackChunkName: "./components/checker/Checker" */ './components/checker/Checker'))
+
+const JoinedOrganizationList =
+  lazy(() => import(/* webpackChunkName: "./components/organization/JoinedOrganizationList" */ './components/organization/JoinedOrganizationList'))
+
+const AllOrganizationList =
+  lazy(() => import(/* webpackChunkName: "./components/organization/AllOrganizationList" */ './components/organization/AllOrganizationList'))
+
+const OrganizationRepositoryList =
+  lazy(() =>
+    import(/* webpackChunkName: "./components/organization/OrganizationRepositoryList" */ './components/organization/OrganizationRepositoryList'))
+
+const Status = lazy(() => import(/* webpackChunkName: "./components/status/Status" */ './components/status/Status'))
+
+const API = lazy(() => import(/* webpackChunkName: "./components/api/API */ './components/api/API'))
+
+const Utils = lazy(() => import(/* webpackChunkName: "./components/utils/Utils" */ './components/utils/Utils'))
 
 const Routes = () => {
   const auth = useSelector((state: RootState) => state.auth)
@@ -103,6 +67,7 @@ const Routes = () => {
       <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}> 回到顶部 </div>
       <Route component={Header} />
       <div className="body">
+      <Suspense fallback={<Spin/>}>
         <Switch>
           <Route exact={true} path="/" component={Home} />
           <Route
@@ -173,6 +138,7 @@ const Routes = () => {
           />
           <Route component={NoMatch} />
         </Switch>
+      </Suspense>
       </div>
       <Footer />
       <div id="portal" />

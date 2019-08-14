@@ -15,6 +15,10 @@ const MuiTheme = createMuiTheme({
       },
     },
   },
+  typography: {
+    htmlFontSize: 10,
+    fontSize: 12,
+  },
   ...theme,
 })
 
