@@ -11,6 +11,7 @@ import Tree from './Tree'
 import RSortable from './RSortable'
 import RParsley from './RParsley'
 import RChart from './RChart'
+import CopyToClipboard from './CopyToClipboard'
 
 export {
   NoMatch,
@@ -25,5 +26,6 @@ export {
   Tree,
   RSortable,
   RParsley,
-  RChart
+  RChart,
+  CopyToClipboard
 }

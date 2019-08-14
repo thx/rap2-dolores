@@ -63,7 +63,7 @@ export function* deleteModule(action: any) {
 export function* sortModuleList(action: any) {
   try {
     const count = yield call(EditorService.sortModuleList, action.ids)
-    yield put(ModuleAction.sortModuleListSucceeded(count))
+    yield put(ModuleAction.sortModuleListSucceeded(count, action.ids))
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     console.error(e.message)

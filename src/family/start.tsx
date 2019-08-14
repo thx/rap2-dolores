@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { History } from 'history'
 import { ConnectedRouter } from 'connected-react-router'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
+import { SnackbarProvider } from 'notistack'
 import { withStyles } from '@material-ui/core'
 import GlobalStyles from '../components/common/GlobalStyles'
 import ThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
@@ -28,11 +29,13 @@ const start = (
       return (
         <ThemeProvider theme={MuiTheme}>
           <MuiThemeProvider theme={MuiTheme}>
-            <Provider store={store}>
-              <ConnectedRouter history={history}>
-                <Routes/>
-              </ConnectedRouter>
-            </Provider>
+            <SnackbarProvider maxSnack={3}>
+              <Provider store={store}>
+                <ConnectedRouter history={history}>
+                  <Routes/>
+                </ConnectedRouter>
+              </Provider>
+            </SnackbarProvider>
           </MuiThemeProvider>
         </ThemeProvider>
       )

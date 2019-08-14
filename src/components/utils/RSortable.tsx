@@ -11,14 +11,15 @@ class RSortable extends Component<RSortableProps, RSortableState> {
     return this.props.children
   }
   componentDidMount() {
-    const { onChange } = this.props
+    // onChange 不能传入 sortable，会有冲突
+    const { onChange, ...restProps } = this.props
     const $sortable = Sortable.create(findDOMNode(this) as any, {
       handle: '.sortable',
       animation: 150,
       onEnd: (e: any) => {
         if (onChange) { onChange(e, $sortable) }
       },
-      ...this.props,
+      ...restProps,
     })
     this.$sortable = $sortable
   }

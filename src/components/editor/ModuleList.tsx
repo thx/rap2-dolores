@@ -4,7 +4,7 @@ import { RModal, RSortable } from '../utils'
 import ModuleForm from './ModuleForm'
 import { GoPencil, GoTrashcan, GoPackage } from 'react-icons/go'
 import { RootState } from 'actions/types'
-import { deleteModule } from '../../actions/module'
+import { deleteModule, sortModuleList } from '../../actions/module'
 
 class ModuleBase extends Component<any, any> {
   constructor(props: any) {
@@ -100,7 +100,7 @@ class ModuleList extends Component<any, any> {
     replace(StoreStateRouterLocationURI(router).href())
   }
   handleSort = (_: any, sortable: any) => {
-    const { onSortModuleList } = this.context
+    const { onSortModuleList } = this.props
     onSortModuleList(sortable.toArray())
   }
 }
@@ -111,6 +111,7 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = ({
   replace,
+  onSortModuleList: sortModuleList,
 })
 export default connect(
   mapStateToProps,

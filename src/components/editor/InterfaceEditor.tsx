@@ -9,6 +9,7 @@ import { fetchRepository } from '../../actions/repository'
 import { RootState } from 'actions/types'
 import { lockInterface, unlockInterface } from 'actions/interface'
 import { updateProperties } from 'actions/property'
+import { updateInterface } from 'actions/interface'
 
 export const RequestPropertyList = (props: any) => {
   return <PropertyList scope="request" title="请求参数" label="请求" {...props} />
@@ -24,6 +25,7 @@ type InterfaceEditorProps = {
   repository: any
   lockInterface: typeof lockInterface
   unlockInterface: typeof unlockInterface
+  updateInterface: typeof updateInterface
   updateProperties: typeof updateProperties
 }
 
@@ -43,7 +45,7 @@ class InterfaceEditor extends Component<
   static childContextTypes = {
     handleLockInterface: PropTypes.func.isRequired,
     handleUnlockInterface: PropTypes.func.isRequired,
-    handleSaveInterface: PropTypes.func.isRequired,
+    handleSaveInterfaceAndProperties: PropTypes.func.isRequired,
     handleMoveInterface: PropTypes.func.isRequired,
     handleAddMemoryProperty: PropTypes.func.isRequired,
     handleAddMemoryProperties: PropTypes.func.isRequired,
@@ -93,8 +95,8 @@ class InterfaceEditor extends Component<
   // shouldComponentUpdate (nextProps, nextState) {}
 
   render() {
-    const { auth, repository, mod, itf } = this.props
-    const { editable } = this.state
+    const { auth, repository, mod } = this.props
+    const { editable, itf } = this.state
     const { id, locker } = this.state.itf
     if (!id) { return null }
     return (
@@ -108,7 +110,7 @@ class InterfaceEditor extends Component<
           moveInterface={this.handleMoveInterface}
           handleLockInterface={this.handleLockInterface}
           handleMoveInterface={this.handleMoveInterface}
-          handleSaveInterface={this.handleSaveInterface}
+          handleSaveInterfaceAndProperties={this.handleSaveInterfaceAndProperties}
           handleUnlockInterface={this.handleUnlockInterface}
         />
         <InterfaceSummary
@@ -118,6 +120,7 @@ class InterfaceEditor extends Component<
           active={true}
           editable={editable}
           stateChangeHandler={this.summaryStateChange}
+          handleChangeInterface={this.handleChangeInterface}
         />
         <RequestPropertyList
           properties={this.state.properties}
@@ -195,9 +198,28 @@ class InterfaceEditor extends Component<
       this.setState({ properties })
     }
   }
-  handleSaveInterface = (e: any) => {
+  handleChangeInterface = (newItf: any) => {
+    this.setState({
+      itf: {
+        ...this.state.itf,
+        ...newItf,
+      },
+    })
+  }
+  handleSaveInterfaceAndProperties = (e: any) => {
     e.preventDefault()
-    const { updateProperties } = this.props
+    const { itf } = this.state
+    const { updateProperties, updateInterface } = this.props
+    updateInterface({
+      id: itf.id,
+      name: itf.name,
+      url: itf.url,
+      method: itf.method,
+      status: itf.status,
+      description: itf.description,
+    }, () => {
+      /** empty */
+    })
     updateProperties(this.state.itf.id, this.state.properties, this.state.summaryState, () => {
       this.handleUnlockInterface()
     })
@@ -208,7 +230,6 @@ class InterfaceEditor extends Component<
     })
   }
   handleMoveInterfaceSubmit = () => {
-    console.log('submit')
     /** empty */
   }
   handleLockInterface = () => {
@@ -230,6 +251,7 @@ const mapDispatchToProps = {
   lockInterface,
   unlockInterface,
   updateProperties,
+  updateInterface,
 }
 export default connect(
   mapStateToProps,

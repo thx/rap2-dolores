@@ -12,7 +12,7 @@ import { addRepository, updateRepository, clearRepository, fetchRepository } fro
 import { addModule, updateModule, deleteModule, sortModuleList } from '../../actions/module'
 import { addInterface, updateInterface, deleteInterface, lockInterface, unlockInterface, sortInterfaceList } from '../../actions/interface'
 import { addProperty, updateProperty, deleteProperty, updateProperties, sortPropertyList } from '../../actions/property'
-import { GoRepo, GoPencil, GoPlug, GoDatabase, GoJersey, GoLinkExternal } from 'react-icons/go'
+import { GoRepo, GoPencil, GoVersions, GoPlug, GoDatabase, GoJersey, GoLinkExternal } from 'react-icons/go'
 
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
@@ -71,13 +71,13 @@ class RepositoryEditor extends Component<any, any> {
   render() {
     const { location: { params }, auth } = this.props
     let { repository } = this.props
-    if (!repository.fetching && !repository.data) { return <div className="p100 fontsize-40 text-center">404</div> }
+    if (!repository.fetching && !repository.data) { return <div className="p100 fontsize-30 text-center">未找到对应仓库</div> }
+    if (repository.fetching || !repository.data || !repository.data.id) { return <Spin /> }
 
     repository = repository.data
     if (repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
-    if (!repository.id) { return <Spin /> } // // DONE 2.2 每次获取仓库都显示加载动画不合理，应该只在初始加载时显示动画。
 
     const mod = repository && repository.modules && repository.modules.length
       ? (repository.modules.find((item: any) => item.id === +params.mod) || repository.modules[0]) : {}
@@ -125,6 +125,7 @@ class RepositoryEditor extends Component<any, any> {
           </div>
           <RepositorySearcher repository={repository} />
           <div className="desc">{repository.description}</div>
+          {this.renderRelatedProjects()}
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className="body">
@@ -135,6 +136,30 @@ class RepositoryEditor extends Component<any, any> {
           </div>
         </div>
       </article>
+    )
+  }
+  renderRelatedProjects() {
+    const { repository } = this.props
+    const { collaborators } = repository.data
+    return (
+      <div className="RelatedProjects">
+        {collaborators &&
+          Array.isArray(collaborators) &&
+          collaborators.map(collab => (
+            <div
+              className="CollabProject Project"
+              key={`collab-${collab.id}`}
+            >
+              <span className="title">
+                <GoVersions className="mr5" />
+                协同
+              </span>
+              <Link to={`/repository/editor?id=${collab.id}`}>
+                {collab.name}
+              </Link>
+            </div>
+          ))}
+      </div>
     )
   }
   handleUpdate = () => {
