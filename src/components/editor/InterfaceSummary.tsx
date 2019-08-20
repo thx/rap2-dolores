@@ -159,20 +159,18 @@ class InterfaceSummary extends Component<InterfaceSummaryProps, InterfaceSummary
                 </Select>
               </FormControl>
             </li>
-            {itf.description && (
-              <li style={{width: '50%'}}>
-                <TextField
-                  id="description"
-                  label="描述（可多行）"
-                  value={itf.description}
-                  fullWidth={true}
-                  multiline={true}
-                  autoComplete="off"
-                  onChange={(e) => {handleChangeInterface({description: e.target.value})}}
-                  margin="normal"
-                />
-              </li>
-            )}
+            <li style={{width: '50%'}}>
+              <TextField
+                id="description"
+                label="描述（可多行）"
+                value={itf.description}
+                fullWidth={true}
+                multiline={true}
+                autoComplete="off"
+                onChange={(e) => {handleChangeInterface({description: e.target.value})}}
+                margin="normal"
+              />
+            </li>
 
           </> : <>
               <li>

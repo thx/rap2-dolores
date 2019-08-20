@@ -83,7 +83,7 @@ const PropertyLabel = (props: any) => {
 const getFormattedValue = (itf: any) => {
   if ((itf.type === 'Array' || itf.type === 'Object' || itf.type === 'String') && itf.value) {
     try {
-      const formatted = JSON5.stringify(JSON5.parse(itf.value), undefined, 2)
+      const formatted = JSON.stringify(JSON5.parse(itf.value), undefined, 2)
       return formatted
     } catch (error) {
       return itf.value || ''

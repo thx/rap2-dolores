@@ -3,6 +3,7 @@ import { connect, Link, Mock, _, PropTypes } from '../../family'
 import { RCodeMirror } from '../utils/'
 import { addProperty } from '../../actions/property'
 import { RootState } from 'actions/types'
+import JSON5 from 'json5'
 import { Button } from '@material-ui/core'
 const mockResult =
   process.env.NODE_ENV === 'development'
@@ -14,6 +15,28 @@ const mockResult =
       },
     })
     : () => ({})
+
+/** MockJS 的 toJSONSchema 的 bug 会导致有 length 属性的对象被识别成数组
+ *  众所周知 MockJS 已经不维护了，所以只能自己想想办法
+ *  先递归把 length 替换成其他的名称，生成 schema 后再换回来
+ */
+const lengthAlias = '__mockjs_length_*#06#'
+
+const replaceLength = (obj: any) => {
+  for (const k in obj) {
+    if (obj[k] && typeof obj[k] === 'object') {
+      replaceLength(obj[k])
+    } else {
+      // Do something with obj[k]
+      if (k === 'length') {
+        const v = obj[k]
+        delete obj[k]
+        obj[lengthAlias] = v
+      }
+    }
+  }
+}
+
 function isPrimitiveType(type: string) {
   return ['number', 'null', 'undefined', 'boolean', 'string'].indexOf(type.toLowerCase()) > -1
 }
@@ -111,7 +134,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
   handleBeautify = (e: any) => {
     e.preventDefault()
     if (this.$rcm) {
-      const result = eval('(' + this.state.result + ')') // eslint-disable-line no-eval
+      const result = JSON5.parse(this.state.result)
       const beautified = JSON.stringify(result, null, 2)
       this.$rcm.cm.setValue(beautified)
     }
@@ -123,6 +146,9 @@ class Importer extends Component<ImporterProps, ImporterState> {
     const { auth, repository, mod, itf, scope } = this.props
     const hasSiblings = siblings instanceof Array && siblings.length > 0
     // DONE 2.1 需要与 Mock 的 rule.type 规则统一，首字符小写，好烦！应该忽略大小写！
+    if (schema.name === lengthAlias) {
+      schema.name = 'length'
+    }
     let type = schema.type[0].toUpperCase() + schema.type.slice(1)
     let rule = ''
     if (type === 'Array' && schema.items && schema.items.length > 1) {
@@ -205,7 +231,12 @@ class Importer extends Component<ImporterProps, ImporterState> {
   // DONE 2.1 因为 setState() 是异步的，导致重复调用 handleAddMemoryProperty() 时最后保留最后一个临时属性
   handleSubmit = (e: any) => {
     e.preventDefault()
-    let result = eval('(' + this.state.result + ')') // eslint-disable-line no-eval
+    let result = JSON5.parse(this.state.result)
+    if (this.state.result.indexOf('length') > -1) {
+      // 递归查找替换 length 是一个重操作，先进行一次字符串查找，发现存在 length 字符再进行
+      replaceLength(result)
+    }
+
     if (result instanceof Array) {
       result = { _root_: result }
     }
