@@ -46,8 +46,9 @@ export function* updateRepository(action: any) {
     acceptedKeys.forEach(x => {
       params[x] = r[x]
     })
-    const repository = yield call(RepositoryService.updateRepository, params)
-    yield put(RepositoryAction.updateRepositorySucceeded(repository))
+    yield call(RepositoryService.updateRepository, params)
+    yield put(RepositoryAction.updateRepositorySucceeded(params))
+    yield put(RepositoryAction.fetchRepository({id: params.id}))
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     yield put(RepositoryAction.updateRepositoryFailed(e.message))

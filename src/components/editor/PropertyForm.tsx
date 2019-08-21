@@ -8,11 +8,11 @@ import { Button } from '@material-ui/core'
 export const TYPES = ['String', 'Number', 'Boolean', 'Object', 'Array', 'Function', 'RegExp']
 
 // 模拟数据
-const mockProperty = process.env.NODE_ENV === 'development'
+export const mockProperty = process.env.NODE_ENV === 'development'
   ? () => Mock.mock({
     'scope|1': ['request', 'response'],
     name: '@WORD(6)',
-    'type|1': TYPES,
+    'type|1': ['String', 'Number', 'Boolean'],
     'value|1': ['@INT', '@FLOAT', '@TITLE', '@NAME'],
     description: '@CSENTENCE',
     parentId: -1,

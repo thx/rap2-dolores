@@ -8,10 +8,38 @@ import { GoPlus, GoTrashcan, GoQuestion } from 'react-icons/go'
 import { rptFromStr2Num } from './InterfaceSummary'
 import './PropertyList.css'
 import { ButtonGroup, Button, Checkbox } from '@material-ui/core'
+import classNames from 'classnames'
+import _ from 'lodash'
+import Mock from 'mockjs'
 import JSON5 from 'json5'
+import { elementInViewport } from 'utils/ElementInViewport'
+
+const mockProperty = process.env.NODE_ENV === 'development'
+  ? () => Mock.mock({
+    'scope|1': ['request', 'response'],
+    name: '@WORD(6)',
+    'type|1': ['String', 'Number', 'Boolean'],
+    'value|1': ['@INT', '@FLOAT', '@TITLE', '@NAME'],
+    description: '@CSENTENCE',
+    parentId: -1,
+    interfaceId: '@NATURAL',
+    moduleId: '@NATURAL',
+    repositoryId: '@NATURAL',
+  })
+  : () => ({
+    scope: 'response',
+    name: '',
+    type: 'String',
+    value: '',
+    description: '',
+    parentId: -1,
+    interfaceId: undefined,
+    moduleId: undefined,
+    repositoryId: undefined,
+  })
 
 export const RequestPropertyListPreviewer = (props: any) => (
-  <Previewer {...props} />
+  <Previewer {...props}/>
 )
 
 export const ResponsePropertyListPreviewer = (props: any) => (
@@ -94,15 +122,40 @@ const getFormattedValue = (itf: any) => {
 }
 
 class SortableTreeTableRow extends Component<any, any> {
+  focusNameInput: HTMLInputElement | undefined = undefined
+  state = {
+    property: { children: [] },
+    childrenAdded: false,
+  }
+  static getDerivedStateFromProps(nextProps: any, prevState: any) {
+    return {
+      property: nextProps.property,
+      childrenAdded: nextProps.property.children.length > prevState.property.children.length,
+    }
+  }
+  componentDidMount() {
+    this.focusInput()
+  }
+  componentDidUpdate() {
+    this.focusInput()
+  }
+  focusInput() {
+    if (this.focusNameInput && this.state.childrenAdded) {
+      this.focusNameInput.focus()
+      if (!elementInViewport(this.focusNameInput)) {
+        this.focusNameInput.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+      }
+    }
+  }
   render() {
-    const { property, editable } = this.props
-    const { handleClickCreateChildPropertyButton, handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
+    const { property, editable, handleClickCreateChildPropertyButton, highlightId,
+      handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
     return (
       <RSortable group={property.depth} handle=".SortableTreeTableRow" disabled={!editable} onChange={handleSortProperties}>
         <div className={`RSortableWrapper depth${property.depth}`}>
           {property.children.sort((a: any, b: any) => a.priority - b.priority).map((item: any) =>
             <div key={item.id} className="SortableTreeTableRow" data-id={item.id}>
-              <div className="flex-row">
+              <div className={classNames('flex-row', { highlight: item.id === highlightId })}>
                 {editable &&
                   <div className="td operations nowrap">
                     {(item.type === 'Object' || item.type === 'Array')
@@ -125,6 +178,11 @@ class SortableTreeTableRow extends Component<any, any> {
                         <div style={{ float: 'right' }}><PropertyLabel pos={item.pos} /></div> : null}
                     </>
                     : <input
+                      ref={(input: HTMLInputElement) => {
+                        if (item.id === highlightId) {
+                          this.focusNameInput = input
+                        }
+                      }}
                       value={item.name}
                       onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)}
                       className="form-control editable"
@@ -231,18 +289,22 @@ class PropertyList extends Component<any, any> {
     label: PropTypes.string.isRequired,
     scope: PropTypes.string.isRequired,
     properties: PropTypes.array,
+    auth: PropTypes.object.isRequired,
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     itf: PropTypes.object.isRequired,
     editable: PropTypes.bool.isRequired,
-
     /** optional */
     bodyOption: PropTypes.string,
     requestParamsType: PropTypes.string,
   }
+  static contextTypes = {
+    handleAddMemoryProperty: PropTypes.func.isRequired,
+  }
   constructor(props: any) {
     super(props)
     this.state = {
+      highlightId: undefined,
       createProperty: false,
       createChildProperty: false,
       previewer: props.scope === 'response',
@@ -279,6 +341,8 @@ class PropertyList extends Component<any, any> {
           <SortableTreeTable
             root={Tree.arrayToTree(scopedProperties)}
             editable={editable}
+            highlightId={this.state.highlightId}
+            // handlefocused={this.handlefocused}
             handleClickCreateChildPropertyButton={this.handleClickCreateChildPropertyButton}
             handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             handleChangePropertyField={this.handleChangePropertyField}
@@ -310,10 +374,31 @@ class PropertyList extends Component<any, any> {
     )
   }
   handleClickCreatePropertyButton = () => {
-    this.setState({ createProperty: true })
+    this.handleClickCreateChildPropertyButton()
   }
-  handleClickCreateChildPropertyButton = (item: any) => {
-    this.setState({ createChildProperty: item })
+  // handlefocused = () => {
+  //   this.setState({ highlightId: undefined })
+  // }
+  handleClickCreateChildPropertyButton = (parent: any = { id: -1 }) => {
+    const { handleAddMemoryProperty } = this.context
+    const { auth, scope, repository = {}, mod = {}, itf = {} } = this.props
+    const childId = _.uniqueId('memory-')
+    const child = {
+      ...mockProperty(),
+      id: childId,
+      creatorId: auth.id,
+      repositoryId: repository.id,
+      moduleId: mod.id,
+      interfaceId: itf.id,
+      scope,
+      parentId: parent.id,
+    }
+    this.setState({
+      highlightId: childId,
+    })
+    handleAddMemoryProperty(child, () => {
+      /** empty */
+    })
   }
   handleClickImporterButton = () => {
     this.setState({ importer: true })
