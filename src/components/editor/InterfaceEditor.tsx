@@ -124,6 +124,7 @@ class InterfaceEditor extends Component<
         />
         <RequestPropertyList
           properties={this.state.properties}
+          auth={auth}
           editable={editable}
           repository={repository}
           mod={mod}
@@ -135,6 +136,7 @@ class InterfaceEditor extends Component<
         />
         <ResponsePropertyList
           properties={this.state.properties}
+          auth={auth}
           editable={editable}
           repository={repository}
           mod={mod}

@@ -172,42 +172,44 @@ export default {
               ),
             },
           }
-        case 'INTERFACE_LIST_SORT_SUCCEEDED':
-            modules = state.data.modules
-            const iftIds = action.ids
-            const itfIdsMap: any = {}
-            iftIds.forEach((id: number, index: number) => {
-              itfIdsMap[id] = index
-            })
-            const moduleId = action.moduleId
-            return {
-              ...state,
-              data: {
-                ...state.data,
-                modules: modules.map((mod: any) =>
-                  mod.id === moduleId
-                    ? {
-                      ...mod,
-                      interfaces: [...mod.interfaces].sort((a: any, b: any) => itfIdsMap[a.id] - itfIdsMap[b.id]),
-                    }
-                    : mod
-                ),
-              },
-            }
-        case 'MODULE_LIST_SORT_SUCCEEDED':
-            modules = state.data.modules
-            const moduleIds = action.ids
-            const moduleIdsMap: any = {}
-            moduleIds.forEach((id: number, index: number) => {
-              moduleIdsMap[id] = index
-            })
-            return {
-              ...state,
-              data: {
-                ...state.data,
-                modules: [...modules].sort((a: any, b: any) => moduleIdsMap[a.id] - moduleIdsMap[b.id]),
-              },
-            }
+        case 'INTERFACE_LIST_SORT_SUCCEEDED': {
+          const modules = state.data.modules
+          const iftIds = action.ids
+          const itfIdsMap: any = {}
+          iftIds.forEach((id: number, index: number) => {
+            itfIdsMap[id] = index
+          })
+          const moduleId = action.moduleId
+          return {
+            ...state,
+            data: {
+              ...state.data,
+              modules: modules.map((mod: any) =>
+                mod.id === moduleId
+                  ? {
+                    ...mod,
+                    interfaces: [...mod.interfaces].sort((a: any, b: any) => itfIdsMap[a.id] - itfIdsMap[b.id]),
+                  }
+                  : mod
+              ),
+            },
+          }
+        }
+        case 'MODULE_LIST_SORT_SUCCEEDED': {
+          const modules = state.data.modules
+          const moduleIds = action.ids
+          const moduleIdsMap: any = {}
+          moduleIds.forEach((id: number, index: number) => {
+            moduleIdsMap[id] = index
+          })
+          return {
+            ...state,
+            data: {
+              ...state.data,
+              modules: [...modules].sort((a: any, b: any) => moduleIdsMap[a.id] - moduleIdsMap[b.id]),
+            },
+          }
+        }
         default:
           return state
       }

@@ -317,11 +317,22 @@
         text-align: center
         color: #999
 
+@keyframes hightlight
+  0% 
+    background-color: unset;
+  50%
+    background-color: #fff3cd
+  100% 
+    background-color: unset;
+  
 .SortableTreeTable
   .SortableTreeTableHeader,
   .SortableTreeTableRow
   .flex-row
     display: flex
+    &.highlight
+      .thtd
+        animation: hightlight 1.5s 1
     .thtd
       border: 1px solid #eceeef
       flex-grow: 1
@@ -340,7 +351,6 @@
       margin-bottom: -1px
     .th, .td
       &.operations
-        background: #fff
         width: 4.5rem
         min-width: 4.5rem
       &.name
@@ -413,7 +423,9 @@
       &.payload.name
         @for $i from 0 through 10
           &.depth-#{$i}
-            padding-left: $i * 1rem
+            padding-left: $i * 1.3rem
+            &:after
+              width: $i * 1.3rem 
       &.payload.value
         max-height: unset
         overflow-wrap: break-word

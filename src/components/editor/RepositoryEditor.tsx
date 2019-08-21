@@ -63,10 +63,10 @@ class RepositoryEditor extends Component<any, any> {
   }
 
   componentDidMount() {
-    const id = +this.props.location.params.id
-    if (!this.props.repository.data || this.props.repository.data.id !== id) {
-      this.props.onFetchRepository({ id })
-    }
+    // const id = +this.props.location.params.id
+    // if (!this.props.repository.data || this.props.repository.data.id !== id) {
+    //   this.props.onFetchRepository({ id })
+    // }
   }
   render() {
     const { location: { params }, auth } = this.props
