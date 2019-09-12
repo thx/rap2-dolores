@@ -220,7 +220,9 @@ function UserList(props: Props) {
         : '请输入检索关键字'
     },
     onChange: (vals: INumItem[] | INumItem) => {
-      if (Array.isArray(vals)) {
+      if (vals === undefined || vals === null) {
+        onChange([])
+      } else if (Array.isArray(vals)) {
         onChange(vals.map(x => ({ id: x.value, fullname: x.label })))
       } else {
         onChange([{ id: vals.value, fullname: vals.label }])
