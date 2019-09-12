@@ -29,7 +29,8 @@ export default {
       ...CREDENTIALS,
       method: 'POST',
       body: JSON.stringify({
-        email, password,
+        email,
+        password,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +55,11 @@ export default {
     email,
     password,
     captcha,
-  }: { email: string, password: string, captcha: string }) {
+  }: {
+    email: string;
+    password: string;
+    captcha: string;
+  }) {
     return fetch(`${serve}/account/login`, {
       ...CREDENTIALS,
       method: 'POST',
@@ -80,7 +85,7 @@ export default {
   },
   // 获取用户总数
   fetchUserCount() {
-    return fetch(`${serve}/account/count`)
+    return fetch(`${serve}/account/count`, { ...CREDENTIALS })
       .then(res => res.json())
       .then(json => json.data)
   },
@@ -89,11 +94,13 @@ export default {
     name = '',
     cursor = 1,
     limit = 100,
-  }: { name?: string, cursor?: number, limit?: number } = {}) {
-    return fetch(`${serve}/account/list?name=${name}&cursor=${cursor}&limit=${limit}`, {
-      ...CREDENTIALS,
-    })
-      .then(res => res.json())
+  }: { name?: string; cursor?: number; limit?: number } = {}) {
+    return fetch(
+      `${serve}/account/list?name=${name}&cursor=${cursor}&limit=${limit}`,
+      {
+        ...CREDENTIALS,
+      }
+    ).then(res => res.json())
     // .then(json => json.data)
   },
   // 根据 id 删除指定用户
@@ -105,14 +112,10 @@ export default {
       .then(json => json.data)
   },
   // 获取用户列表
-  fetchLogList({
-    cursor = 1,
-    limit = 100,
-  }: { cursor: number, limit: number }) {
+  fetchLogList({ cursor = 1, limit = 100 }: { cursor: number; limit: number }) {
     return fetch(`${serve}/account/logger?cursor=${cursor}&limit=${limit}`, {
       ...CREDENTIALS,
-    })
-      .then(res => res.json())
+    }).then(res => res.json())
     // .then(json => json.data)
   },
 }
