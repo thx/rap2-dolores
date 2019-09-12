@@ -90,13 +90,17 @@ export default {
     cursor = 1,
     limit = 100,
   }: { name?: string, cursor?: number, limit?: number } = {}) {
-    return fetch(`${serve}/account/list?name=${name}&cursor=${cursor}&limit=${limit}`)
+    return fetch(`${serve}/account/list?name=${name}&cursor=${cursor}&limit=${limit}`, {
+      ...CREDENTIALS,
+    })
       .then(res => res.json())
     // .then(json => json.data)
   },
   // 根据 id 删除指定用户
   deleteUser(id: number) {
-    return fetch(`${serve}/account/remove?id=${id}`)
+    return fetch(`${serve}/account/remove?id=${id}`, {
+      ...CREDENTIALS,
+    })
       .then(res => res.json())
       .then(json => json.data)
   },
