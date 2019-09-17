@@ -49,7 +49,7 @@ function url2name(itf: any) {
   const apiUrl = itf.url
   const projectId = itf.repositoryId
   const id = itf.id
-
+  // eslint-disable-next-line
   const regExp = /^(?:https?:\/\/[^\/]+)?(\/?.+?\/?)(?:\.[^./]+)?$/
   const regExpExec = regExp.exec(apiUrl)
 
@@ -67,8 +67,10 @@ function url2name(itf: any) {
   // api/:id/get -> api//get
   // api/bid[0-9]{4}/get -> api//get
   urlSplit.forEach((item, i) => {
+    // eslint-disable-next-line
     if (/\:id/.test(item)) {
       urlSplit[i] = '$id'
+      // eslint-disable-next-line
     } else if (/[\[\]\{\}]/.test(item)) {
       urlSplit[i] = '$regx'
     }
