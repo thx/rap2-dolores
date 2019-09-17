@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { PropTypes, connect, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
-import InterfaceSummary, { BODY_OPTION, REQUEST_PARAMS_TYPE, rptFromStr2Num } from './InterfaceSummary'
+import InterfaceSummary, {
+  BODY_OPTION,
+  REQUEST_PARAMS_TYPE,
+  rptFromStr2Num
+} from './InterfaceSummary'
 import PropertyList from './PropertyList'
-import { RModal } from '../utils'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
 import { RootState } from 'actions/types'
@@ -12,36 +15,38 @@ import { updateProperties } from 'actions/property'
 import { updateInterface } from 'actions/interface'
 
 export const RequestPropertyList = (props: any) => {
-  return <PropertyList scope="request" title="请求参数" label="请求" {...props} />
+  return (
+    <PropertyList scope="request" title="请求参数" label="请求" {...props} />
+  )
 }
 export const ResponsePropertyList = (props: any) => (
   <PropertyList scope="response" title="响应内容" label="响应" {...props} />
 )
 type InterfaceEditorProps = {
-  auth: any
-  itf: any
-  properties: any[]
-  mod: any
-  repository: any
-  lockInterface: typeof lockInterface
-  unlockInterface: typeof unlockInterface
-  updateInterface: typeof updateInterface
-  updateProperties: typeof updateProperties
+  auth: any;
+  itf: any;
+  properties: any[];
+  mod: any;
+  repository: any;
+  lockInterface: typeof lockInterface;
+  unlockInterface: typeof unlockInterface;
+  updateInterface: typeof updateInterface;
+  updateProperties: typeof updateProperties;
 }
 
 type InterfaceEditorState = {
-  summaryState: any
-  itf: any
-  properties: any
-  editable: boolean
-  moveInterfaceDialogOpen: boolean,
+  summaryState: any;
+  itf: any;
+  properties: any;
+  editable: boolean;
+  moveInterfaceDialogOpen: boolean;
 }
 // TODO 2.x 参考 MySQL Workbench 的字段编辑器
 // TODO 2.x 支持复制整个接口到其他模块、其他项目
 class InterfaceEditor extends Component<
   InterfaceEditorProps,
   InterfaceEditorState
-  > {
+> {
   static childContextTypes = {
     handleLockInterface: PropTypes.func.isRequired,
     handleUnlockInterface: PropTypes.func.isRequired,
@@ -71,7 +76,7 @@ class InterfaceEditor extends Component<
       ...prevStates,
       itf,
       properties: properties.map((property: any) => ({ ...property })),
-      editable: !!(itf.locker && (itf.locker.id === auth.id)),
+      editable: !!(itf.locker && itf.locker.id === auth.id),
     }
   }
   getChildContext() {
@@ -86,7 +91,9 @@ class InterfaceEditor extends Component<
     if (
       nextProps.itf.id === this.state.itf.id &&
       nextProps.itf.updatedAt === this.state.itf.updatedAt
-    ) { return }
+    ) {
+      return
+    }
     const prevStates = this.state
     this.setState(InterfaceEditor.mapPropsToState(nextProps, prevStates))
   }
@@ -98,7 +105,9 @@ class InterfaceEditor extends Component<
     const { auth, repository, mod } = this.props
     const { editable, itf } = this.state
     const { id, locker } = this.state.itf
-    if (!id) { return null }
+    if (!id) {
+      return null
+    }
     return (
       <article className="InterfaceEditor">
         <InterfaceEditorToolbar
@@ -110,7 +119,9 @@ class InterfaceEditor extends Component<
           moveInterface={this.handleMoveInterface}
           handleLockInterface={this.handleLockInterface}
           handleMoveInterface={this.handleMoveInterface}
-          handleSaveInterfaceAndProperties={this.handleSaveInterfaceAndProperties}
+          handleSaveInterfaceAndProperties={
+            this.handleSaveInterfaceAndProperties
+          }
           handleUnlockInterface={this.handleUnlockInterface}
         />
         <InterfaceSummary
@@ -144,33 +155,41 @@ class InterfaceEditor extends Component<
           handleChangeProperty={this.handleChangeProperty}
           handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
         />
-        <RModal
-          when={this.state.moveInterfaceDialogOpen}
+
+        {this.state.moveInterfaceDialogOpen && <MoveInterfaceForm
+          title="移动/复制接口"
+          mod={mod}
+          repository={repository}
+          itfId={itf.id}
+          open={this.state.moveInterfaceDialogOpen}
           onClose={() => this.setState({ moveInterfaceDialogOpen: false })}
-          onResolve={this.handleMoveInterfaceSubmit}
-        >
-          <MoveInterfaceForm title="移动接口" repository={repository} itfId={itf.id} />
-        </RModal>
+        />}
       </article>
     )
   }
   handleAddMemoryProperty = (property: any, cb: any) => {
     this.handleAddMemoryProperties([property], cb)
-  }
+  };
   handleAddMemoryProperties = (properties: any, cb: any) => {
     const requestParamsType = this.state.summaryState.requestParamsType
     const rpt = rptFromStr2Num(requestParamsType)
 
     properties.forEach((item: any) => {
-      if (item.memory === undefined) { item.memory = true }
-      if (item.id === undefined) { item.id = _.uniqueId('memory-') }
+      if (item.memory === undefined) {
+        item.memory = true
+      }
+      if (item.id === undefined) {
+        item.id = _.uniqueId('memory-')
+      }
       item.pos = rpt
     })
     const nextState = { properties: [...this.state.properties, ...properties] }
     this.setState(nextState, () => {
-      if (cb) { cb(properties) }
+      if (cb) {
+        cb(properties)
+      }
     })
-  }
+  };
   handleDeleteMemoryProperty = (property: any, cb: any) => {
     const properties = [...this.state.properties]
     const index = properties.findIndex(item => item.id === property.id)
@@ -188,10 +207,12 @@ class InterfaceEditor extends Component<
       }
 
       this.setState({ properties }, () => {
-        if (cb) { cb() }
+        if (cb) {
+          cb()
+        }
       })
     }
-  }
+  };
   handleChangeProperty = (property: any) => {
     const properties = [...this.state.properties]
     const index = properties.findIndex(item => item.id === property.id)
@@ -199,7 +220,7 @@ class InterfaceEditor extends Component<
       properties.splice(index, 1, property)
       this.setState({ properties })
     }
-  }
+  };
   handleChangeInterface = (newItf: any) => {
     this.setState({
       itf: {
@@ -207,41 +228,49 @@ class InterfaceEditor extends Component<
         ...newItf,
       },
     })
-  }
+  };
   handleSaveInterfaceAndProperties = (e: any) => {
     e.preventDefault()
     const { itf } = this.state
     const { updateProperties, updateInterface } = this.props
-    updateInterface({
-      id: itf.id,
-      name: itf.name,
-      url: itf.url,
-      method: itf.method,
-      status: itf.status,
-      description: itf.description,
-    }, () => {
-      /** empty */
-    })
-    updateProperties(this.state.itf.id, this.state.properties, this.state.summaryState, () => {
-      this.handleUnlockInterface()
-    })
-  }
+    updateInterface(
+      {
+        id: itf.id,
+        name: itf.name,
+        url: itf.url,
+        method: itf.method,
+        status: itf.status,
+        description: itf.description,
+      },
+      () => {
+        /** empty */
+      }
+    )
+    updateProperties(
+      this.state.itf.id,
+      this.state.properties,
+      this.state.summaryState,
+      () => {
+        this.handleUnlockInterface()
+      }
+    )
+  };
   handleMoveInterface = () => {
     this.setState({
       moveInterfaceDialogOpen: true,
     })
-  }
+  };
   handleMoveInterfaceSubmit = () => {
     /** empty */
-  }
+  };
   handleLockInterface = () => {
     const { itf, lockInterface } = this.props
     lockInterface(itf.id)
-  }
+  };
   handleUnlockInterface = () => {
     const { itf, unlockInterface } = this.props
     unlockInterface(itf.id)
-  }
+  };
 }
 
 const mapStateToProps = (state: RootState) => ({

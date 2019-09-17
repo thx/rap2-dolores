@@ -24,11 +24,12 @@
   > .footer
 
 .RepositoryList
+  display: grid;    
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 20px;
+  padding: 0 15px;
   .Repository.card
-    margin-bottom: 1rem;
-    // transition: box-shadow .15s ease-out;
-    // &:hover
-    //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.18);
+    margin-bottom: 1rem;    
     .card-block
       position: relative;
       .name

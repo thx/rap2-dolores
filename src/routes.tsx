@@ -64,7 +64,9 @@ const Routes = () => {
   return (
     <article className="Routes">
       <Message messageInfo={message} />
-      <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}> 回到顶部 </div>
+      <div className="btn-top" onClick={() => { console.log('hahaha'); window.scrollTo(0, 0) }}>
+        回到顶部
+      </div>
       <Route component={Header} />
       <div className="body">
       <Suspense fallback={<Spin/>}>

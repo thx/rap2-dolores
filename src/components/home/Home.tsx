@@ -29,10 +29,10 @@ const Home = ({ owned, joined, logs }: any) => {
   return (
     <div className="Home">
       <div className="row">
-        <div className="col-12 col-sm-8 col-md-8 col-lg-8">
+        <div className="distribute-2-3 pl15 pr15">
           <LogsCard logs={logs} />
         </div>
-        <div className="col-12 col-sm-4 col-md-4 col-lg-4">
+        <div className="distribute-1-3 pl15 pl15">
           <OwnedRepositoriesCard repositories={owned} />
           <div style={{ marginTop: 8 }}>
             <JoinedRepositoriesCard repositories={joined} />

@@ -1,3 +1,42 @@
+.label.fl
+  float: left;
+.ovh
+	overflow: hidden;
+.SyncRoomDialog
+  min-width: 400px;
+  min-height: 300px;
+  padding: 1.64rem;
+  ul
+    margin-top: 2rem;
+    padding: 0;
+  li
+    display: block;
+    border-radius: 5px;
+    padding: 1rem;
+    border: 1px solid #CCC;
+  li + li
+    margin-top: 1rem;
+  i
+    font-style: normal;
+    color: #FFF;
+    padding: 0 10px;
+    background: #CCC;
+    margin-left: 1rem;
+    border-radius: 5px;
+    zoom: .7;
+  p
+    margin-bottom: 0;
+  .button
+    float: right;
+    margin-top: 7px;
+    font-size: 14px;
+    background: #28a745;
+    color: #FFF;
+    line-height: 1.5;
+    user-select: none;
+    padding: .375rem 2rem;
+    border-radius: .25rem;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 .InterfaceSummary
   .dropdown
     display: inline-block
@@ -5,6 +44,11 @@
     max-width: 500px
   .body-options
     margin: 8px
+    display: flex
+    .form-check
+      margin-right: 10px
+    .form-check-label, .form-check-input 
+      cursor: pointer
   ul.summary
     padding: 0
     li
@@ -12,5 +56,49 @@
       margin: 0
       padding: 0
       margin-bottom: 5px
-  .nav-tabs 
-    margin-top: 20px
+  .nav
+    display: -ms-flexbox
+    display: flex
+    -ms-flex-wrap: wrap
+    flex-wrap: wrap
+    padding-left: 0
+    margin-bottom: 0
+    list-style: none
+
+  .nav-link
+    display: block
+    padding: 0.5rem 1rem
+    cursor: pointer
+    &:hover, &:focus
+      text-decoration: none
+    &.disabled
+      color: #6c757d
+      pointer-events: none
+      cursor: default
+
+  .nav-tabs
+    border-bottom: 1px solid #dee2e6
+    .nav-item
+      margin-bottom: -1px
+    .nav-link
+      border: 1px solid transparent
+      border-top-left-radius: 0.25rem
+      border-top-right-radius: 0.25rem
+      &:hover, &:focus
+        border-color: #e9ecef #e9ecef #dee2e6
+      &.disabled
+        color: #6c757d
+        background-color: transparent
+        border-color: transparent
+      &.active
+        color: #495057
+        background-color: #fff
+        border-color: #dee2e6 #dee2e6 #fff
+    .nav-item.show .nav-link
+      color: #495057
+      background-color: #fff
+      border-color: #dee2e6 #dee2e6 #fff
+    .dropdown-menu
+      margin-top: -1px
+      border-top-left-radius: 0
+      border-top-right-radius: 0

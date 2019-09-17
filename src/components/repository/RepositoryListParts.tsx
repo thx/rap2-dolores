@@ -40,20 +40,40 @@ export function CreateButton(props: CreateButtonProps) {
   return (
     <span className="float-right ml10">
       {/* DONE 2.1 √我加入的仓库、X所有仓库 是否应该有 新建仓库 */}
-      <Button className="RepositoryCreateButton" variant="contained" color="primary" onClick={() => setCreating(true)}> 新建仓库 </Button>
-      {organization &&
-        <button className="RepositoryCreateButton btn btn-secondary ml8" onClick={() => setImporting(true)}>
+      <Button
+        className="RepositoryCreateButton"
+        variant="contained"
+        color="primary"
+        onClick={() => setCreating(true)}
+      >
+        {' '}
+        新建仓库{' '}
+      </Button>
+
+      {organization && (
+        <button
+          className="RepositoryCreateButton btn btn-secondary ml8"
+          onClick={() => setImporting(true)}
+        >
           <GoArrowRight /> 导入仓库
-          </button>
-      }
-      <RModal when={creating} onClose={() => setCreating(false)} onResolve={handleUpdate}>
-        <RepositoryForm title="新建仓库" organization={organization} />
-      </RModal>
-      {organization &&
-        <RModal when={importing && !!organization} onClose={() => setImporting(false)} onResolve={handleUpdate}>
+        </button>
+      )}
+
+      <RepositoryForm
+        title="新建仓库"
+        open={creating}
+        onClose={() => setCreating(false)}
+      />
+
+      {organization && (
+        <RModal
+          when={importing && !!organization}
+          onClose={() => setImporting(false)}
+          onResolve={handleUpdate}
+        >
           <ImportRepositoryForm title="导入仓库" orgId={organization.id} />
         </RModal>
-      }
+      )}
     </span>
   )
 }

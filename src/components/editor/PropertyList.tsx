@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
 import { PropTypes, Link } from '../../family'
-import { Tree, SmartTextarea, RModal, RSortable, CopyToClipboard } from '../utils'
+import {
+  Tree,
+  SmartTextarea,
+  RModal,
+  RSortable,
+  CopyToClipboard
+} from '../utils'
 import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
-import { GoPlus, GoTrashcan, GoQuestion } from 'react-icons/go'
+import { GoPlus, GoTrashcan, GoQuestion, GoChevronDown, GoChevronRight } from 'react-icons/go'
 import { rptFromStr2Num } from './InterfaceSummary'
 import './PropertyList.css'
 import { ButtonGroup, Button, Checkbox } from '@material-ui/core'
@@ -14,32 +20,34 @@ import Mock from 'mockjs'
 import JSON5 from 'json5'
 import { elementInViewport } from 'utils/ElementInViewport'
 
-const mockProperty = process.env.NODE_ENV === 'development'
-  ? () => Mock.mock({
-    'scope|1': ['request', 'response'],
-    name: '@WORD(6)',
-    'type|1': ['String', 'Number', 'Boolean'],
-    'value|1': ['@INT', '@FLOAT', '@TITLE', '@NAME'],
-    description: '@CSENTENCE',
-    parentId: -1,
-    interfaceId: '@NATURAL',
-    moduleId: '@NATURAL',
-    repositoryId: '@NATURAL',
-  })
-  : () => ({
-    scope: 'response',
-    name: '',
-    type: 'String',
-    value: '',
-    description: '',
-    parentId: -1,
-    interfaceId: undefined,
-    moduleId: undefined,
-    repositoryId: undefined,
-  })
+const mockProperty =
+  process.env.NODE_ENV === 'development'
+    ? () =>
+        Mock.mock({
+          'scope|1': ['request', 'response'],
+          name: '@WORD(6)',
+          'type|1': ['String', 'Number', 'Boolean'],
+          'value|1': ['@INT', '@FLOAT', '@TITLE', '@NAME'],
+          description: '@CSENTENCE',
+          parentId: -1,
+          interfaceId: '@NATURAL',
+          moduleId: '@NATURAL',
+          repositoryId: '@NATURAL',
+        })
+    : () => ({
+        scope: 'response',
+        name: '',
+        type: 'String',
+        value: '',
+        description: '',
+        parentId: -1,
+        interfaceId: undefined,
+        moduleId: undefined,
+        repositoryId: undefined,
+      })
 
 export const RequestPropertyListPreviewer = (props: any) => (
-  <Previewer {...props}/>
+  <Previewer {...props} />
 )
 
 export const ResponsePropertyListPreviewer = (props: any) => (
@@ -60,19 +68,17 @@ class SortableTreeTableHeader extends Component<any, any> {
       <div className="SortableTreeTableHeader">
         <div className="flex-row">
           {/* DONE 2.1 每列增加帮助 Tip */}
-          {editable && (
-            <div className="th operations">
-              <Link
-                to=""
-                onClick={e => {
-                  e.preventDefault()
-                  handleClickCreatePropertyButton()
-                }}
-              >
-                <GoPlus className="fontsize-14 color-6" />
-              </Link>
-            </div>
-          )}
+          <div className="th operations">
+            <Link
+              to=""
+              onClick={e => {
+                e.preventDefault()
+                handleClickCreatePropertyButton()
+              }}
+            >
+              {editable && <GoPlus className="fontsize-14 color-6" />}
+            </Link>
+          </div>
           <div className="th name">名称</div>
           <div className="th type">必选</div>
           <div className="th type">类型</div>
@@ -108,8 +114,13 @@ const PropertyLabel = (props: any) => {
   }
 }
 
+// const PropertyArrow = (props: { property: any }) => {}
+
 const getFormattedValue = (itf: any) => {
-  if ((itf.type === 'Array' || itf.type === 'Object' || itf.type === 'String') && itf.value) {
+  if (
+    (itf.type === 'Array' || itf.type === 'Object' || itf.type === 'String') &&
+    itf.value
+  ) {
     try {
       const formatted = JSON.stringify(JSON5.parse(itf.value), undefined, 2)
       return formatted
@@ -120,17 +131,53 @@ const getFormattedValue = (itf: any) => {
     return itf.value || ''
   }
 }
-
-class SortableTreeTableRow extends Component<any, any> {
+interface SortableTreeTableRowState {
+  property: {
+    children: any[];
+    [k: string]: any;
+  }
+  interfaceId: number
+  childrenAdded: boolean
+  childrenExpandingIdList: number[]
+}
+interface SortableTreeTableRowProps {
+  /** 当前层级是不是展开 */
+  isExpanding: boolean
+  interfaceId: number
+  [k: string]: any
+}
+class SortableTreeTableRow extends Component<
+  SortableTreeTableRowProps,
+  SortableTreeTableRowState
+> {
   focusNameInput: HTMLInputElement | undefined = undefined
-  state = {
-    property: { children: [] },
-    childrenAdded: false,
+  constructor(props: SortableTreeTableRowProps) {
+    super(props)
+    this.state = {
+      property: { children: [] },
+      childrenAdded: false,
+      childrenExpandingIdList: [],
+      interfaceId: -1,
+    }
   }
   static getDerivedStateFromProps(nextProps: any, prevState: any) {
     return {
+      interfaceId: nextProps.interfaceId,
       property: nextProps.property,
-      childrenAdded: nextProps.property.children.length > prevState.property.children.length,
+      childrenAdded:
+        nextProps.property.children.length > prevState.property.children.length,
+      childrenExpandingIdList:
+        nextProps.interfaceId !== prevState.interfaceId
+          ? nextProps.property.children
+              // 默认展现 0，1，2 三个层级
+              .filter(
+                (item: any) =>
+                  item.children &&
+                  item.children.length > 0 &&
+                  nextProps.property.depth < 1
+              )
+              .map((item: any) => item.id)
+          : prevState.childrenExpandingIdList,
     }
   }
   componentDidMount() {
@@ -143,141 +190,289 @@ class SortableTreeTableRow extends Component<any, any> {
     if (this.focusNameInput && this.state.childrenAdded) {
       this.focusNameInput.focus()
       if (!elementInViewport(this.focusNameInput)) {
-        this.focusNameInput.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
+        this.focusNameInput.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest',
+        })
       }
     }
   }
   render() {
-    const { property, editable, handleClickCreateChildPropertyButton, highlightId,
-      handleDeleteMemoryProperty, handleChangePropertyField, handleSortProperties } = this.props
+    const {
+      property,
+      isExpanding,
+      editable,
+      handleClickCreateChildPropertyButton,
+      highlightId,
+      handleDeleteMemoryProperty,
+      handleChangePropertyField,
+      handleSortProperties,
+    } = this.props
     return (
-      <RSortable group={property.depth} handle=".SortableTreeTableRow" disabled={!editable} onChange={handleSortProperties}>
-        <div className={`RSortableWrapper depth${property.depth}`}>
-          {property.children.sort((a: any, b: any) => a.priority - b.priority).map((item: any) =>
-            <div key={item.id} className="SortableTreeTableRow" data-id={item.id}>
-              <div className={classNames('flex-row', { highlight: item.id === highlightId })}>
-                {editable &&
-                  <div className="td operations nowrap">
-                    {(item.type === 'Object' || item.type === 'Array')
-                      ? <Link
-                        to=""
-                        onClick={e => { e.preventDefault(); handleClickCreateChildPropertyButton(item) }}
-                      >
-                        <GoPlus className="fontsize-14 color-6" />
-                      </Link>
-                      : null}
-                    <Link to="" onClick={e => handleDeleteMemoryProperty(e, item)}><GoTrashcan className="fontsize-14 color-6" /></Link>
-                  </div>
-                }
-                <div className={`td payload name depth-${item.depth} nowrap`}>
-                  {!editable
-                    ?
-                    <>
-                      <CopyToClipboard text={item.name}><span className="nowrap">{item.name}</span></CopyToClipboard>
-                      {item.scope === 'request' && item.depth === 0 ?
-                        <div style={{ float: 'right' }}><PropertyLabel pos={item.pos} /></div> : null}
-                    </>
-                    : <input
-                      ref={(input: HTMLInputElement) => {
-                        if (item.id === highlightId) {
-                          this.focusNameInput = input
-                        }
-                      }}
-                      value={item.name}
-                      onChange={e => handleChangePropertyField(item.id, 'name', e.target.value)}
-                      className="form-control editable"
-                      spellCheck={false}
-                      placeholder=""
-                    />
-                  }
-                </div>
-                <div className={`td payload required type depth-${item.depth} nowrap`}>
-                  <Checkbox
-                    checked={!!item.required}
-                    disabled={!editable}
-                    onChange={e =>
-                      handleChangePropertyField(
-                        item.id,
-                        'required',
-                        e.target.checked
-                      )
-                    }
-                    color="primary"
-                    inputProps={{
-                      'aria-label': '必选',
-                    }}
-                  />
-                </div>
-
-                <div className="td payload type">
-                  {!editable
-                    ? <CopyToClipboard text={item.type.toLowerCase()}><span className="nowrap">{item.type}</span></CopyToClipboard>
-                    : <select
-                      value={item.type}
-                      onChange={e => handleChangePropertyField(item.id, 'type', e.target.value)}
-                      className="form-control editable"
+      isExpanding && (
+        <RSortable
+          group={property.depth}
+          handle=".SortableTreeTableRow"
+          disabled={!editable}
+          onChange={handleSortProperties}
+        >
+          <div className={`RSortableWrapper depth${property.depth}`}>
+            {property.children
+              .sort((a: any, b: any) => a.priority - b.priority)
+              .map((item: any) => {
+                const childrenIsExpanding = this.state.childrenExpandingIdList.includes(
+                  item.id
+                )
+                return (
+                  <div
+                    key={item.id}
+                    className="SortableTreeTableRow"
+                    data-id={item.id}
+                  >
+                    <div
+                      className={classNames('flex-row', {
+                        highlight: item.id === highlightId,
+                      })}
                     >
-                      {['String', 'Number', 'Boolean', 'Object', 'Array', 'Function', 'RegExp'].map(type =>
-                        <option key={type} value={type}>{type}</option>
-                      )}
-                    </select>
-                  }
-                </div>
-                <div className="td payload rule nowrap">
-                  {!editable
-                    ? <span className="nowrap">{item.rule}</span>
-                    : <input
-                      value={item.rule || ''}
-                      onChange={e => handleChangePropertyField(item.id, 'rule', e.target.value)}
-                      className="form-control editable"
-                      spellCheck={false}
-                      placeholder=""
-                    />
-                  }
-                </div>
-                <div className="td payload value">
-                  {!editable
-                    ? <CopyToClipboard text={item.value}><span className="value-container">{getFormattedValue(item)}</span></CopyToClipboard>
-                    : <SmartTextarea
-                      value={item.value || ''}
-                      onChange={(e: any) => handleChangePropertyField(item.id, 'value', e.target.value)}
-                      rows="1"
-                      className="form-control editable"
-                      spellCheck={false}
-                      placeholder=""
-                    />
-                  }
-                </div>
-                <div className="td payload desc">
-                  {!editable
-                    ? <CopyToClipboard text={item.description}><span>{item.description}</span></CopyToClipboard>
-                    : <SmartTextarea
-                      value={item.description || ''}
-                      onChange={(e: any) => handleChangePropertyField(item.id, 'description', e.target.value)}
-                      rows="1"
-                      className="form-control editable"
-                      spellCheck={false}
-                      placeholder=""
-                    />
-                  }
-                </div>
-              </div>
-              {item.children && item.children.length ? <SortableTreeTableRow {...this.props} property={item} /> : null}
-            </div>
-          )}
-        </div>
-      </RSortable>
+                      <div className="td operations nowrap">
+                        {(item.type === 'Object' || item.type === 'Array') &&
+                        item.children &&
+                        item.children.length ? (
+                          <Link
+                            to=""
+                            onClick={e => {
+                              e.preventDefault()
+                              this.setState(prev => ({
+                                ...prev,
+                                childrenExpandingIdList: childrenIsExpanding
+                                  ? prev.childrenExpandingIdList.filter(
+                                      id => id !== item.id
+                                    )
+                                  : [...prev.childrenExpandingIdList, item.id],
+                              }))
+                            }}
+                          >
+                            {childrenIsExpanding ? (
+                              <GoChevronDown className="fontsize-14 color-6"/>
+                            ) : (
+                              <GoChevronRight className="fontsize-14 color-6"/>
+                            )}
+                          </Link>
+                        ) : null}
+                        {editable && (
+                          <>
+                            {item.type === 'Object' || item.type === 'Array' ? (
+                              <Link
+                                to=""
+                                onClick={e => {
+                                  e.preventDefault()
+                                  handleClickCreateChildPropertyButton(item)
+                                  this.setState(prev => ({
+                                    ...prev,
+                                    childrenExpandingIdList: _.uniq([
+                                      ...prev.childrenExpandingIdList,
+                                      item.id,
+                                    ]),
+                                  }))
+                                }}
+                              >
+                                <GoPlus className="fontsize-14 color-6" />
+                              </Link>
+                            ) : null}
+                            <Link
+                              to=""
+                              onClick={e => handleDeleteMemoryProperty(e, item)}
+                            >
+                              <GoTrashcan className="fontsize-14 color-6" />
+                            </Link>
+                          </>
+                        )}
+                      </div>
+                      <div
+                        className={`td payload name depth-${item.depth} nowrap`}
+                      >
+                        {!editable ? (
+                          <>
+                            <CopyToClipboard text={item.name} type="right">
+                              <span className="name-wrapper nowrap">
+                                {item.name}
+                              </span>
+                            </CopyToClipboard>
+                            {item.scope === 'request' && item.depth === 0 ? (
+                              <div style={{ margin: '1px 0 0 3px' }}>
+                                <PropertyLabel pos={item.pos} />
+                              </div>
+                            ) : null}
+                          </>
+                        ) : (
+                          <input
+                            ref={(input: HTMLInputElement) => {
+                              if (item.id === highlightId) {
+                                this.focusNameInput = input
+                              }
+                            }}
+                            value={item.name}
+                            onChange={e =>
+                              handleChangePropertyField(
+                                item.id,
+                                'name',
+                                e.target.value
+                              )
+                            }
+                            className="form-control editable"
+                            spellCheck={false}
+                            placeholder=""
+                          />
+                        )}
+                      </div>
+                      <div
+                        className={`td payload required type depth-${item.depth} nowrap`}
+                      >
+                        <Checkbox
+                          checked={!!item.required}
+                          disabled={!editable}
+                          onChange={e =>
+                            handleChangePropertyField(
+                              item.id,
+                              'required',
+                              e.target.checked
+                            )
+                          }
+                          color="primary"
+                          inputProps={{
+                            'aria-label': '必选',
+                          }}
+                        />
+                      </div>
+
+                      <div className="td payload type">
+                        {!editable ? (
+                          <CopyToClipboard text={item.type}>
+                            <span className="nowrap">{item.type}</span>
+                          </CopyToClipboard>
+                        ) : (
+                          <select
+                            value={item.type}
+                            onChange={e =>
+                              handleChangePropertyField(
+                                item.id,
+                                'type',
+                                e.target.value
+                              )
+                            }
+                            className="form-control editable"
+                          >
+                            {[
+                              'String',
+                              'Number',
+                              'Boolean',
+                              'Object',
+                              'Array',
+                              'Function',
+                              'RegExp',
+                            ].map(type => (
+                              <option key={type} value={type}>
+                                {type}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                      <div className="td payload rule nowrap">
+                        {!editable ? (
+                          <span className="nowrap">{item.rule}</span>
+                        ) : (
+                          <input
+                            value={item.rule || ''}
+                            onChange={e =>
+                              handleChangePropertyField(
+                                item.id,
+                                'rule',
+                                e.target.value
+                              )
+                            }
+                            className="form-control editable"
+                            spellCheck={false}
+                            placeholder=""
+                          />
+                        )}
+                      </div>
+                      <div className="td payload value">
+                        {!editable ? (
+                          <CopyToClipboard text={item.value}>
+                            <span className="value-container">
+                              {getFormattedValue(item)}
+                            </span>
+                          </CopyToClipboard>
+                        ) : (
+                          <SmartTextarea
+                            value={item.value || ''}
+                            onChange={(e: any) =>
+                              handleChangePropertyField(
+                                item.id,
+                                'value',
+                                e.target.value
+                              )
+                            }
+                            rows="1"
+                            className="form-control editable"
+                            spellCheck={false}
+                            placeholder=""
+                          />
+                        )}
+                      </div>
+                      <div className="td payload desc">
+                        {!editable ? (
+                          <CopyToClipboard text={item.description}>
+                            <span>{item.description}</span>
+                          </CopyToClipboard>
+                        ) : (
+                          <SmartTextarea
+                            value={item.description || ''}
+                            onChange={(e: any) =>
+                              handleChangePropertyField(
+                                item.id,
+                                'description',
+                                e.target.value
+                              )
+                            }
+                            rows="1"
+                            className="form-control editable"
+                            spellCheck={false}
+                            placeholder=""
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {item.children && item.children.length ? (
+                      <SortableTreeTableRow
+                        {...this.props}
+                        property={item}
+                        isExpanding={childrenIsExpanding}
+                      />
+                    ) : null}
+                  </div>
+                )
+              })}
+          </div>
+        </RSortable>
+      )
     )
   }
 }
-
 class SortableTreeTable extends Component<any, any> {
   render() {
     const { root, editable } = this.props
     return (
       <div className={`SortableTreeTable ${editable ? 'editable' : ''}`}>
         <SortableTreeTableHeader {...this.props} />
-        <SortableTreeTableRow {...this.props} property={root} />
+        <SortableTreeTableRow
+          {...this.props}
+          interfaceId={this.props.interfaceId}
+          property={root}
+          isExpanding={true}
+        />
       </div>
     )
   }
@@ -312,11 +507,23 @@ class PropertyList extends Component<any, any> {
     }
   }
   render() {
-    const { title, label, scope, properties = [], repository = {}, mod = {}, itf = {} } = this.props
-    if (!itf.id) { return null }
+    const {
+      title,
+      label,
+      scope,
+      properties = [],
+      repository = {},
+      mod = {},
+      itf = {},
+    } = this.props
+    if (!itf.id) {
+      return null
+    }
     const { editable, requestParamsType } = this.props // itf.locker && (itf.locker.id === auth.id)
     const pos = rptFromStr2Num(requestParamsType)
-    let scopedProperties = properties.map((property: any) => ({ ...property })).filter((property: any) => property.scope === scope)
+    let scopedProperties = properties
+      .map((property: any) => ({ ...property }))
+      .filter((property: any) => property.scope === scope)
     if (scope === 'request' && editable) {
       scopedProperties = scopedProperties.filter((s: any) => s.pos === pos)
     }
@@ -328,10 +535,17 @@ class PropertyList extends Component<any, any> {
           <div className="toolbar">
             <ButtonGroup size="small" color="primary">
               {editable && [
-                <Button key={1} onClick={this.handleClickCreatePropertyButton}>新建</Button>,
-                <Button key={2} onClick={this.handleClickImporterButton}>导入</Button>,
+                <Button key={1} onClick={this.handleClickCreatePropertyButton}>
+                  新建
+                </Button>,
+                <Button key={2} onClick={this.handleClickImporterButton}>
+                  导入
+                </Button>,
               ]}
-              <Button className={this.state.previewer ? 'checked-button' : ''} onClick={this.handleClickPreviewerButton}>
+              <Button
+                className={this.state.previewer ? 'checked-button' : ''}
+                onClick={this.handleClickPreviewerButton}
+              >
                 预览
               </Button>
             </ButtonGroup>
@@ -340,42 +554,77 @@ class PropertyList extends Component<any, any> {
         <div className="body">
           <SortableTreeTable
             root={Tree.arrayToTree(scopedProperties)}
+            interfaceId={itf.id}
             editable={editable}
             highlightId={this.state.highlightId}
             // handlefocused={this.handlefocused}
-            handleClickCreateChildPropertyButton={this.handleClickCreateChildPropertyButton}
+            handleClickCreateChildPropertyButton={
+              this.handleClickCreateChildPropertyButton
+            }
             handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             handleChangePropertyField={this.handleChangePropertyField}
             handleSortProperties={this.handleSortProperties}
-            handleClickCreatePropertyButton={this.handleClickCreatePropertyButton}
+            handleClickCreatePropertyButton={
+              this.handleClickCreatePropertyButton
+            }
           />
         </div>
         <div className="footer">
-          {this.state.previewer && <Previewer scope={scope} label={label} properties={properties} itf={itf} />}
+          {this.state.previewer && (
+            <Previewer
+              scope={scope}
+              label={label}
+              properties={properties}
+              itf={itf}
+            />
+          )}
         </div>
         <RModal
           when={this.state.createProperty}
           onClose={() => this.setState({ createProperty: false })}
           onResolve={this.handleCreatePropertySucceeded}
         >
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} />
+          <PropertyForm
+            title={`新建${label}属性`}
+            scope={scope}
+            repository={repository}
+            mod={mod}
+            itf={itf}
+          />
         </RModal>
         <RModal
           when={!!this.state.createChildProperty}
           onClose={() => this.setState({ createChildProperty: false })}
           onResolve={this.handleCreatePropertySucceeded}
         >
-          <PropertyForm title={`新建${label}属性`} scope={scope} repository={repository} mod={mod} itf={itf} parent={this.state.createChildProperty} />
+          <PropertyForm
+            title={`新建${label}属性`}
+            scope={scope}
+            repository={repository}
+            mod={mod}
+            itf={itf}
+            parent={this.state.createChildProperty}
+          />
         </RModal>
-        <RModal when={this.state.importer} onClose={() => this.setState({ importer: false })} onResolve={this.handleCreatePropertySucceeded}>
-          <Importer title={`导入${label}属性`} repository={repository} mod={mod} itf={itf} scope={scope} />
+        <RModal
+          when={this.state.importer}
+          onClose={() => this.setState({ importer: false })}
+          onResolve={this.handleCreatePropertySucceeded}
+        >
+          <Importer
+            title={`导入${label}属性`}
+            repository={repository}
+            mod={mod}
+            itf={itf}
+            scope={scope}
+          />
         </RModal>
       </section>
     )
   }
   handleClickCreatePropertyButton = () => {
     this.handleClickCreateChildPropertyButton()
-  }
+  };
   // handlefocused = () => {
   //   this.setState({ highlightId: undefined })
   // }
@@ -399,35 +648,37 @@ class PropertyList extends Component<any, any> {
     handleAddMemoryProperty(child, () => {
       /** empty */
     })
-  }
+  };
   handleClickImporterButton = () => {
     this.setState({ importer: true })
-  }
+  };
   handleClickPreviewerButton = () => {
     this.setState({ previewer: !this.state.previewer })
-  }
+  };
   handleChangePropertyField = (id: any, key: any, value: any) => {
     const { handleChangeProperty } = this.props
     const { properties } = this.props
     const property = properties.find((property: any) => property.id === id)
     handleChangeProperty({ ...property, [key]: value })
-  }
+  };
   handleCreatePropertySucceeded = () => {
     /** empty */
-  }
+  };
   handleDeleteMemoryProperty = (e: any, property: any) => {
     e.preventDefault()
     const { handleDeleteMemoryProperty } = this.props
     handleDeleteMemoryProperty(property)
-  }
+  };
   handleSortProperties = (_: any, sortable: any) => {
     const { properties } = this.props
     const ids = sortable.toArray()
     ids.forEach((id: any, index: any) => {
-      const property = properties.find((item: any) => item.id === id || item.id === +id)
+      const property = properties.find(
+        (item: any) => item.id === id || item.id === +id
+      )
       property.priority = index + 1
     })
-  }
+  };
 }
 
 export default PropertyList

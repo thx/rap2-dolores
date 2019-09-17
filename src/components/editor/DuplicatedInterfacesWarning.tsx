@@ -53,7 +53,7 @@ class DuplicatedInterfacesWarning extends Component<DuplicatedInterfacesWarningP
     return (
       <div className="DuplicatedInterfacesWarning">
         {duplicated.map((interfaces, index) => (
-          <div key={index} className="alert alert-warning mb6">
+          <div key={index} className="alert alert-warning">
             <span className="title">
               <GoAlert className="icon" />
               <span className="msg">警告：检测到重复接口</span>

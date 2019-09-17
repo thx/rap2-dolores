@@ -1,5 +1,4 @@
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css'
+
 import './assets/index.css'
 import 'animate.css'
 

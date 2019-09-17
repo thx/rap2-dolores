@@ -23,7 +23,6 @@ class Previewer extends Component<any, any> {
     const { label, scope, properties, itf } = this.props
 
     try {
-
       // DONE 2.2 支持引用请求参数
       scopedProperties = {
         request: properties.map((property: any) => ({ ...property })).filter((property: any) => property.scope === 'request'),
