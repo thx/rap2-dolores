@@ -76,7 +76,7 @@ function OrganizationForm(props: Props) {
   return (
     <Dialog
       open={open}
-      onClose={() => onClose()}
+      onClose={(_event, reason) => (reason !== 'backdropClick' && onClose())}
       TransitionComponent={Transition}
     >
       <DialogTitle>新建团队</DialogTitle>

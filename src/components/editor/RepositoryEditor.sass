@@ -3,7 +3,7 @@
 .RepositoryEditor
   > .header
     position: relative
-    padding: 2rem
+    padding: 2rem 2rem 1rem 2rem
     background-color: #fafbfc
     > .title
       font-size: 2rem
@@ -89,19 +89,7 @@
 
 .DuplicatedInterfacesWarning
   margin-top: 1rem
-  .alert.alert-warning
-    margin-bottom: .5rem
-    .title
-      margin-right: 1rem
-      .icon
-        font-size: 1.4rem
-        margin-right: .5rem
-      .msg
-        font-weight: bold
-        margin-right: 1rem
-      .itf
-    a
-      margin-right: 1rem
+
 
 .ModuleList
   margin: 0
@@ -351,8 +339,8 @@
       margin-bottom: -1px
     .th, .td
       &.operations
-        width: 4.5rem
-        min-width: 4.5rem
+        padding: .5rem
+        width: 1rem
       &.name
         width: 20rem
         flex-grow: 3
@@ -372,7 +360,6 @@
             color: $brand
     .td
       &.operations
-        padding: .5rem .75rem
         height: auto
         line-height: 1
         justify-content: flex-end
@@ -390,6 +377,8 @@
       &.payload.name
         justify-content: space-between
         position: relative
+        .name-wrapper
+          flex-grow: 1
         @for $i from 1 through 42
           &.depth-#{$i}
             padding-left: $i * 1rem + 0.75rem
@@ -416,7 +405,11 @@
       &.payload.desc
         word-break: break-word
 .SortableTreeTable.editable
-  .flex-row
+  .flex-row    
+    .th, .td
+      &.operations
+        width: 4.5rem
+        padding: .5rem .75rem
     .td
       &.payload
         padding: 0

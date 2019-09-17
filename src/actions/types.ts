@@ -21,7 +21,6 @@ export interface RootState {
 }
 
 export interface Organization {
-
   id: number
 
   name: string
@@ -44,7 +43,6 @@ export interface Organization {
   owner?: User
 
   newOwner?: User
-
 }
 
 export interface User {
@@ -64,4 +62,80 @@ export interface IConfig {
   session: {
     key: string
   }
+}
+export interface Repository {
+  id: number
+
+  name: string
+
+  description?: string
+
+  logo?: string
+
+  /** true: 公开, false: 私有 */
+  visibility?: boolean
+
+  creatorId?: number
+
+  ownerId?: number
+
+  organizationid?: number
+
+  memberIds?: number[]
+
+  members?: User[]
+
+  owner?: User
+
+  newOwner?: User
+
+  collaborators?: Repository[]
+
+  collaboratorIds?: string[]
+
+  collaboratorIdstring?: string
+}
+
+export interface Module {
+  id: number
+
+  name: string
+
+  description?: string
+
+  repositoryid?: number
+
+  creatorId?: number
+
+  priority: number
+
+  repository?: Repository
+
+  repositoryId?: number
+}
+
+export interface Interface {
+  id: number
+
+  name: string
+
+  url: string
+
+  method: string
+
+  description?: string
+
+  moduleId?: number
+
+  creatorId?: number
+
+  lockerid?: number
+
+  locker?: User
+
+  repositoryId?: number
+
+  repository?: Repository
+
+  status?: number
 }

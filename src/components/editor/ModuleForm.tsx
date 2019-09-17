@@ -1,114 +1,150 @@
-import React, { Component } from 'react'
-import { PropTypes, connect, Mock } from '../../family'
-import { SmartTextarea } from '../utils'
-import { RootState } from 'actions/types'
-import { Button } from '@material-ui/core'
-// 模拟数据
-const mockModule = process.env.NODE_ENV === 'development'
-  ? () => Mock.mock({
-    name: '模块@CTITLE(4)',
-    description: '@CPARAGRAPH',
-    repositoryId: undefined,
-  })
-  : () => ({
-    name: '',
-    description: '',
-    repositoryId: undefined,
-  })
+import React from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { YUP_MSG } from '../../family/UIConst'
+import { Formik, Field, Form } from 'formik'
+import { TextField } from 'formik-material-ui'
+import * as Yup from 'yup'
+import { Button, Theme, Dialog, Slide, DialogContent, DialogTitle } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
+import { TransitionProps } from '@material-ui/core/transitions/transition'
+import { Module, Repository, RootState } from '../../actions/types'
+import { updateModule, addModule } from '../../actions/module'
+import { refresh } from '../../actions/common'
 
-// 展示组件
-class ModuleForm extends Component<any, any> {
-  static contextTypes = {
-    rmodal: PropTypes.object.isRequired,
-    onAddModule: PropTypes.func.isRequired,
-    onUpdateModule: PropTypes.func.isRequired,
-  }
-  static propTypes = {
-    auth: PropTypes.object.isRequired,
-    repository: PropTypes.object.isRequired,
-    mod: PropTypes.object,
-  }
-  constructor(props: any) {
-    super(props)
-    const { mod } = this.props
-    this.state = mod ? { ...mod } : mockModule()
-  }
-  render() {
-    const { rmodal } = this.context
-    return (
-      <section>
-        <div className="rmodal-header">
-          <span className="rmodal-title">{this.props.title}</span>
-        </div>
-        <form className="form-horizontal w600" onSubmit={this.handleSubmit}>
-          <div className="rmodal-body">
-            <div className="form-group row">
-              <label className="col-sm-2 control-label">名称：</label>
-              <div className="col-sm-10">
-                <input
-                  name="name"
-                  tabIndex={1}
-                  value={this.state.name}
-                  onChange={e => this.setState({ name: e.target.value })}
-                  className="form-control"
-                  placeholder="Name"
-                  spellCheck={false}
-                  autoFocus={true}
-                  required={true}
-                />
-              </div>
-            </div>
-            <div className="form-group row">
-              <label className="col-sm-2 control-label">简介：</label>
-              <div className="col-sm-10">
-                <SmartTextarea
-                  tabIndex={2}
-                  name="description"
-                  value={this.state.description}
-                  onChange={(e: any) => this.setState({ description: e.target.value })}
-                  className="form-control"
-                  placeholder="Description"
-                  spellCheck={false}
-                  rows="5"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="rmodal-footer">
-            <div className="form-group row mb0">
-              <label className="col-sm-2 control-label" />
-              <div className="col-sm-10">
-                <Button type="submit" style={{ marginRight: 8 }} variant="contained" color="primary">提交</Button>
-                <Button onClick={() => rmodal.close()} >取消</Button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </section>
-    )
-  }
-  handleSubmit = (e: any) => {
-    e.preventDefault()
-    const { onAddModule, onUpdateModule } = this.context
-    const { auth, repository } = this.props
-    const onAddOrUpdateModule = this.state.id ? onUpdateModule : onAddModule
-    const mod = Object.assign({}, this.state, {
-      creatorId: auth.id,
-      repositoryId: repository.id,
-    })
-    const { rmodal } = this.context
-    rmodal.close()
-    onAddOrUpdateModule(mod, () => {
-      if (rmodal) { rmodal.resolve() }
-    })
-  }
+const useStyles = makeStyles(({ spacing }: Theme) => ({
+  root: {
+  },
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    marginLeft: spacing(2),
+    flex: 1,
+  },
+  preview: {
+    marginTop: spacing(1),
+  },
+  form: {
+    minWidth: 500,
+  },
+  formTitle: {
+    color: 'rgba(0, 0, 0, 0.54)',
+    fontSize: 9,
+  },
+  formItem: {
+    marginBottom: spacing(1),
+  },
+  ctl: {
+    marginTop: spacing(3),
+  },
+}))
+
+const schema = Yup.object().shape<Partial<Module>>({
+  name: Yup.string().required(YUP_MSG.REQUIRED).max(20, YUP_MSG.MAX_LENGTH(20)),
+  description: Yup.string().max(1000, YUP_MSG.MAX_LENGTH(1000)),
+})
+
+const FORM_STATE_INIT: Module = {
+  id: 0,
+  name: '',
+  description: '',
+  repositoryid: 0,
+  priority: 1,
 }
 
-const mapStateToProps = (state: RootState) => ({
-  auth: state.auth,
+const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
 })
-const mapDispatchToProps = ({})
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ModuleForm)
+
+interface Props {
+  title?: string
+  open: boolean
+  onClose: (isOk?: boolean) => void
+  module?: Module
+  repository?: Repository
+}
+
+function ModuleForm(props: Props) {
+  const auth = useSelector((state: RootState) => state.auth)
+  const { open, onClose, module, title, repository } = props
+  const classes = useStyles()
+  const dispatch = useDispatch()
+
+  return (
+    <Dialog
+      open={open}
+      onClose={(_event, reason) => (reason !== 'backdropClick' && onClose())}
+      TransitionComponent={Transition}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent dividers={true}>
+        <div className={classes.form}>
+          <Formik
+            initialValues={{
+              ...FORM_STATE_INIT,
+              ...(module || {}),
+            }}
+            validationSchema={schema}
+            onSubmit={(values) => {
+              const addOrUpdateModule = values.id ? updateModule : addModule
+              const module: Module = {
+                ...values,
+                creatorId: auth.id,
+                repositoryId: repository!.id,
+              }
+              dispatch(addOrUpdateModule(module, () => {
+                dispatch(refresh())
+                onClose(true)
+              }))
+            }}
+            render={({ isSubmitting }) => {
+              return (
+                <Form>
+                  <div className="rmodal-body">
+                    <div className={classes.formItem}>
+                      <Field
+                        name="name"
+                        label="模块名称"
+                        component={TextField}
+                        fullWidth={true}
+                      />
+                    </div>
+                    <div className={classes.formItem}>
+                      <Field
+                        name="description"
+                        label="模块简介"
+                        component={TextField}
+                        multiline={true}
+                        rows={5}
+                        fullWidth={true}
+                      />
+                    </div>
+                  </div>
+                  <div className={classes.ctl}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      className="mr1"
+                      disabled={isSubmitting}
+                    >
+                      提交
+                    </Button>
+                    <Button
+                      onClick={() => onClose()}
+                      disabled={isSubmitting}
+                    >
+                      取消
+                    </Button>
+                  </div>
+                </Form>
+              )
+            }}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export default ModuleForm
