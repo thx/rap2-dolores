@@ -1,14 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { contextTypes, childContextTypes, getChildContext, CreateButton, OrganizationsTypeDropdown, SearchGroup, OrganizationListWithSpin, PaginationWithLocation, mapDispatchToProps } from './OrganizationListParts'
+import { CreateButton, OrganizationsTypeDropdown, SearchGroup, OrganizationListWithSpin, PaginationWithLocation, mapDispatchToProps } from './OrganizationListParts'
 import './Organization.css'
 import { RootState } from 'actions/types'
 
 // 所有团队
 class JoinedOrganizationList extends Component<any, any> {
-  static contextTypes = contextTypes
-  static childContextTypes = childContextTypes
-  getChildContext = getChildContext
   render() {
     const { location, match, organizations } = this.props
     return (

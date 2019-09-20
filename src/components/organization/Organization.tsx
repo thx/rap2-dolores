@@ -5,7 +5,7 @@ import OrganizationForm from './OrganizationForm'
 import { GoOrganization } from 'react-icons/go'
 import { useSelector } from 'react-redux'
 import { RootState, Organization } from '../../actions/types'
-import { handleDelete, handleExit, handleJoin } from './OrganizationListParts'
+import { useHandleDelete, useHandleExit, useHandleJoin } from './OrganizationListParts'
 
 function avatar(user: any) {
   return `https://work.alibaba-inc.com/photo/${user.empId}.220x220.jpg`
@@ -22,41 +22,97 @@ function OrganizationBlock(props: Props) {
   const owned = organization.owner && organization.owner.id === auth.id
   const joined = organization.members!.find(user => user.id === auth.id)
   const selfHelpJoin = false // DONE 2.1 不允许自助加入团队
+  const handleDelete = useHandleDelete()
+  const handleExit = useHandleExit()
+  const handleJoin = useHandleJoin()
   return (
     <section className="Organization card">
       <div className="card-block">
         <div className="header clearfix">
           <span className="title">
             <GoOrganization className="mr6 color-9" />
-            <Link to={`/organization/repository?organization=${organization.id}`} >{organization.name}</Link>
+            <Link
+              to={`/organization/repository?organization=${organization.id}`}
+            >
+              {organization.name}
+            </Link>
           </span>
           <span className="toolbar">
             {owned || joined ? ( // 拥有或已加入
-              <span className="fake-link operation mr5" onClick={() => setUpdate(true)}>编辑</span>
+              <span
+                className="fake-link operation mr5"
+                onClick={() => setUpdate(true)}
+              >
+                编辑
+              </span>
             ) : null}
-            <OrganizationForm organization={organization} open={update} onClose={() => setUpdate(false)} />
+            <OrganizationForm
+              organization={organization}
+              open={update}
+              onClose={() => setUpdate(false)}
+            />
             {owned ? ( // 拥有
-              <Link to="" onClick={e => handleDelete(e, organization)} className="operation mr5">删除</Link>
+              <Link
+                to=""
+                onClick={e => {
+                  e.preventDefault()
+                  handleDelete(organization)
+                }}
+                className="operation mr5"
+              >
+                删除
+              </Link>
             ) : null}
             {!owned && joined ? ( // 不拥有，已加入
-              <Link to="" onClick={e => handleExit(e, organization)} className="operation mr5">退出</Link>
+              <Link
+                to=""
+                onClick={e => {
+                  e.preventDefault()
+                  handleExit(organization)
+                }}
+                className="operation mr5"
+              >
+                退出
+              </Link>
             ) : null}
             {!owned && !joined && selfHelpJoin ? ( // 不拥有，未加入
-              <Link to="" onClick={e => handleJoin(e, organization)} className="operation mr5">加入</Link>
+              <Link
+                to=""
+                onClick={e => {
+                  e.preventDefault()
+                  handleJoin(organization)
+                }}
+                className="operation mr5"
+              >
+                加入
+              </Link>
             ) : null}
           </span>
         </div>
         <div className="body">
           <div className="desc">{organization.description}</div>
           <div className="members">
-            <Popover content={`${organization.owner!.fullname} ${organization.owner!.id}`}>
-              <img alt={organization.owner!.fullname} src={avatar(organization.owner)} className="avatar owner" />
+            <Popover
+              content={`${organization.owner!.fullname} ${
+                organization.owner!.id
+              }`}
+            >
+              <img
+                alt={organization.owner!.fullname}
+                src={avatar(organization.owner)}
+                className="avatar owner"
+              />
             </Popover>
-            {organization.members!.map(user =>
+            {organization.members!.map(user => (
               <Popover key={user.id} content={`${user.fullname} ${user.id}`}>
-                <img alt={user.fullname} title={user.fullname} src={avatar(user)} className="avatar" />
+                <img
+                  alt={user.fullname}
+                  title={user.fullname}
+                  src={avatar(user)}
+                  className="avatar"
+                />
               </Popover>
-            )}
+            ))}
           </div>
         </div>
       </div>
