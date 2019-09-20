@@ -5,6 +5,7 @@
     "tslint-react-hooks"
   ],
   "rules": {
+    "jsx-wrap-multiline": false,
     "arrow-parens": false,
     "arrow-return-shorthand": [
       false
