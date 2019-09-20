@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { PropTypes, Link, StoreStateRouterLocationURI, connect } from '../../family'
+import AwesomeDebouncePromise from 'awesome-debounce-promise'
 
 class Highlight extends Component<any, any> {
   static replace = (clip: any, seed: any) => {
@@ -115,28 +116,41 @@ class DropdownMenuBase extends Component<any, any> {
 
 const DropdownMenu = connect((state: any) => ({ router: state.router }))(DropdownMenuBase)
 
+interface IState {
+  seed: string
+  result: string
+}
+
 // TODO 2.2 自动隐藏，高阶组件
-class RepositorySearcher extends Component<any, any> {
+class RepositorySearcher extends Component<any, IState> {
   constructor(props: any) {
     super(props)
-    this.state = { seed: '' }
+    this.state = { seed: '', result: '' }
   }
   render() {
     const { repository } = this.props
+    const { seed, result } = this.state
+
+    const debouncedInput = AwesomeDebouncePromise((val: string) => this.setState({ result: val }), 500)
+
     return (
       <div className="RepositorySearcher dropdown">
         <input
-          value={this.state.seed}
-          onChange={e => { this.setState({ seed: e.target.value }) }}
+          value={seed}
+          onChange={e => {
+            const val = e.target.value
+            this.setState({ seed: val })
+            debouncedInput(val)
+          }}
           className="dropdown-input form-control"
           placeholder="工作区搜索"
         />
-        {this.state.seed && <DropdownMenu repository={repository} seed={this.state.seed} onSelect={this.clearSeed} />}
+        {this.state.result && <DropdownMenu repository={repository} seed={result} onSelect={this.clearSeed} />}
       </div>
     )
   }
   clearSeed = () => {
-    this.setState({ seed: '' })
+    this.setState({ seed: '', result: '' })
   }
 }
 
