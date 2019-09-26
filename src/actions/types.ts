@@ -56,13 +56,6 @@ export interface INumItem {
   label: string
 }
 
-export interface IConfig {
-  serve: string
-  keys: string[]
-  session: {
-    key: string
-  }
-}
 export interface Repository {
   id: number
 
@@ -79,7 +72,7 @@ export interface Repository {
 
   ownerId?: number
 
-  organizationid?: number
+  organizationId?: number
 
   memberIds?: number[]
 

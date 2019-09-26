@@ -54,7 +54,7 @@ const FORM_STATE_INIT: Repository = {
   description: '',
   members: [],
   collaborators: [],
-  organizationid: 0,
+  organizationId: 0,
   collaboratorIdstring: '',
 }
 
@@ -66,11 +66,12 @@ interface Props {
   title?: string
   open: boolean
   onClose: (isOk?: boolean) => void
-  repository?: Repository
+  repository?: Repository,
+  organizationId?: number
 }
 
 function RepositoryForm(props: Props) {
-  const { open, onClose, repository, title } = props
+  const { open, onClose, repository, title, organizationId } = props
   if (repository) {
     repository.collaboratorIdstring = repository.collaborators!.map(x => { return x.id }).join(',')
   }
@@ -104,6 +105,9 @@ function RepositoryForm(props: Props) {
                 collaboratorIds: (
                   values.collaboratorIdstring || ''
                 ).split(','),
+              }
+              if (organizationId !== undefined) {
+                repository.organizationId = organizationId
               }
               const { owner, newOwner } = values
               if (newOwner && newOwner.id !== owner!.id) { repository.ownerId = newOwner.id }

@@ -46,23 +46,26 @@ export function CreateButton(props: CreateButtonProps) {
         color="primary"
         onClick={() => setCreating(true)}
       >
-        {' '}
-        新建仓库{' '}
+        新建仓库
       </Button>
 
       {organization && (
-        <button
-          className="RepositoryCreateButton btn btn-secondary ml8"
+        <Button
+          style={{marginLeft: 8}}
+          className="RepositoryCreateButton"
+          variant="contained"
+          color="primary"
           onClick={() => setImporting(true)}
         >
           <GoArrowRight /> 导入仓库
-        </button>
+        </Button>
       )}
 
       <RepositoryForm
         title="新建仓库"
         open={creating}
         onClose={() => setCreating(false)}
+        organizationId={organization ? organization.id : undefined}
       />
 
       {organization && (
