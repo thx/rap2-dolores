@@ -117,7 +117,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = {
   replace,
-  onSortInterfaceList: sortInterfaceList,
   deleteInterface,
 }
 const InterfaceWrap = connect(
@@ -132,15 +131,17 @@ interface InterfaceListProps {
   mod: Module
   repository: Repository
 }
-function InterfaceList(props: InterfaceListProps, context: any) {
+function InterfaceList(props: InterfaceListProps) {
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
   const auth = useSelector((state: RootState) => state.auth)
   const { repository, itf, itfs = [], mod } = props
   const isOwned = repository.owner!.id === auth.id
   const isJoined = repository.members!.find((item: any) => item.id === auth.id)
   const handleSort = (_: any, sortable: any) => {
-    const { onSortInterfaceList } = context
-    onSortInterfaceList(sortable.toArray())
+    dispatch(sortInterfaceList(sortable.toArray(), mod.id, () => {
+      /** empty */
+    }))
   }
   return (
     <article className="InterfaceList">
