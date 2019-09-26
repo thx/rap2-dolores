@@ -26,7 +26,6 @@ import {
   deleteInterface,
   lockInterface,
   unlockInterface,
-  sortInterfaceList
 } from '../../actions/interface'
 import {
   addProperty,
@@ -74,7 +73,6 @@ class RepositoryEditor extends Component<any, any> {
     onDeleteInterface: PropTypes.func.isRequired,
     onLockInterface: PropTypes.func.isRequired,
     onUnlockInterface: PropTypes.func.isRequired,
-    onSortInterfaceList: PropTypes.func.isRequired,
     onAddProperty: PropTypes.func.isRequired,
     onUpdateProperty: PropTypes.func.isRequired,
     onUpdateProperties: PropTypes.func.isRequired,
@@ -278,7 +276,6 @@ const mapDispatchToProps = {
   onDeleteInterface: deleteInterface,
   onLockInterface: lockInterface,
   onUnlockInterface: unlockInterface,
-  onSortInterfaceList: sortInterfaceList,
   onAddProperty: addProperty,
   onUpdateProperty: updateProperty,
   onUpdateProperties: updateProperties,
