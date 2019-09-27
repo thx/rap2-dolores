@@ -84,15 +84,17 @@ interface ModuleListProps {
   mod?: Module
   repository: Repository
 }
-function ModuleList(props: ModuleListProps, context: any) {
+function ModuleList(props: ModuleListProps) {
   const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
   const auth = useSelector((state: RootState) => state.auth)
   const { repository, mods = [], mod } = props
   const isOwned = repository.owner!.id === auth.id
   const isJoined = repository.members!.find((item: any) => item.id === auth.id)
   const handleSort = (_: any, sortable: any) => {
-    const { onSortModuleList } = context
-    onSortModuleList(sortable.toArray())
+    dispatch(sortModuleList(sortable.toArray(), () => {
+      /** empty */
+    }))
   }
   return (
     <RSortable onChange={handleSort} disabled={!isOwned && !isJoined}>
@@ -136,7 +138,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = ({
   replace,
-  onSortModuleList: sortModuleList,
 })
 export default connect(
   mapStateToProps,

@@ -12,7 +12,6 @@ import { METHODS, STATUS_LIST } from './InterfaceForm'
 import { CopyToClipboard } from '../utils/'
 import { getRelativeUrl } from '../../utils/URLUtils'
 import './InterfaceSummary.css'
-import { RootState } from 'actions/types'
 import { showMessage, MSG_TYPE } from 'actions/common'
 import {
   TextField,
@@ -109,7 +108,6 @@ class InterfaceSummary extends Component<
   InterfaceSummaryState
 > {
   static contextTypes = {
-    // onAddForeignRoomCase: PropTypes.func.isRequired,
     onDeleteInterface: PropTypes.func.isRequired,
   }
   constructor(props: any) {
@@ -490,20 +488,8 @@ class InterfaceSummary extends Component<
     }
   }
   handleUpdate = () => { /** empty */ }
-  // createCase = (e: any, repositoryId: any, interfaceId: any, name: any) => {
-  //   e.preventDefault()
-  //   this.setState({ name })
-  //   const { onAddForeignRoomCase } = this.context
-  //   onAddForeignRoomCase({
-  //     id: repositoryId,
-  //     itf: interfaceId,
-  //     name,
-  //   })
-  //   // itf.repositoryId
-  // }
 }
-const mapStateToProps = (state: RootState) => ({
-  room: state.foreign,
+const mapStateToProps = () => ({
 })
 const mapDispatchToProps = {
   replace,
