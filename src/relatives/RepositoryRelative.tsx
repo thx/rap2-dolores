@@ -401,39 +401,6 @@ export default {
           return state
       }
     },
-    foreign(state: any = null, action: any) {
-      switch (action.type) {
-        case 'FOREIGN_INTERFACE_FETCH':
-          return {
-            ...state,
-            [action.itf ? action.id + '_' + action.itf : action.id]: 'pending',
-          }
-        case 'FOREIGN_INTERFACE_FETCH_SUCCEEDED':
-          return {
-            ...state,
-            [action.data.interfaceId
-              ? action.data.repositoryId + '_' + action.data.interfaceId
-              : action.data.repositoryId]: action.data,
-          }
-        case 'ADD_FOREIGN_ROOM_CASE':
-          return {
-            ...state,
-            ['+' + action.id + '_' + action.itf]: 'pending',
-          }
-        case 'ADD_FOREIGN_ROOM_CASE_SUCCEEDED':
-          return {
-            ...state,
-            ['+' + action.id + '_' + action.itf]: 'success',
-          }
-        case 'ADD_FOREIGN_ROOM_CASE_FAILED':
-          return {
-            ...state,
-            ['+' + action.id + '_' + action.itf]: 'failed',
-          }
-        default:
-          return state
-      }
-    },
   },
   sagas: {
     [RepositoryAction.addRepository(undefined, undefined).type]:

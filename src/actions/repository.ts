@@ -40,11 +40,3 @@ export const fetchJoinedRepositoryList = (
 ) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH', user, name })
 export const fetchJoinedRepositoryListSucceeded = (repositories: any) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH_SUCCEEDED', repositories })
 export const fetchJoinedRepositoryListFailed = (message: any) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH_FAILED', message })
-
-export const fetchForeignInterfaces = ({ id, itf } = {id: '', itf: ''}) => ({ type: 'FOREIGN_INTERFACE_FETCH', id, itf })
-export const fetchForeignInterfacesSuccessed = (data: any) => ({ type: 'FOREIGN_INTERFACE_FETCH_SUCCEEDED', data })
-export const fetchForeignInterfacesFailed = (message: any) => ({ type: 'FOREIGN_INTERFACE_FETCH_FAILED', message })
-
-export const addForeignRoomCase = ({ id, itf, name } = { id: '', itf: '', name: ''}) => ({ type: 'ADD_FOREIGN_ROOM_CASE', id, itf, name })
-export const addForeignRoomCaseSuccessed = ({ id, itf } = { id: '', itf: ''}) => ({ type: 'ADD_FOREIGN_ROOM_CASE_SUCCEEDED', id, itf })
-export const addForeignRoomCaseFailed = ({ id, itf, message }: any) => ({ type: 'ADD_FOREIGN_ROOM_CASE_FAILED', id, itf, message })

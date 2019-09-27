@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { PropTypes, connect, Link, replace, _ } from '../../family'
 import { serve } from '../../relatives/services/constant'
-import { RModal, Spin } from '../utils'
+import { Spin } from '../utils'
 import RepositoryForm from '../repository/RepositoryForm'
 import RepositorySearcher from './RepositorySearcher'
 import ModuleList from './ModuleList'
@@ -25,7 +25,7 @@ import {
   updateInterface,
   deleteInterface,
   lockInterface,
-  unlockInterface,
+  unlockInterface
 } from '../../actions/interface'
 import {
   addProperty,
@@ -39,7 +39,6 @@ import {
   GoPlug,
   GoDatabase,
   GoJersey,
-  GoChecklist,
   GoLinkExternal,
   GoPencil
 } from 'react-icons/go'
@@ -100,7 +99,6 @@ class RepositoryEditor extends Component<any, any> {
   render() {
     const {
       location: { params },
-      room,
       auth,
     } = this.props
     let { repository } = this.props
@@ -161,17 +159,15 @@ class RepositoryEditor extends Component<any, any> {
                 <GoPencil /> 编辑
               </span>
             ) : null}
-            <RModal when={this.state.update} onResolve={this.handleUpdate}>
-              <RepositoryForm
-                open={this.state.update}
-                onClose={ok => {
-                  ok && this.handleUpdate()
-                  this.setState({ update: false })
-                }}
-                title="编辑仓库"
-                repository={repository}
-              />
-            </RModal>
+            <RepositoryForm
+              open={this.state.update}
+              onClose={ok => {
+                ok && this.handleUpdate()
+                this.setState({ update: false })
+              }}
+              title="编辑仓库"
+              repository={repository}
+            />
             <a
               href={`${serve}/app/plugin/${repository.id}`}
               target="_blank"
@@ -196,31 +192,19 @@ class RepositoryEditor extends Component<any, any> {
             >
               <GoJersey /> 测试
             </a>
-            {room &&
-              room[repository.id] &&
-              typeof room[repository.id].coverage !== 'undefined' && (
-                <a
-                  href={`http://room.daily.taobao.net/index.html#/detail?projectId=${room[repository.id].roomProjectId}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <GoChecklist /> Room用例覆盖:{' '}
-                  {Math.round(room[repository.id].coverage * 100)}%
-                </a>
-              )}
             <span
               className="fake-link edit"
               onClick={() => this.setState({ exportPostman: true })}
             >
-              <GoLinkExternal /> 导出Postman Collection
+              <GoLinkExternal /> 导出
             </span>
-            <RModal
-              when={this.state.exportPostman}
+
+            <ExportPostmanForm
+              title="导出"
+              open={this.state.exportPostman}
+              repoId={repository.id}
               onClose={() => this.setState({ exportPostman: false })}
-              onResolve={() => this.setState({ exportPostman: false })}
-            >
-              <ExportPostmanForm title="导出到Postman" repoId={repository.id} />
-            </RModal>
+            />
           </div>
           <RepositorySearcher repository={repository} />
           <div className="desc">{repository.description}</div>

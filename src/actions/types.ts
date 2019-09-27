@@ -15,7 +15,6 @@ export interface RootState {
 
   counter: any
   logs: any
-  foreign: any
   loading: boolean
   message: IMessage
 }
@@ -56,6 +55,13 @@ export interface INumItem {
   label: string
 }
 
+export interface IConfig {
+  serve: string
+  keys: string[]
+  session: {
+    key: string
+  }
+}
 export interface Repository {
   id: number
 
