@@ -54,7 +54,7 @@ export default function ExportPostmanForm(props: {
               role="alert"
               style={{ margin: '8px 0' }}
             >
-              <a href={markdownLink} target="_blank">
+              <a href={markdownLink} target="_blank" rel="noopener noreferrer">
                 {markdownLink}
               </a>
             </div>
