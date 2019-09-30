@@ -54,7 +54,6 @@ const FORM_STATE_INIT: Repository = {
   description: '',
   members: [],
   collaborators: [],
-  organizationId: 0,
   collaboratorIdstring: '',
 }
 
