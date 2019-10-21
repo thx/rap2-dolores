@@ -20,6 +20,7 @@ export default function ExportPostmanForm(props: {
   title: string;
 }) {
   const { repoId, open, onClose, title } = props
+  const postmanLink = `${config.serve}/export/postman?id=${repoId}`
   const markdownLink = `${config.serve}/export/markdown?id=${repoId}&origin=${window.location.origin}`
   const docxLink = `${config.serve}/export/docx?id=${repoId}&origin=${window.location.origin}`
   // const pdfLink = `${config.serve}/export/pdf?id=${repoId}&origin=${window.location.origin}`
@@ -32,19 +33,19 @@ export default function ExportPostmanForm(props: {
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers={true}>
         <form className="form-horizontal" onSubmit={() => false}>
-          <div>
+          <div className="mb5">
             <div>
-              Postman:            </div>
+              Postman:</div>
             <div
               className="alert alert-info"
               role="alert"
               style={{ margin: '8px 0' }}
             >
-              {' '}
-              {config.serve}/export/postman?id={repoId}{' '}
+              <a href={postmanLink} target="_blank" rel="noopener noreferrer">
+                {postmanLink}
+              </a>
             </div>
-            <div>请在 Postman 中点击导入（Import），选择从链接导入（Import
-              From Link），输入以上链接即可。</div>
+            <div>点击以上链接下载，在 Postman 中点击导入（Import），选择从文件导入（Import File）下载的文件。</div>
           </div>
 
           <div>
