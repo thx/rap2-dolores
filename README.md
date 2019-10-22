@@ -53,6 +53,15 @@ npm run build
 serve -s ./build -p 80
 ```
 
+### docker部署
+```
+# 1. config server API path in /src/config/config.prod.js(production config file)
+# 1. 配置后端服务器的地址。 /src/config/config.prod.js(生产模式配置文件)
+
+# 2. run build-image.sh, make sure the server has docker installed.
+# 2. 执行构建镜像命令，确保环境上安装有docker（脚本会pull下来node镜像做npm的构建，然后基于nginx制作最终镜像）
+```
+
 ## Author
 
 * Owner: Alimama FE Team
