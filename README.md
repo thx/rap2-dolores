@@ -54,7 +54,7 @@ serve -s ./build -p 80
 ```
 
 ### docker部署
-```
+```sh
 # 1. config server API path in /src/config/config.prod.js(production config file)
 # 1. 配置后端服务器的地址。 /src/config/config.prod.js(生产模式配置文件)
 
