@@ -6,3 +6,6 @@ services:
     container_name: rap2-dolores
     ports:
       - 80:80
+    environment:
+      # todo: this is the backend api rap2-delos's url, this feature can make dolores read url from env.
+      - BACKEND_API_URL='http://rap2api.taobao.org'
