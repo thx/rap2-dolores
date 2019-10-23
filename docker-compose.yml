@@ -2,7 +2,7 @@ version: '2.2'
 
 services:
   dolores:
-    image: stpice/rap2-dolores:1.0.0
+    image: rap2-dolores:1.0.0
     container_name: rap2-dolores
     ports:
       - 80:80
