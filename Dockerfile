@@ -7,12 +7,13 @@ RUN apk --no-cache --virtual build-dependencies add \
     python \
     make \
     g++ && \
-    yarn config set registry https://registry.npm.taobao.org/ && \
+    # 在国内打开下面一行加速
+    # yarn config set registry https://registry.npm.taobao.org/ && \
     yarn install && \
     apk del build-dependencies && \
     yarn global add typescript && \
     yarn run lint && \
-    SERVE_URL=http://localhost:8080 yarn run build
+    yarn run build
 
 # nginx
 FROM nginx:stable-alpine
