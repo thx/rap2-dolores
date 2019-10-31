@@ -1,10 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAEA,AACE,UADQ,CACR,IAAI,CAAC;EACH,gBAAgB,ECAN,OAAO;CDAU;;AAF/B,AAII,UAJM,CAGR,QAAQ,CACN,aAAa,CAAC;EACZ,gBAAgB,ECHR,OAAO;EDIf,iBAAiB,ECJT,OAAO;CDIa",
-    "sources": [
-        "nprogress.sass",
-        "../../assets/variables.sass"
-    ],
-    "names": [],
-    "file": "nprogress.css"
-}
+{"version":3,"sourceRoot":"","sources":["nprogress.sass","../../assets/variables.sass"],"names":[],"mappings":"AAGE;EACE;;AAEA;EACE,kBCHQ;EDIR,mBCJQ","file":"nprogress.css"}

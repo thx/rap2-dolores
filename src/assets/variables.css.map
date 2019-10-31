@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "variables.sass"
-    ],
-    "names": [],
-    "file": "variables.css"
-}
+{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"variables.css"}

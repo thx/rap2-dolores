@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,MAAM,CAAC;EACL,OAAO,EAAE,IAAI;CAAG",
-    "sources": [
-        "Utils.sass"
-    ],
-    "names": [],
-    "file": "Utils.css"
-}
+{"version":3,"sourceRoot":"","sources":["Utils.sass"],"names":[],"mappings":"AAAA;EACE","file":"Utils.css"}

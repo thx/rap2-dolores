@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,SAAS,CAAC;EACR,OAAO,EAAE,IAAI;CASD;;AAVd,AAEE,SAFO,CAEP,OAAO,CAAC;EACN,aAAa,EAAE,IAAI;CAEG;;AAL1B,AAII,SAJK,CAEP,OAAO,CAEL,MAAM,CAAC;EACL,SAAS,EAAE,IAAI;CAAG;;AALxB,AAME,SANO,CAMP,QAAQ,CAAC;EACP,aAAa,EAAE,IAAI;CAAG",
-    "sources": [
-        "UserList.sass"
-    ],
-    "names": [],
-    "file": "UserList.css"
-}
+{"version":3,"sourceRoot":"","sources":["UserList.sass"],"names":[],"mappings":"AAAA;EACE;;AACA;EACE;;AACA;EACE;;AACJ;EACE","file":"UserList.css"}
