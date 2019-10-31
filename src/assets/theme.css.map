@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "",
-    "sources": [
-        "theme.sass"
-    ],
-    "names": [],
-    "file": "theme.css"
-}
+{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"theme.css"}

@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,WAAW,CAAC;EACV,MAAM,EAAE,iBAAiB;CAAG",
-    "sources": [
-        "RCodeMirror.sass"
-    ],
-    "names": [],
-    "file": "RCodeMirror.css"
-}
+{"version":3,"sourceRoot":"","sources":["RCodeMirror.sass"],"names":[],"mappings":"AAAA;EACE","file":"RCodeMirror.css"}

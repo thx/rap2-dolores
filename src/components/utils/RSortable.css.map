@@ -1,9 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAGA,AAAA,eAAe,CAAC;EACd,gBAAgB,EAAE,OAAO;CAAG;;AAG9B,AAAA,cAAc,CAAC;EACb,gBAAgB,EAAE,KAAK;CAAG",
-    "sources": [
-        "RSortable.sass"
-    ],
-    "names": [],
-    "file": "RSortable.css"
-}
+{"version":3,"sourceRoot":"","sources":["RSortable.sass"],"names":[],"mappings":"AAGA;EACE;;;AAGF;EACE","file":"RSortable.css"}

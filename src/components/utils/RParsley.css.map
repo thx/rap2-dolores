@@ -1,10 +1,1 @@
-{
-    "version": 3,
-    "mappings": "AAEA,AAAA,KAAK,AAAA,cAAc,EAAE,KAAK,AAAA,aAAa,AAAA,cAAc;AACrD,QAAQ,AAAA,cAAc,EAAE,QAAQ,AAAA,aAAa,AAAA,cAAc,CAAC;EACxD,KAAK,EAAE,IAAI;EACX,gBAAgB,EAAE,KAAK;EACvB,YAAY,ECWL,OAAO;CDXQ;;AAE1B,AAAA,oBAAoB,CAAC;EACjB,UAAU,EAAE,IAAI;EAChB,YAAY,EAAE,MAAM;EACpB,KAAK,ECME,OAAO;EDLd,UAAU,EAAE,MAAM;EAClB,aAAa,EAAE,KAAK;CAAG;;AAE3B,AAAA,oBAAoB,GAAG,oBAAoB,CAAC;EACxC,UAAU,EAAE,KAAK;CAAG",
-    "sources": [
-        "RParsley.sass",
-        "../../assets/variables.sass"
-    ],
-    "names": [],
-    "file": "RParsley.css"
-}
+{"version":3,"sourceRoot":"","sources":["RParsley.sass","../../assets/variables.sass"],"names":[],"mappings":"AAEA;AAAA;EAEI;EACA;EACA,cCUO;;;ADRX;EACI;EACA;EACA,OCKO;EDJP;EACA;;;AAEJ;EACI","file":"RParsley.css"}
