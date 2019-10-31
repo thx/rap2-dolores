@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "npm run start",
-    "build-css": "node-sass src/ -o src/",
-    "watch-css": "npm run build-css && node-sass src/ -o src/ --watch --recursive",
+    "build-css": "node ./node_modules/sass/sass src/:src/ --quiet",
+    "watch-css": "npm run build-css && sass src/ src/ --watch",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js --max-old-space-size=4096",
     "build": "npm run lint && npm run build-css && react-scripts build",
@@ -14,7 +14,7 @@
     "test": "npm run lint",
     "eject": "react-scripts eject",
     "lint": "tslint --project ./ -c tslint.json",
-    "build:docker": "docker build --rm -f \"Dockerfile\" -t rapteam/rap2-dolores:latest ."
+    "build-docker": "docker build --rm -f \"Dockerfile\" -t rapteam/rap2-dolores:latest ."
   },
   "repository": {
     "type": "git",
@@ -105,7 +105,7 @@
     "@types/sortablejs": "^1.7.2",
     "@types/urijs": "^1.19.3",
     "@types/yup": "^0.26.21",
-    "node-sass": "4.13.0",
+    "sass": "^1.23.2",
     "npm-run-all": "4.1.5",
     "pre-commit": "^1.2.2",
     "react-scripts": "^3.0.1",
