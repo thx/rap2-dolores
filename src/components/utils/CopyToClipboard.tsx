@@ -5,7 +5,7 @@ import 'rc-tooltip/assets/bootstrap.css'
 import FileCopy from '@material-ui/icons/FileCopyTwoTone'
 import { withSnackbar, WithSnackbarProps } from 'notistack'
 
-import './CopyToClipboard.sass'
+import './CopyToClipboard.css'
 
 type Props = {
   children: React.ReactElement<any>;
