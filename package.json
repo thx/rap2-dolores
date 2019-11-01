@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run start",
     "build-css": "node ./node_modules/sass/sass src/:src/ --quiet",
-    "watch-css": "npm run build-css && sass src/ src/ --watch",
+    "watch-css": "npm run build-css && node ./node_modules/sass/sass src/:src/ --watch",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js --max-old-space-size=4096",
     "build": "npm run lint && npm run build-css && react-scripts build",
