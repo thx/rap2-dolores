@@ -1,19 +1,43 @@
-import React from 'react'
-import { Link } from '../../family'
+import React, { useState } from 'react'
+import { push } from '../../family'
+import { useDispatch } from 'react-redux'
 import { connect } from 'react-redux'
 import { Spin } from '../utils'
 import OwnedRepositoriesCard from './OwnedRepositoriesCard'
 import JoinedRepositoriesCard from './JoinedRepositoriesCard'
 import LogsCard from './LogsCard'
 import './Home.css'
-import { GoRepo } from 'react-icons/go'
 import { RootState } from 'actions/types'
+import Button from '@material-ui/core/Button'
+import RepositoryForm from 'components/repository/RepositoryForm'
 
-const Maiden = () => (
-  <div className="Maiden">
-    <Link to="/repository/joined/create" className=" btn btn-lg btn-success"><GoRepo /> 新建仓库</Link>
-  </div>
-)
+
+const Maiden = () => {
+  const [creating, setCreating] = useState(false)
+  const dispatch = useDispatch()
+  return (
+    <div className="Maiden">
+      <Button
+        className="RepositoryCreateButton"
+        variant="contained"
+        color="primary"
+        onClick={() => { setCreating(true) }}
+      >
+        新建仓库
+      </Button>
+      <RepositoryForm
+        title="新建仓库"
+        open={creating}
+        onClose={(ok: boolean) => {
+          if (ok) {
+            dispatch(push('/repository/joined'))
+          }
+          setCreating(false)
+        }}
+      />
+    </div>
+  )
+}
 
 // 展示组件
 const Home = ({ owned, joined, logs }: any) => {
