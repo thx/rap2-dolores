@@ -248,7 +248,8 @@ class InterfaceEditor extends Component<
     )
     updateProperties(
       this.state.itf.id,
-      this.state.properties,
+      // 过滤掉名称为空的propertie
+      this.state.properties.filter((item: any) => item.name),
       this.state.summaryState,
       () => {
         this.handleUnlockInterface()
