@@ -161,7 +161,7 @@ export default function LoginForm() {
             </div>
             <div className={classes.buttonWrapper}>
               <Button variant="outlined" color="default" style={{ marginRight: 8 }} onClick={() => dispatch(push('/account/register'))}>注册</Button>
-              <Button variant="contained" color="primary" tabIndex={3} onClick={handleSubmit}>登陆</Button>
+              <Button variant="contained" color="primary" tabIndex={3} onClick={handleSubmit}>登录</Button>
             </div>
           </ListItem>
         </List>
