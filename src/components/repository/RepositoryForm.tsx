@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 import { Button, Theme, Dialog, Slide, DialogContent, DialogTitle } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { TransitionProps } from '@material-ui/core/transitions/transition'
-import { Repository, RootState } from '../../actions/types'
+import { RepositoryFormData, RootState, Repository } from '../../actions/types'
 import UserList from '../common/UserList'
 import AccountService from '../../relatives/services/Account'
 import * as _ from 'lodash'
@@ -43,12 +43,12 @@ const useStyles = makeStyles(({ spacing }: Theme) => ({
   },
 }))
 
-const schema = Yup.object().shape<Partial<Repository>>({
+const schema = Yup.object().shape<Partial<RepositoryFormData>>({
   name: Yup.string().required(YUP_MSG.REQUIRED).max(20, YUP_MSG.MAX_LENGTH(20)),
   description: Yup.string().max(1000, YUP_MSG.MAX_LENGTH(1000)),
 })
 
-const FORM_STATE_INIT: Repository = {
+const FORM_STATE_INIT: RepositoryFormData = {
   id: 0,
   name: '',
   description: '',
@@ -70,7 +70,8 @@ interface Props {
 }
 
 function RepositoryForm(props: Props) {
-  const { open, onClose, repository, title, organizationId } = props
+  const { open, onClose, title, organizationId } = props
+  const repository = props.repository as RepositoryFormData
   if (repository) {
     repository.collaboratorIdstring = repository.collaborators!.map(x => { return x.id }).join(',')
   }
@@ -96,7 +97,7 @@ function RepositoryForm(props: Props) {
             validationSchema={schema}
             onSubmit={(values) => {
               const addOrUpdateRepository = values.id ? updateRepository : addRepository
-              const repository: Repository = {
+              const repository: RepositoryFormData = {
                 ...values,
                 memberIds: (values.members || []).map(
                   (user: any) => user.id

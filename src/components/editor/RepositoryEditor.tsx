@@ -8,6 +8,8 @@ import ModuleList from './ModuleList'
 import InterfaceList from './InterfaceList'
 import InterfaceEditor from './InterfaceEditor'
 import DuplicatedInterfacesWarning from './DuplicatedInterfacesWarning'
+import RapperInstallerModal from './RapperInstallerModal'
+
 import {
   addRepository,
   updateRepository,
@@ -40,20 +42,37 @@ import {
   GoDatabase,
   GoJersey,
   GoLinkExternal,
-  GoPencil
+  GoPencil,
+  GoCode
 } from 'react-icons/go'
 
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
-import { RootState } from 'actions/types'
+import { RootState, Repository, Module, Interface } from 'actions/types'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
 // DONE 2.2 各种空数据下的视觉效果：空仓库、空模块、空接口、空属性
 // TODO 2.1 大数据测试，含有大量模块、接口、属性的仓库
 
+interface Props {
+  auth: any
+  repository: any
+  location: any
+  onClearRepository: any
+  room: any
+  replace: any
+  router: any
+}
+
+interface States {
+  rapperInstallerModalOpen: boolean
+  update: boolean
+  exportPostman: boolean
+}
+
 // 展示组件
-class RepositoryEditor extends Component<any, any> {
+class RepositoryEditor extends Component<Props, States> {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     repository: PropTypes.object.isRequired,
@@ -84,6 +103,7 @@ class RepositoryEditor extends Component<any, any> {
     this.state = {
       update: false,
       exportPostman: false,
+      rapperInstallerModalOpen: false,
     }
   }
   getChildContext() {
@@ -101,29 +121,29 @@ class RepositoryEditor extends Component<any, any> {
       location: { params },
       auth,
     } = this.props
-    let { repository } = this.props
-    if (!repository.fetching && !repository.data) {
+    const { repository: repositoryAsync } = this.props
+    if (!repositoryAsync.fetching && !repositoryAsync.data) {
       return <div className="p100 fontsize-30 text-center">未找到对应仓库</div>
     }
-    if (repository.fetching || !repository.data || !repository.data.id) {
+    if (repositoryAsync.fetching || !repositoryAsync.data || !repositoryAsync.data.id) {
       return <Spin />
     }
 
-    repository = repository.data
+    const repository: Repository = repositoryAsync.data
     if (repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
 
-    const mod =
+    const mod: Module =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find((item: any) => item.id === +params.mod) ||
+        ? repository.modules.find(item => item.id === +params.mod) ||
           repository.modules[0]
-        : {}
-    const itf =
+        : {} as Module
+    const itf: Interface =
       mod.interfaces && mod.interfaces.length
         ? mod.interfaces.find((item: any) => item.id === +params.itf) ||
           mod.interfaces[0]
-        : {}
+        : {} as Interface
     const properties = itf.properties || []
 
     const ownerlink = repository.organization
@@ -131,7 +151,7 @@ class RepositoryEditor extends Component<any, any> {
       : `/repository/joined?user=${repository.owner.id}`
 
     const isOwned = repository.owner.id === auth.id
-    const isJoined = repository.members.find(
+    const isJoined = repository.members && repository.members.find(
       (item: any) => item.id === auth.id
     )
 
@@ -177,7 +197,7 @@ class RepositoryEditor extends Component<any, any> {
               <GoPlug /> 插件
             </a>
             <a
-              href={`${serve}/repository/get?id=${repository.id}`}
+              href={`${serve}/repository/get?id=${repository.id}&token=${repository.token}`}
               target="_blank"
               rel="noopener noreferrer"
               className="api"
@@ -204,6 +224,19 @@ class RepositoryEditor extends Component<any, any> {
               open={this.state.exportPostman}
               repoId={repository.id}
               onClose={() => this.setState({ exportPostman: false })}
+            />
+
+            <span
+              className="fake-link edit"
+              style={{color: '#f95e49'}}
+              onClick={() => this.setState({ rapperInstallerModalOpen: true })}
+            >
+              <GoCode /> 点这里帮你生成 TS 代码！
+            </span>
+            <RapperInstallerModal
+              open={this.state.rapperInstallerModalOpen}
+              handleClose={() => this.setState({ rapperInstallerModalOpen: false })}
+              repository={repository}
             />
           </div>
           <RepositorySearcher repository={repository} />

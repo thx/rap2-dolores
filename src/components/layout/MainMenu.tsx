@@ -3,14 +3,14 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener'
+import Grow from '@material-ui/core/Grow'
+import Divider from '@material-ui/core/Divider'
+import Paper from '@material-ui/core/Paper'
+import Popper from '@material-ui/core/Popper'
+import MenuItem from '@material-ui/core/MenuItem'
+import MenuList from '@material-ui/core/MenuList'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Link } from 'react-router-dom'
 import { User } from 'actions/types'
 import Logo from './Logo'
@@ -21,41 +21,41 @@ const useAccountButtonStyles = makeStyles(({ spacing }: Theme) => ({
   accountName: {
     padding: spacing(1),
     textAlign: 'center',
-    fontSize: '1.3714285714285714rem'
-  }
+    fontSize: '1.3714285714285714rem',
+  },
 }))
 
 const options = [{
   key: 'logout',
-  text: '注销'
-}];
+  text: '注销',
+}]
 
 function AccountButton({ user }: { user: User }) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false)
   const dispatch = useDispatch()
   const classes = useAccountButtonStyles()
 
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
 
   const handleMenuItemClick = (_event: React.MouseEvent<HTMLLIElement, MouseEvent>, key: string) => {
     if (key === 'logout') {
       dispatch(logout())
     }
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen);
-  };
+    setOpen(prevOpen => !prevOpen)
+  }
 
   const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
 
     if (anchorRef && anchorRef.current && event.target instanceof Node && anchorRef.current.contains(event.target)) {
-      return;
+      return
     }
 
-    setOpen(false);
-  };
+    setOpen(false)
+  }
 
   return (
     <div>
@@ -71,7 +71,7 @@ function AccountButton({ user }: { user: User }) {
         </span>
         <ExpandMoreIcon fontSize="small" />
       </Button>
-      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition>
+      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition={true}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
@@ -103,7 +103,7 @@ function AccountButton({ user }: { user: User }) {
         )}
       </Popper>
     </div>
-  );
+  )
 }
 
 const useStyles = makeStyles((theme: Theme) =>
