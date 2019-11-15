@@ -19,6 +19,7 @@ import _ from 'lodash'
 import Mock from 'mockjs'
 import JSON5 from 'json5'
 import { elementInViewport } from 'utils/ElementInViewport'
+import { nl2br } from 'utils/StringUtils'
 
 const mockProperty =
   process.env.NODE_ENV === 'development'
@@ -425,7 +426,7 @@ class SortableTreeTableRow extends Component<
                       <div className="td payload desc">
                         {!editable ? (
                           <CopyToClipboard text={item.description}>
-                            <span>{item.description}</span>
+                            <span>{nl2br(item.description)}</span>
                           </CopyToClipboard>
                         ) : (
                           <SmartTextarea

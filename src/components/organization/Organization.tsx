@@ -6,6 +6,7 @@ import { GoOrganization } from 'react-icons/go'
 import { useSelector } from 'react-redux'
 import { RootState, Organization } from '../../actions/types'
 import { useHandleDelete, useHandleExit, useHandleJoin } from './OrganizationListParts'
+import { nl2br } from '../../utils/StringUtils'
 
 function avatar(user: any) {
   return `https://work.alibaba-inc.com/photo/${user.empId}.220x220.jpg`
@@ -90,7 +91,7 @@ function OrganizationBlock(props: Props) {
           </span>
         </div>
         <div className="body">
-          <div className="desc">{organization.description}</div>
+          <div className="desc">{nl2br(organization.description)}</div>
           <div className="members">
             <Popover
               content={`${organization.owner!.fullname} ${

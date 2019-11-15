@@ -14,6 +14,7 @@ import { RouterState } from 'connected-react-router'
 import { RootState } from 'actions/types'
 import { Card } from '@material-ui/core'
 import { deleteRepository } from 'actions/repository'
+import { nl2br } from '../../utils/StringUtils'
 // DONE 2.1 iconfont => octicons
 
 interface Props {
@@ -50,7 +51,7 @@ function Repository(props: Props) {
           <GoRepo className="mr6 color-9" />
           <Link to={`${editor}?id=${repository.id}`}>{repository.name}</Link>
         </div>
-        <div className="desc">{repository.description}</div>
+        <div className="desc">{nl2br(repository.description)}</div>
         {/* TODO 2.x 成员列表参考 ProductHunt，仓库成员不怎么重要，暂时不现实 */}
         {/* <div className='members'>
             {repository.members.map(user =>

@@ -46,6 +46,7 @@ import {
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
 import { RootState } from 'actions/types'
+import { nl2br } from '../../utils/StringUtils'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
@@ -207,7 +208,7 @@ class RepositoryEditor extends Component<any, any> {
             />
           </div>
           <RepositorySearcher repository={repository} />
-          <div className="desc">{repository.description}</div>
+          <div className="desc">{nl2br(repository.description)}</div>
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className="body">

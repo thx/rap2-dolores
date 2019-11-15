@@ -11,6 +11,7 @@ import { serve } from '../../relatives/services/constant'
 import { METHODS, STATUS_LIST } from './InterfaceForm'
 import { CopyToClipboard } from '../utils/'
 import { getRelativeUrl } from '../../utils/URLUtils'
+import { nl2br } from '../../utils/StringUtils'
 import './InterfaceSummary.css'
 import { showMessage, MSG_TYPE } from 'actions/common'
 import {
@@ -339,7 +340,7 @@ class InterfaceSummary extends Component<
                   <CopyToClipboard text={itf.description}>
                     <span>
                       <span className="label">简介：</span>
-                      <span>{itf.description}</span>
+                      <div>{nl2br(itf.description)}</div>
                     </span>
                   </CopyToClipboard>
                 </li>
