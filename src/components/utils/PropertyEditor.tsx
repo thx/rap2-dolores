@@ -15,9 +15,9 @@
 
 import React, { Component } from 'react'
 import { mock } from 'mockjs'
+import { TYPES } from '../../utils/consts'
 import './PropertyEditor.css'
 
-const TYPES = ['String', 'Number', 'Boolean', 'Object', 'Array', 'Function', 'RegExp']
 const fixValue = ({ type, value }: Readonly<any>) => {
   switch (type) {
     case 'String':
@@ -46,6 +46,8 @@ const fixValue = ({ type, value }: Readonly<any>) => {
       return {}
     case 'Array':
       return []
+    case 'Null':
+      return null
     default:
       return value
   }
@@ -272,7 +274,18 @@ class PropertyEditor extends Component<any, any> {
           </div>
           <div className="form-group">
             <label className="control-label">类型：</label>
-            <select name="type" value={this.state.type} onChange={e => this.setState({ type: e.target.value })} className="form-control">
+            <select
+              name="type"
+              value={this.state.type}
+              onChange={e => {
+                const type = e.target.value
+                if (type === 'Null') {
+                  this.setState({ value: '' })
+                }
+                this.setState({ type })
+              }}
+              className="form-control"
+            >
               {TYPES.map(type =>
                 <option key={type} value={type}>{type}</option>
               )}
