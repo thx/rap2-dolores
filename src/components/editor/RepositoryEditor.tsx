@@ -40,20 +40,38 @@ import {
   GoDatabase,
   GoJersey,
   GoLinkExternal,
-  GoPencil
+  GoPencil,
+  GoEllipsis
 } from 'react-icons/go'
 
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
 import { RootState } from 'actions/types'
+import DefaultValueModal from './DefaultValueModal'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
 // DONE 2.2 各种空数据下的视觉效果：空仓库、空模块、空接口、空属性
 // TODO 2.1 大数据测试，含有大量模块、接口、属性的仓库
 
+interface Props {
+  auth: any
+  repository: any
+  location: any
+  onClearRepository: any
+  room: any
+  replace: any
+  router: any
+}
+
+interface States {
+  defaultValuesModalOpen: boolean
+  update: boolean
+  exportPostman: boolean
+}
+
 // 展示组件
-class RepositoryEditor extends Component<any, any> {
+class RepositoryEditor extends Component<Props, States> {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     repository: PropTypes.object.isRequired,
@@ -84,6 +102,7 @@ class RepositoryEditor extends Component<any, any> {
     this.state = {
       update: false,
       exportPostman: false,
+      defaultValuesModalOpen: false,
     }
   }
   getChildContext() {
@@ -117,12 +136,12 @@ class RepositoryEditor extends Component<any, any> {
     const mod =
       repository && repository.modules && repository.modules.length
         ? repository.modules.find((item: any) => item.id === +params.mod) ||
-          repository.modules[0]
+        repository.modules[0]
         : {}
     const itf =
       mod.interfaces && mod.interfaces.length
         ? mod.interfaces.find((item: any) => item.id === +params.itf) ||
-          mod.interfaces[0]
+        mod.interfaces[0]
         : {}
     const properties = itf.properties || []
 
@@ -204,6 +223,17 @@ class RepositoryEditor extends Component<any, any> {
               open={this.state.exportPostman}
               repoId={repository.id}
               onClose={() => this.setState({ exportPostman: false })}
+            />
+            <span
+              className="fake-link edit"
+              onClick={() => this.setState({ defaultValuesModalOpen: true })}
+            >
+              <GoEllipsis />默认值
+            </span>
+            <DefaultValueModal
+              open={this.state.defaultValuesModalOpen}
+              handleClose={() => this.setState({ defaultValuesModalOpen: false })}
+              repositoryId={repository.id}
             />
           </div>
           <RepositorySearcher repository={repository} />

@@ -2,6 +2,7 @@ import { call, put, select } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
+import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
 
 //
 export function* fetchRepositoryCount(action: any) {
@@ -48,7 +49,7 @@ export function* updateRepository(action: any) {
     })
     yield call(RepositoryService.updateRepository, params)
     yield put(RepositoryAction.updateRepositorySucceeded(params))
-    yield put(RepositoryAction.fetchRepository({id: params.id}))
+    yield put(RepositoryAction.fetchRepository({ id: params.id }))
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     yield put(RepositoryAction.updateRepositoryFailed(e.message))
@@ -100,5 +101,23 @@ export function* fetchJoinedRepositoryList(action: any) {
     yield put(RepositoryAction.fetchJoinedRepositoryListSucceeded(repositories))
   } catch (e) {
     yield put(RepositoryAction.fetchJoinedRepositoryListFailed(e.message))
+  }
+}
+
+export function* fetchDefaultVals(action: IFetchDefaultValsAction) {
+  try {
+    const result = yield call(RepositoryService.fetchDefaultVals, action.payload)
+    yield put(RepositoryAction.fetchDefaultValsSucceeded(result))
+  } catch (e) {
+    yield put(fetchDefaultValsFailed({ message: e.message }))
+  }
+}
+
+export function* updateDefaultVals(action: IUpdateDefaultValsAction) {
+  try {
+    yield call(RepositoryService.updateDefaultVals, action.payload)
+    yield put(RepositoryAction.updateDefaultValsSucceeded())
+  } catch (e) {
+    yield put(RepositoryAction.updateDefaultValsFailed({ message: e.message }))
   }
 }

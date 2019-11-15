@@ -13,9 +13,10 @@ cluster.setupMaster({
 })
 
 if (cluster.isMaster) {
-  require('os').cpus().forEach((cpu, index) => {
+  const maxSize = +process.env.SIGMA_MAX_PROCESSORS_LIMIT || +process.env.AJDK_MAX_PROCESSORS_LIMIT || require('os').cpus().length
+  for (let i = 0; i < maxSize; i++) {
     cluster.fork()
-  })
+  }
   cluster.on('listening', (worker, address) => {
     console.error(`[${now()}] master#${process.pid} worker#${worker.process.pid} is now connected to ${address.address}:${address.port}.`)
   })

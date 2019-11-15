@@ -1,3 +1,5 @@
+import { IDefaultVal } from 'components/editor/DefaultValueModal'
+
 export const addRepository = (repository: any, onResolved: any) => ({ type: 'REPOSITORY_ADD', repository, onResolved })
 export const addRepositorySucceeded = (repository: any) => ({ type: 'REPOSITORY_ADD_SUCCEEDED', repository })
 export const addRepositoryFailed = (message: any) => ({ type: 'REPOSITORY_ADD_FAILED', message })
@@ -26,7 +28,7 @@ export const fetchRepositoryCount = () => ({ type: 'REPOSITORY_COUNT_FETCH' })
 export const fetchRepositoryCountSucceeded = (count: any) => ({ type: 'REPOSITORY_COUNT_FETCH_SUCCEEDED', count })
 export const fetchRepositoryCountFailed = (message: any) => ({ type: 'REPOSITORY_COUNT_FETCH_FAILED', message })
 
-export const fetchRepositoryList = ({ user, organization, name, cursor, limit } = {user: '', organization: '', name: '', cursor: '', limit: ''}) => ({ type: 'REPOSITORY_LIST_FETCH', user, organization, name, cursor, limit })
+export const fetchRepositoryList = ({ user, organization, name, cursor, limit } = { user: '', organization: '', name: '', cursor: '', limit: '' }) => ({ type: 'REPOSITORY_LIST_FETCH', user, organization, name, cursor, limit })
 export const fetchRepositoryListSucceeded = (repositories: any) => ({ type: 'REPOSITORY_LIST_FETCH_SUCCEEDED', repositories })
 export const fetchRepositoryListFailed = (message: any) => ({ type: 'REPOSITORY_LIST_FETCH_FAILED', message })
 export const fetchOwnedRepositoryList = (
@@ -40,3 +42,15 @@ export const fetchJoinedRepositoryList = (
 ) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH', user, name })
 export const fetchJoinedRepositoryListSucceeded = (repositories: any) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH_SUCCEEDED', repositories })
 export const fetchJoinedRepositoryListFailed = (message: any) => ({ type: 'JOINED_REPOSITORY_LIST_FETCH_FAILED', message })
+
+export const fetchDefaultVals = (id: number) => ({ type: 'DEFAULT_VALS_FETCH', payload: { id } })
+export const fetchDefaultValsSucceeded = (data: IDefaultVal[]) => ({ type: 'DEFAULT_VALS_SUCCEEDED', payload: { data } })
+export const fetchDefaultValsFailed = (payload: { message: string }) => ({ type: 'DEFAULT_VALS_FAILED', payload })
+
+export type IFetchDefaultValsAction = ReturnType<typeof fetchDefaultVals>
+
+export const updateDefaultVals = (id: number, data: IDefaultVal[]) => ({ type: 'UPDATE_DEFAULT_VALS_FETCH', payload: { id, data } })
+export const updateDefaultValsSucceeded = () => ({ type: 'UPDATE_DEFAULT_VALS_SUCCEEDED' })
+export const updateDefaultValsFailed = (payload: { message: string }) => ({ type: 'UPDATE_DEFAULT_VALS_FAILED', payload })
+
+export type IUpdateDefaultValsAction = ReturnType<typeof updateDefaultVals>
