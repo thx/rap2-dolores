@@ -55,9 +55,9 @@ export const ResponsePropertyListPreviewer = (props: any) => (
   <Previewer {...props} />
 )
 
-/** Object Array Null 不需要 value */
+/** Object Null 不需要 value */
 function isNoValueType(type: string) {
-  return ['Object', 'Array', 'Null'].indexOf(type) > -1
+  return ['Object', 'Null'].indexOf(type) > -1
 }
 
 // DONE 2.2 请求属性有什么用？有必要吗？有，用于订制响应数据。
