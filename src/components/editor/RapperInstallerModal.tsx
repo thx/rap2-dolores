@@ -31,7 +31,7 @@ const codeTmpl = ({ projectId, token, rapperType, rapperPath }: {
 }) => {
   const apiUrl = `${config.serve}/repository/get?id=${projectId}&token=${token}`
   const rapUrl = window.location.origin
-  return `"rapper": "rapper --type ${rapperType} --rapperPath ${rapperPath} --apiUrl ${apiUrl} --rapUrl ${rapUrl}"`
+  return String.raw`"rapper": "rapper --type ${rapperType} --rapperPath \"${rapperPath}\" --apiUrl \"${apiUrl}\" --rapUrl \"${rapUrl}\""`
 }
 
 const useReadmeStyles = makeStyles({
@@ -172,7 +172,7 @@ function RapperInstallerModal({
         </div>
         <p className={classes.step}>1. 安装 rapper 到项目的开发依赖</p>
         <pre>npm install rap --save-dev</pre>
-        <p className={classes.step}>2. 给 package.json 的 scripts 下添加如下代码</p>
+        <p className={classes.step}>2. 给 package.json 的 scripts 对象下添加下面一行脚本</p>
         <pre>
           {codeTmpl({ projectId: repository.id, token: repository.token, rapperType, rapperPath })}
         </pre>
