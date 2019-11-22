@@ -23,8 +23,13 @@ export default {
       .then(res => res.json())
     // .then(json => json.data)
   },
-  fetchRepository(id: any) {
-    return fetch(`${serve}/repository/get?id=${id}`, { ...CREDENTIALS })
+  fetchRepository(id: any, token?: string) {
+    return fetch(
+      `${serve}/repository/get?id=${id}${
+        token !== undefined ? `&token=${token}` : ''
+      }`,
+      { ...CREDENTIALS }
+    )
       .then(res => res.json())
       .then(json => json.data)
   },

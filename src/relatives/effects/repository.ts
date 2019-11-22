@@ -2,6 +2,7 @@ import { call, put, select } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
+import { StoreStateRouterLocationURI } from 'family/index'
 import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
 
 //
@@ -72,7 +73,10 @@ export function* importRepository(action: any) {
 
 export function* fetchRepository(action: any) {
   try {
-    const count = yield call(RepositoryService.fetchRepository, action.repository || action.id)
+    const router = yield select((state: RootState) => state.router)
+    const uri = StoreStateRouterLocationURI(router)
+    const params = uri.search(true)
+    const count = yield call(RepositoryService.fetchRepository, action.repository || action.id, params.token)
     yield put(RepositoryAction.fetchRepositorySucceeded(count))
   } catch (e) {
     yield put(RepositoryAction.fetchRepositoryFailed(e.message))
