@@ -15,7 +15,6 @@ app.use(async (ctx, next) => {
   const ms = new Date() - start
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
-
 app.use(async (ctx, next) => {
   await next()
   if (ctx.response.body && ctx.response.body.url) {

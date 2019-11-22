@@ -43,12 +43,14 @@ import {
   GoJersey,
   GoLinkExternal,
   GoPencil,
-  GoCode
+  GoCode,
+  GoEllipsis
 } from 'react-icons/go'
 
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
 import { RootState, Repository, Module, Interface } from 'actions/types'
+import DefaultValueModal from './DefaultValueModal'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
@@ -67,6 +69,7 @@ interface Props {
 
 interface States {
   rapperInstallerModalOpen: boolean
+  defaultValuesModalOpen: boolean
   update: boolean
   exportPostman: boolean
 }
@@ -104,6 +107,7 @@ class RepositoryEditor extends Component<Props, States> {
       update: false,
       exportPostman: false,
       rapperInstallerModalOpen: false,
+      defaultValuesModalOpen: false,
     }
   }
   getChildContext() {
@@ -225,7 +229,17 @@ class RepositoryEditor extends Component<Props, States> {
               repoId={repository.id}
               onClose={() => this.setState({ exportPostman: false })}
             />
-
+            <span
+              className="fake-link edit"
+              onClick={() => this.setState({ defaultValuesModalOpen: true })}
+            >
+              <GoEllipsis />默认值
+            </span>
+            <DefaultValueModal
+              open={this.state.defaultValuesModalOpen}
+              handleClose={() => this.setState({ defaultValuesModalOpen: false })}
+              repositoryId={repository.id}
+            />
             <span
               className="fake-link edit"
               style={{color: '#f95e49'}}
@@ -264,7 +278,7 @@ class RepositoryEditor extends Component<Props, States> {
             />
           </div>
         </div>
-      </article>
+      </article >
     )
   }
   handleUpdate = () => {

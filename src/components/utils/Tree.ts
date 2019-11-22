@@ -93,6 +93,9 @@ const treeToJson = (tree: any) => {
           })
         }
         break
+      case 'Null':
+          result[item.name + rule] = null
+          break
       default:
         result[item.name + rule] = item.value
     }

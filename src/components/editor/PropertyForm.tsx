@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import Mock from 'mockjs'
 import SmartTextarea from '../utils/SmartTextarea'
 import { Button } from '@material-ui/core'
-
-export const TYPES = ['String', 'Number', 'Boolean', 'Object', 'Array', 'Function', 'RegExp']
+import { TYPES } from '../../utils/consts'
 
 // 模拟数据
 export const mockProperty = process.env.NODE_ENV === 'development'
@@ -80,7 +79,13 @@ class PropertyForm extends Component<any, any> {
                   name="type"
                   tabIndex={2}
                   value={this.state.type}
-                  onChange={e => this.setState({ type: e.target.value })}
+                  onChange={e => {
+                    const type = e.target.value
+                    if (type === 'Null') {
+                      this.setState({ value: '' })
+                    }
+                    this.setState({ type })
+                  }}
                   className="form-control"
                 >
                   {TYPES.map(type =>

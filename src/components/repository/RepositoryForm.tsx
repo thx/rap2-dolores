@@ -173,7 +173,6 @@ function RepositoryForm(props: Props) {
                         name="description"
                         label="简介"
                         multiline={true}
-                        rows={3}
                         component={TextField}
                         fullWidth={true}
                       />

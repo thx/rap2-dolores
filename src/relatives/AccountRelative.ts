@@ -101,7 +101,9 @@ const relatives = {
     *[AccountAction.addUser(null, null).type](action: any) {
       try {
         const user = yield call(AccountService.addUser, action.user)
+        let isOk = false
         if (user && user.id) {
+          isOk = true
           yield put(AccountAction.addUserSucceeded(user))
           try {
             const user = yield call(AccountService.fetchLoginInfo)
@@ -113,10 +115,11 @@ const relatives = {
           }
           yield put(push('/'))
         } else {
+          yield put(showMessage(`注册失败：${user.errMsg}`, MSG_TYPE.ERROR))
           yield put(AccountAction.addUserFailed('注册失败'))
         }
         if (action.onResolved) {
-          action.onResolved()
+          action.onResolved(isOk)
         }
       } catch (e) {
         yield put(AccountAction.addUserFailed(e.message))
