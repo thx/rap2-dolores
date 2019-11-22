@@ -126,6 +126,8 @@ class RepositoryEditor extends Component<Props, States> {
       auth,
     } = this.props
     const { repository: repositoryAsync } = this.props
+    const idStr = auth.id.toString()
+    const canTestRapper = (idStr[idStr.length - 1] === '2') || idStr === '128226'
     if (!repositoryAsync.fetching && !repositoryAsync.data) {
       return <div className="p100 fontsize-30 text-center">未找到对应仓库</div>
     }
@@ -240,13 +242,13 @@ class RepositoryEditor extends Component<Props, States> {
               handleClose={() => this.setState({ defaultValuesModalOpen: false })}
               repositoryId={repository.id}
             />
-            <span
+            {canTestRapper && <span
               className="fake-link edit"
               style={{color: '#f95e49'}}
               onClick={() => this.setState({ rapperInstallerModalOpen: true })}
             >
-              <GoCode /> 点这里帮你生成 TS 代码！
-            </span>
+              <GoCode /> 内测用户你好，点这里可以帮你生成 TS 代码！
+            </span>}
             <RapperInstallerModal
               open={this.state.rapperInstallerModalOpen}
               handleClose={() => this.setState({ rapperInstallerModalOpen: false })}

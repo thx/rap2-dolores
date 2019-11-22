@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
+import TextField from '@material-ui/core/TextField'
 import config from '../../config'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -13,17 +14,65 @@ import { DialogContent } from '@material-ui/core'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 import { Repository } from 'actions/types'
 
-// import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter'
-// import docco from 'react-syntax-highlighter/dist/esm/styles/hljs/docco'
-// import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash'
-
-// SyntaxHighlighter.registerLanguage('bash', bash)
-
 type RapperType = 'requester' | 'redux'
+
+const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
+  return <Slide direction="up" ref={ref} {...props} />
+})
+
+const codeTmpl = ({ projectId, token, rapperType, rapperPath }: {
+  projectId: number
+  token: string
+  rapperType: RapperType
+  rapperPath: string
+}) => {
+  const apiUrl = `${config.serve}/repository/get?id=${projectId}&token=${token}`
+  const rapUrl = window.location.origin
+  return `"rapper": "rapper --type ${rapperType} --rapperPath ${rapperPath} --apiUrl ${apiUrl} --rapUrl ${rapUrl}"`
+}
+
+const useReadmeStyles = makeStyles({
+  root: {
+    '&': {
+      fontSize: 16,
+    },
+  },
+})
+
+function Readme() {
+  const classes = useReadmeStyles()
+
+  return (
+    <div className={classes.root}>
+      <p style={{ textAlign: 'center' }}>
+        <a href="https://github.com/thx/rapper" target="_blank" rel="noopener noreferrer">
+          <img src="https://img.alicdn.com/tfs/TB1SlW9lQT2gK0jSZPcXXcKkpXa-1138-220.png" alt="Logo" width="250" />
+        </a>
+        <h3>一个自带类型的请求库（内测）</h3>
+        <p>
+          <a href="https://www.yuque.com/rap/rapper/readme" target="_blank" rel="noopener noreferrer">文档</a>
+        </p>
+      </p>
+
+      <h2>Rapper 是什么？</h2>
+      <p>Rapper 是 TypeScript 的最佳拍档，它可以帮你生成具有类型定义的请求方案。</p>
+      <ul>
+        <li>无需自行书写请求代码，把 HTTP 接口当做函数调用</li>
+        <li>请求参数/返回数据类型化，静态校验、自动补全快到飞起</li>
+        <li>对 React/Redux 特别优化，提供全局数据方案，hooks 轻松使用</li>
+      </ul>
+      <p>更多了解请移步：<a href="https://www.yuque.com/rap/rapper/readme" target="_blank" rel="noopener noreferrer">文档</a></p>
+      <p>使用期间有疑问欢迎加入钉钉群：21912534</p>
+      {/* <div style={{ textAlign: 'center' }}> */}
+        <img src="https://img.alicdn.com/tfs/TB1mLzfnF67gK0jSZPfXXahhFXa-828-1068.png" alt="dingtalk" width="200" />
+      {/* </div> */}
+      <h2>快速配置</h2>
+    </div>
+  )
+}
 
 const useStyles = makeStyles(({ spacing }: Theme) =>
   createStyles({
@@ -39,56 +88,24 @@ const useStyles = makeStyles(({ spacing }: Theme) =>
       marginTop: spacing(2),
     },
     content: {
-      width: '70vw',
-      margin: '0 auto',
-      paddingTop: 30,
+      padding: '30px 15vw 40vh 15vw',
     },
     formControl: {
-      margin: spacing(3),
+      margin: 0,
+    },
+    formItem: {
+      marginBottom: 16,
+    },
+    formLabel: {
+      fontSize: 16,
+      marginBottom: 5,
+    },
+    step: {
+      fontSize: 16,
+      marginBottom: 10,
     },
   })
 )
-
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
-// /** 同步 rap 接口到本地 */
-// const { rapper } = require('@ali/rapper');
-// const { resolve } = require('path');
-
-// rapper({
-//   /** 生成的请求类型 */
-//   type: 'requester',
-//   /** 必须配置，rap 仓库 id */
-//   projectId: ${projectId},
-//   /** 可选，输出文件的目录，默认是 ./src/rapper/ */
-//   rapperPath: resolve(process.cwd(), './src/rapper/'),
-//   /** 可选，rap 前端地址，默认是 http://rap2.taobao.org */
-//   rapUrl: '${window.location.origin}',
-//   /** 可选，rap 后端 api 地址，默认是 http://rap2api.taobao.org */
-//   apiUrl: '${config.serve}/repository/get?id=${projectId}'
-//   /** 可选，输出模板代码的格式，具体见 prettier的配置规则 https://prettier.io/docs/en/options.html */
-//   codeStyle: {
-//     /** 默认单引号 */
-//     singleQuote: true,
-//     /** 默认2个空格 */
-//     tabWidth: 2,
-//     /** 分号结尾，默认false */
-//     semi: false,
-//     /** 逗号 */
-//     trailingComma: 'es5',
-//   },
-// });
-const codeTmpl = ({ projectId, token, rapperType }: {
-  projectId: number
-  token: string
-  rapperType: RapperType
-}) => {
-  const apiUrl = `${config.serve}/repository/get?id=${projectId}&token=${token}`
-  const rapUrl = window.location.origin
-  return `npx rap --type ${rapperType} --apiUrl ${apiUrl} --rapUrl ${rapUrl}`
-}
 
 function RapperInstallerModal({
   open,
@@ -101,7 +118,11 @@ function RapperInstallerModal({
 }) {
   const classes = useStyles()
 
+  /** rapper 类型 requester redux */
   const [rapperType, setRapperType] = useState<RapperType>('requester')
+
+  /** rapper 生成目录地址 */
+  const [rapperPath, setRapperPath] = useState<string>('src/rapper')
 
   function handleRapperTypeChange(_event: React.ChangeEvent<HTMLInputElement>, value: RapperType) {
     setRapperType(value)
@@ -125,21 +146,42 @@ function RapperInstallerModal({
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            配置 Rapper 帮你生成代码
+            尝试用 Rapper 帮你生成代码
           </Typography>
         </Toolbar>
       </AppBar>
       <DialogContent className={classes.content}>
-        <FormControl component="fieldset" className={classes.formControl}>
-          <FormLabel component="legend">生成代码的形式</FormLabel>
+        <Readme />
+        <div className={classes.formItem}>
+          <FormLabel component="legend" className={classes.formLabel}>生成代码的形式</FormLabel>
           <RadioGroup aria-label="rapperType" row={true} name="rapperType" value={rapperType} onChange={handleRapperTypeChange}>
-            <FormControlLabel value="requester" control={<Radio />} label="请求函数" />
+            <FormControlLabel value="requester" control={<Radio />} label="通用请求函数/类型" />
             <FormControlLabel value="redux" control={<Radio />} label="React/Redux 集成" />
           </RadioGroup>
-        </FormControl>
+        </div>
+        <div className={classes.formItem}>
+          <FormLabel component="legend" className={classes.formLabel}>Rapper 生成文件的目录（相对于项目根目录）</FormLabel>
+          <TextField
+            placeholder="src/rapper"
+            fullWidth={true}
+            margin="normal"
+            variant="outlined"
+            value={rapperPath}
+            onChange={(event) => setRapperPath(event.target.value)}
+          />
+        </div>
+        <p className={classes.step}>1. 安装 rapper 到项目的开发依赖</p>
+        <pre>npm install rap --save-dev</pre>
+        <p className={classes.step}>2. 给 package.json 的 scripts 下添加如下代码</p>
         <pre>
-          {codeTmpl({ projectId: repository.id, token: repository.token, rapperType })}
+          {codeTmpl({ projectId: repository.id, token: repository.token, rapperType, rapperPath })}
         </pre>
+        <p className={classes.step}>3. 运行 rapper 生成代码</p>
+        <pre>
+          npm run rapper
+        </pre>
+        <p className={classes.step}>4. <a href="https://www.yuque.com/rap/rapper/use" target="_blank" rel="noopener noreferrer">愉快使用吧</a></p>
+
       </DialogContent>
     </Dialog>
   )
