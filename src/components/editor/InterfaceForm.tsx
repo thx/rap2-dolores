@@ -182,7 +182,6 @@ function InterfaceForm(props: Props) {
                         label="简介"
                         component={TextField}
                         multiline={true}
-                        rows={4}
                         fullWidth={true}
                       />
                     </div>

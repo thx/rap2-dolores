@@ -401,6 +401,13 @@ export default {
           return state
       }
     },
+    defaultVals(state: any = [], action: any) {
+      switch (action.type) {
+        case 'DEFAULT_VALS_SUCCEEDED':
+          return action.payload.data
+      }
+      return state
+    },
   },
   sagas: {
     [RepositoryAction.addRepository(undefined, undefined).type]:
@@ -423,6 +430,10 @@ export default {
       RepositoryEffects.fetchOwnedRepositoryList,
     [RepositoryAction.fetchJoinedRepositoryList().type]:
       RepositoryEffects.fetchJoinedRepositoryList,
+    [RepositoryAction.fetchDefaultVals(0).type]:
+      RepositoryEffects.fetchDefaultVals,
+    [RepositoryAction.updateDefaultVals(0, []).type]:
+      RepositoryEffects.updateDefaultVals,
     [ModuleAction.sortModuleList(undefined, undefined).type]:
       ModuleEffects.sortModuleList,
     [InterfaceAction.fetchInterfaceCount().type]:

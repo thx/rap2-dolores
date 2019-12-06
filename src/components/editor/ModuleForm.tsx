@@ -115,7 +115,6 @@ function ModuleForm(props: Props) {
                         label="模块简介"
                         component={TextField}
                         multiline={true}
-                        rows={5}
                         fullWidth={true}
                       />
                     </div>

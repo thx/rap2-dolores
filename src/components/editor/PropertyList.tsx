@@ -7,6 +7,7 @@ import {
   RSortable,
   CopyToClipboard
 } from '../utils'
+import { TYPES } from '../../utils/consts'
 import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
@@ -54,6 +55,11 @@ export const RequestPropertyListPreviewer = (props: any) => (
 export const ResponsePropertyListPreviewer = (props: any) => (
   <Previewer {...props} />
 )
+
+/** Object Null 不需要 value */
+function isNoValueType(type: string) {
+  return ['Object', 'Null'].indexOf(type) > -1
+}
 
 // DONE 2.2 请求属性有什么用？有必要吗？有，用于订制响应数据。
 // DONE 2.2 如何过滤模拟 URL 中额外的请求属性？解析 URL 中的参数到请求属性列表吗？可以在响应数据中引用 配置的请求参数 和 URL 中的额外参数。
@@ -207,6 +213,7 @@ class SortableTreeTableRow extends Component<
       handleClickCreateChildPropertyButton,
       highlightId,
       handleDeleteMemoryProperty,
+      handleChangeProperty,
       handleChangePropertyField,
       handleSortProperties,
     } = this.props
@@ -355,24 +362,26 @@ class SortableTreeTableRow extends Component<
                         ) : (
                           <select
                             value={item.type}
-                            onChange={e =>
-                              handleChangePropertyField(
-                                item.id,
-                                'type',
-                                e.target.value
-                              )
-                            }
+                            onChange={e => {
+                              const type = e.target.value
+                              if (isNoValueType(type)) {
+                                handleChangeProperty(
+                                  item.id,
+                                  {
+                                    value: '',
+                                    type,
+                                  }
+                                )
+                              } else {
+                                handleChangeProperty(
+                                  item.id,
+                                  {type}
+                                )
+                              }
+                            }}
                             className="form-control editable"
                           >
-                            {[
-                              'String',
-                              'Number',
-                              'Boolean',
-                              'Object',
-                              'Array',
-                              'Function',
-                              'RegExp',
-                            ].map(type => (
+                            {TYPES.map(type => (
                               <option key={type} value={type}>
                                 {type}
                               </option>
@@ -416,6 +425,7 @@ class SortableTreeTableRow extends Component<
                                 e.target.value
                               )
                             }
+                            disabled={isNoValueType(item.type) && !item.value}
                             rows="1"
                             className="form-control editable"
                             spellCheck={false}
@@ -564,6 +574,7 @@ class PropertyList extends Component<any, any> {
             }
             handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             handleChangePropertyField={this.handleChangePropertyField}
+            handleChangeProperty={this.handleChangeProperty}
             handleSortProperties={this.handleSortProperties}
             handleClickCreatePropertyButton={
               this.handleClickCreatePropertyButton
@@ -661,6 +672,12 @@ class PropertyList extends Component<any, any> {
     const { properties } = this.props
     const property = properties.find((property: any) => property.id === id)
     handleChangeProperty({ ...property, [key]: value })
+  };
+  handleChangeProperty = (id: any, value: any) => {
+    const { handleChangeProperty } = this.props
+    const { properties } = this.props
+    const property = properties.find((property: any) => property.id === id)
+    handleChangeProperty({ ...property, ...value })
   };
   handleCreatePropertySucceeded = () => {
     /** empty */

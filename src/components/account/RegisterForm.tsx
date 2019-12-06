@@ -92,8 +92,10 @@ class RegisterForm extends Component<Props, State> {
   handleSubmit = (e: any) => {
     const { onAddUser } = this.props
     e.preventDefault()
-    onAddUser(this.state, () => {
-      window.location.href = '/'
+    onAddUser(this.state, (isOk: boolean) => {
+      if (isOk) {
+        window.location.href = '/'
+      }
     })
   };
 }
