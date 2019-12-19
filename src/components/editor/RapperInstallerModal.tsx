@@ -17,7 +17,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormLabel from '@material-ui/core/FormLabel'
 import { Repository } from 'actions/types'
 
-type RapperType = 'requester' | 'redux'
+type RapperType = 'normal' | 'redux'
 
 const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
   return <Slide direction="up" ref={ref} {...props} />
@@ -118,8 +118,8 @@ function RapperInstallerModal({
 }) {
   const classes = useStyles()
 
-  /** rapper 类型 requester redux */
-  const [rapperType, setRapperType] = useState<RapperType>('requester')
+  /** rapper 类型 normal redux */
+  const [rapperType, setRapperType] = useState<RapperType>('normal')
 
   /** rapper 生成目录地址 */
   const [rapperPath, setRapperPath] = useState<string>('src/rapper')
@@ -155,7 +155,7 @@ function RapperInstallerModal({
         <div className={classes.formItem}>
           <FormLabel component="legend" className={classes.formLabel}>生成代码的形式</FormLabel>
           <RadioGroup aria-label="rapperType" row={true} name="rapperType" value={rapperType} onChange={handleRapperTypeChange}>
-            <FormControlLabel value="requester" control={<Radio />} label="通用请求函数/类型" />
+            <FormControlLabel value="normal" control={<Radio />} label="通用请求函数/类型" />
             <FormControlLabel value="redux" control={<Radio />} label="React/Redux 集成" />
           </RadioGroup>
         </div>
