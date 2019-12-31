@@ -127,7 +127,7 @@ class RepositoryEditor extends Component<Props, States> {
     } = this.props
     const { repository: repositoryAsync } = this.props
     const idStr = auth.id.toString()
-    const canTestRapper = (idStr[idStr.length - 1] === '2') || idStr === '128226'
+    const canTestRapper = ['0','2','4','6','8'].includes(idStr[idStr.length - 1])
     if (!repositoryAsync.fetching && !repositoryAsync.data) {
       return <div className="p100 fontsize-30 text-center">未找到对应仓库</div>
     }
