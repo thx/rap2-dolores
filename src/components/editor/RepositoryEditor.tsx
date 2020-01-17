@@ -8,6 +8,8 @@ import ModuleList from './ModuleList'
 import InterfaceList from './InterfaceList'
 import InterfaceEditor from './InterfaceEditor'
 import DuplicatedInterfacesWarning from './DuplicatedInterfacesWarning'
+import RapperInstallerModal from './RapperInstallerModal'
+
 import {
   addRepository,
   updateRepository,
@@ -41,12 +43,13 @@ import {
   GoJersey,
   GoLinkExternal,
   GoPencil,
+  GoCode,
   GoEllipsis
 } from 'react-icons/go'
 
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
-import { RootState } from 'actions/types'
+import { RootState, Repository, Module, Interface } from 'actions/types'
 import DefaultValueModal from './DefaultValueModal'
 
 // DONE 2.1 import Spin from '../utils/Spin'
@@ -65,6 +68,7 @@ interface Props {
 }
 
 interface States {
+  rapperInstallerModalOpen: boolean
   defaultValuesModalOpen: boolean
   update: boolean
   exportPostman: boolean
@@ -102,6 +106,7 @@ class RepositoryEditor extends Component<Props, States> {
     this.state = {
       update: false,
       exportPostman: false,
+      rapperInstallerModalOpen: false,
       defaultValuesModalOpen: false,
     }
   }
@@ -120,29 +125,30 @@ class RepositoryEditor extends Component<Props, States> {
       location: { params },
       auth,
     } = this.props
-    let { repository } = this.props
-    if (!repository.fetching && !repository.data) {
+    const { repository: repositoryAsync } = this.props
+    const idStr = auth.id.toString()
+    if (!repositoryAsync.fetching && !repositoryAsync.data) {
       return <div className="p100 fontsize-30 text-center">未找到对应仓库</div>
     }
-    if (repository.fetching || !repository.data || !repository.data.id) {
+    if (repositoryAsync.fetching || !repositoryAsync.data || !repositoryAsync.data.id) {
       return <Spin />
     }
 
-    repository = repository.data
+    const repository: Repository = repositoryAsync.data
     if (repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
 
-    const mod =
+    const mod: Module =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find((item: any) => item.id === +params.mod) ||
-        repository.modules[0]
-        : {}
-    const itf =
+        ? repository.modules.find(item => item.id === +params.mod) ||
+          repository.modules[0]
+        : {} as Module
+    const itf: Interface =
       mod.interfaces && mod.interfaces.length
         ? mod.interfaces.find((item: any) => item.id === +params.itf) ||
-        mod.interfaces[0]
-        : {}
+          mod.interfaces[0]
+        : {} as Interface
     const properties = itf.properties || []
 
     const ownerlink = repository.organization
@@ -150,7 +156,7 @@ class RepositoryEditor extends Component<Props, States> {
       : `/repository/joined?user=${repository.owner.id}`
 
     const isOwned = repository.owner.id === auth.id
-    const isJoined = repository.members.find(
+    const isJoined = repository.members && repository.members.find(
       (item: any) => item.id === auth.id
     )
 
@@ -196,7 +202,7 @@ class RepositoryEditor extends Component<Props, States> {
               <GoPlug /> 插件
             </a>
             <a
-              href={`${serve}/repository/get?id=${repository.id}`}
+              href={`${serve}/repository/get?id=${repository.id}&token=${repository.token}`}
               target="_blank"
               rel="noopener noreferrer"
               className="api"
@@ -235,6 +241,18 @@ class RepositoryEditor extends Component<Props, States> {
               handleClose={() => this.setState({ defaultValuesModalOpen: false })}
               repositoryId={repository.id}
             />
+            <span
+              className="fake-link edit"
+              style={{color: '#f95e49'}}
+              onClick={() => this.setState({ rapperInstallerModalOpen: true })}
+            >
+              <GoCode /> 内测用户你好，点这里可以帮你生成 TS 代码！
+            </span>
+            <RapperInstallerModal
+              open={this.state.rapperInstallerModalOpen}
+              handleClose={() => this.setState({ rapperInstallerModalOpen: false })}
+              repository={repository}
+            />
           </div>
           <RepositorySearcher repository={repository} />
           <div className="desc">{repository.description}</div>
@@ -261,7 +279,7 @@ class RepositoryEditor extends Component<Props, States> {
             />
           </div>
         </div>
-      </article>
+      </article >
     )
   }
   handleUpdate = () => {

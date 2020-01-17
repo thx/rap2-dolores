@@ -62,7 +62,8 @@ export interface IConfig {
     key: string
   }
 }
-export interface Repository {
+
+export interface RepositoryFormData {
   id: number
 
   name: string
@@ -95,6 +96,41 @@ export interface Repository {
   collaboratorIdstring?: string
 }
 
+export interface Repository {
+  id: number
+
+  name: string
+
+  description: string
+
+  logo: string
+
+  /** true: 公开, false: 私有 */
+  visibility: boolean
+
+  creatorId: number
+
+  ownerId: number
+
+  organizationId: number
+
+  organization: Organization
+
+  memberIds: number[]
+
+  members: User[]
+
+  token: string
+
+  owner: User
+
+  collaborators: Repository[]
+
+  modules: Module[]
+
+  collaboratorIds: string[]
+}
+
 export interface Module {
   id: number
 
@@ -107,6 +143,8 @@ export interface Module {
   creatorId?: number
 
   priority: number
+
+  interfaces?: Interface[]
 
   repository?: Repository
 
@@ -136,5 +174,28 @@ export interface Interface {
 
   repository?: Repository
 
+  properties?: Property[]
+
   status?: number
+}
+
+export type Property = {
+  name: string;
+  type: any;
+  rule: string;
+  value: any;
+  descripton: string;
+  creator: any;
+  repositoryId: number;
+  moduleId: number;
+  interfaceId: number;
+  scope: string;
+  parentId: number;
+  memory: boolean;
+  id: number;
+}
+
+export type Async<T> = {
+  data: T
+  fetching: boolean
 }
