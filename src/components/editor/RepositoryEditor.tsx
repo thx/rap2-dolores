@@ -126,7 +126,6 @@ class RepositoryEditor extends Component<Props, States> {
       auth,
     } = this.props
     const { repository: repositoryAsync } = this.props
-    const idStr = auth.id.toString()
     if (!repositoryAsync.fetching && !repositoryAsync.data) {
       return <div className="p100 fontsize-30 text-center">未找到对应仓库</div>
     }
