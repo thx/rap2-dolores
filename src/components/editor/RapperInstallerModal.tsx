@@ -104,6 +104,10 @@ const useStyles = makeStyles(({ spacing }: Theme) =>
       fontSize: 16,
       marginBottom: 10,
     },
+    mode: {
+      fontSize: 12,
+      marginLeft: 10,
+    },
   })
 )
 
@@ -153,10 +157,13 @@ function RapperInstallerModal({
       <DialogContent className={classes.content}>
         <Readme />
         <div className={classes.formItem}>
-          <FormLabel component="legend" className={classes.formLabel}>生成代码的形式</FormLabel>
+          <FormLabel component="legend" className={classes.formLabel}>
+            生成代码的模式
+            <a href="https://www.yuque.com/rap/rapper/which-model" className={classes.mode} target="_blank" rel="noopener noreferrer">我该选择哪种模式？</a>
+          </FormLabel>
           <RadioGroup aria-label="rapperType" row={true} name="rapperType" value={rapperType} onChange={handleRapperTypeChange}>
-            <FormControlLabel value="normal" control={<Radio />} label="通用请求函数/类型" />
-            <FormControlLabel value="redux" control={<Radio />} label="React/Redux 集成" />
+            <FormControlLabel value="normal" control={<Radio />} label="基础模式" />
+            <FormControlLabel value="redux" control={<Radio />} label="React + Redux 进阶模式" />
           </RadioGroup>
         </div>
         <div className={classes.formItem}>
