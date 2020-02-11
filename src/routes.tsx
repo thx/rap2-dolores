@@ -8,6 +8,8 @@ import Footer from './components/common/Footer'
 import Home from './components/home/Home'
 import LoginForm from './components/account/LoginForm'
 import RegisterForm from './components/account/RegisterForm'
+import FindpwdForm from './components/account/FindpwdForm'
+import ResetpwdForm from './components/account/ResetpwdForm'
 import Message from 'components/common/Message'
 import { useSelector } from 'react-redux'
 import { RootState } from 'actions/types'
@@ -56,6 +58,8 @@ const Routes = () => {
          <Message messageInfo={message} />
         <Switch>
           <Route path="/account/register" component={RegisterForm} />
+          <Route path="/account/findpwd" component={FindpwdForm} />
+          <Route path="/account/resetpwd" component={ResetpwdForm} />
           <Route component={LoginForm} />
         </Switch>
       </article>
@@ -117,6 +121,8 @@ const Routes = () => {
                 <Route path="/account/users" component={UserList} />
                 <Route path="/account/login" component={LoginForm} />
                 <Route path="/account/register" component={RegisterForm} />
+                <Route path="/account/findpwd" component={FindpwdForm} />
+                <Route path="/account/resetpwd" component={ResetpwdForm} />
                 <Route component={NoMatch} />
               </Switch>
             )}

@@ -118,4 +118,57 @@ export default {
     }).then(res => res.json())
     // .then(json => json.data)
   },
+  // 发送重置密码激活邮件
+  findpwd({
+    email,
+    captcha,
+  }: {
+    email: string;
+    captcha: string;
+  }) {
+    return fetch(`${serve}/account/findpwd`, {
+      ...CREDENTIALS,
+      method: 'POST',
+      body: JSON.stringify({
+        email,
+        captcha,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(json => json.data)
+  },
+  // 通过邮件链接重置密码
+  resetpwd({
+    email,
+    code,
+    token,
+    password,
+    captcha,
+  }: {
+    email: string;
+    code: string;
+    token: string;
+    password: string;
+    captcha: string;
+  }) {
+    return fetch(`${serve}/account/findpwd/reset`, {
+      ...CREDENTIALS,
+      method: `POST`,
+      body: JSON.stringify({
+        code,
+        email,
+        captcha,
+        token,
+        password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(json => json.data)
+  },
 }

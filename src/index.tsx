@@ -1,4 +1,3 @@
-
 import './assets/index.css'
 import 'animate.css'
 
@@ -41,7 +40,7 @@ function* authenticate() {
   } else {
     const { pathname, search, hash } = window.location
     // const uri = URI(pathname + search + hash)
-    if (pathname.indexOf('/account/login') > -1) {
+    if (pathname.indexOf('/account/login') > -1 || pathname.indexOf('/account/resetpwd') > -1 ) {
       yield Promise.resolve()
       return
     }

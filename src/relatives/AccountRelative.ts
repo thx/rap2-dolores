@@ -29,6 +29,8 @@ const relatives = {
     },
     auth(state: any = {}, action: any) {
       switch (action.type) {
+        case AccountAction.findpwdSucceeded().type:
+        case AccountAction.findpwdFailed('').type:
         case AccountAction.loginSucceeded({}).type:
         case AccountAction.fetchLoginInfoSucceeded({}).type:
           return action.user && action.user.id ? action.user : {}
@@ -43,6 +45,8 @@ const relatives = {
     },
     user(state: any = {}, action: any) {
       switch (action.type) {
+        case AccountAction.findpwdSucceeded().type:
+        case AccountAction.findpwdFailed('').type:
         case AccountAction.loginSucceeded({}).type:
         case AccountAction.fetchLoginInfoSucceeded({}).type:
           return action.user && action.user.id ? action.user : {}
@@ -178,6 +182,32 @@ const relatives = {
         yield put(AccountAction.fetchUserListSucceeded(users))
       } catch (e) {
         yield put(AccountAction.fetchUserListFailed(e.message))
+      }
+    },
+    *[AccountAction.findpwd({}, () => {/** empty */ }).type](action: any) {
+      try {
+        const result = yield call(AccountService.findpwd, action.user)
+        if (result.errMsg) {
+          throw new Error(result.errMsg)
+        }
+        yield put(AccountAction.findpwdSucceeded())
+        if (action.onResolved) { action.onResolved() }
+      } catch (e) {
+        yield put(showMessage(e.message, MSG_TYPE.WARNING))
+        yield put(AccountAction.findpwdFailed(e.message))
+      }
+    },
+    *[AccountAction.resetpwd({}, () => {/** empty */ }).type](action: any) {
+      try {
+        const result = yield call(AccountService.resetpwd, action.user)
+        if (result.errMsg) {
+          throw new Error(result.errMsg)
+        }
+        yield put(AccountAction.resetpwdSucceeded())
+        if (action.onResolved) { action.onResolved() }
+      } catch (e) {
+        yield put(showMessage(e.message, MSG_TYPE.WARNING))
+        yield put(AccountAction.resetpwdFailed(e.message))
       }
     },
   },

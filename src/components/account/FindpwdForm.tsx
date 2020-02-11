@@ -1,21 +1,14 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import config from '../../config'
 import { Button, createStyles, makeStyles, List, ListItem, InputLabel, Input, FormControl, InputAdornment, IconButton, Paper } from '@material-ui/core'
-import Logo from 'components/layout/Logo'
 import { green } from '@material-ui/core/colors'
-import { getBGImageUrl } from 'utils/ImageUtils'
-import PhoneIcon from '@material-ui/icons/PhoneIphone'
+import EmailIcon from '@material-ui/icons/Email'
 import CodeIcon from '@material-ui/icons/Code'
-import Visibility from '@material-ui/icons/Visibility'
-import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import Refresh from '@material-ui/icons/Refresh'
-import { login } from 'actions/account'
-import URI from 'urijs'
+import { findpwd } from 'actions/account'
 import { showMessage, MSG_TYPE } from 'actions/common'
 import { push } from 'connected-react-router'
-import { getRouter } from 'selectors/router'
-import { Link } from '../../family'
 
 const { serve } = config
 
@@ -37,10 +30,6 @@ const useStyles = makeStyles(() => createStyles({
     display: 'flex',
     justifyContent: 'space-between',
   },
-  ctlend: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
   captchaWrapper: {
     cursor: 'pointer',
   },
@@ -61,42 +50,31 @@ const useStyles = makeStyles(() => createStyles({
   },
 }))
 
-export default function LoginForm() {
-  const [bg] = useState(getBGImageUrl())
+export default function FindpwdForm() {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [captchaId, setCaptchaId] = useState(Date.now())
   const [captcha, setCaptcha] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const router = useSelector(getRouter)
-  const { pathname, hash, search } = router.location
   const handleSubmit = (e?: any) => {
     e && e.preventDefault()
-    if (!email || !password || !captcha) {
-      dispatch(showMessage(`请输入账号、密码、验证码`, MSG_TYPE.WARNING))
+    if (!email || !captcha) {
+      dispatch(showMessage(`请输入Email、验证码`, MSG_TYPE.WARNING))
     } else {
       dispatch(
-        login({ email, password, captcha }, () => {
-          const uri = URI(pathname + hash + search)
-          const original = uri.search(true).original
-          if (original) {
-            dispatch(push(decodeURIComponent(original)))
-          } else {
-            dispatch(push('/'))
-          }
+        findpwd({ email, captcha }, () => {
+          dispatch(showMessage(`发送成功，请登录您的邮箱按提示重置密码`, MSG_TYPE.SUCCESS))
         })
       )
     }
   }
 
   return (
-    <div className={classes.root} style={{ background: bg }}>
+    <div className={classes.root}>
       <Paper className={classes.container}>
         <List>
           <ListItem>
-            <Logo color="#3f51b5" />
+            <h2>发送重设密码邮件</h2>
           </ListItem>
           <ListItem>
             <FormControl fullWidth={true}>
@@ -111,29 +89,7 @@ export default function LoginForm() {
                 endAdornment={
                   <InputAdornment position="end" tabIndex={100}>
                     <IconButton>
-                      <PhoneIcon />
-                    </IconButton>
-                  </InputAdornment>}
-              />
-            </FormControl>
-          </ListItem>
-          <ListItem>
-            <FormControl fullWidth={true}>
-              <InputLabel htmlFor="password">密码</InputLabel>
-              <Input
-                tabIndex={1}
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                autoComplete="current-password"
-                onChange={e => setPassword(e.target.value)}
-                endAdornment={
-                  <InputAdornment position="end" tabIndex={101}>
-                    <IconButton
-                      aria-label="Toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                      <EmailIcon />
                     </IconButton>
                   </InputAdornment>}
               />
@@ -165,12 +121,9 @@ export default function LoginForm() {
               <Refresh />
             </div>
             <div className={classes.buttonWrapper}>
-              <Button variant="outlined" color="default" style={{ marginRight: 8 }} onClick={() => dispatch(push('/account/register'))}>注册</Button>
-              <Button variant="contained" color="primary" tabIndex={3} onClick={handleSubmit}>登录</Button>
+            <Button variant="outlined" color="default" style={{ marginRight: 8 }} onClick={() => dispatch(push('/account/login'))}>取消</Button>
+              <Button variant="contained" color="primary" tabIndex={3} onClick={handleSubmit}>发送</Button>
             </div>
-          </ListItem>
-          <ListItem className={classes.ctlend}>
-            <Link to="#" onClick={() => dispatch(push('/account/findpwd'))} className="operation ">忘记密码？</Link>
           </ListItem>
         </List>
       </Paper>

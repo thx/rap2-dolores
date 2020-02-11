@@ -57,3 +57,13 @@ export const fetchLogList = (
 ) => ({ type: 'LOG_LIST_FETCH', cursor, limit })
 export const fetchLogListSucceeded = (logs: any) => ({ type: 'LOG_LIST_FETCH_SUCCEEDED', logs })
 export const fetchLogListFailed = (message: any) => ({ type: 'LOG_LIST_FETCH_FAILED', message })
+
+// 发送重设密码邮件
+export const findpwd = (user: any, onResolved: any) => ({ type: 'USER_FINDPWD', user, onResolved })
+export const findpwdSucceeded = () => ({ type: 'USER_FINDPWD_SUCCEEDED' })
+export const findpwdFailed = (message: any) => ({ type: 'USER_FINDPWD_FAILED', message })
+
+// 用户通过邮件重设密码
+export const resetpwd = (user: any, onResolved: any) => ({ type: 'USER_RESETPWD', user, onResolved })
+export const resetpwdSucceeded = () => ({ type: 'USER_RESETPWD_SUCCEEDED' })
+export const resetpwdFailed = (message: any) => ({ type: 'USER_RESETPWD_FAILED', message })
