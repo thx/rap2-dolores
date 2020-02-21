@@ -208,14 +208,6 @@ class RepositoryEditor extends Component<Props, States> {
             >
               <GoDatabase /> 数据
             </a>
-            <a
-              href={`${serve}/test/test.plugin.jquery.html?id=${repository.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="api"
-            >
-              <GoJersey /> 测试
-            </a>
             <span
               className="fake-link edit"
               onClick={() => this.setState({ exportPostman: true })}
