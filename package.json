@@ -14,7 +14,7 @@
     "test": "npm run lint",
     "eject": "react-scripts eject",
     "lint": "tslint --project ./ -c tslint.json --fix",
-    "build-docker": "docker build --rm -f \"Dockerfile\" -t rapteam/rap2-dolores:latest ."
+    "build-docker": "docker build --rm -f \"Dockerfile\" -t rapteam/rap2-dolores:rap2org ."
   },
   "repository": {
     "type": "git",
