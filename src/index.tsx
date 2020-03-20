@@ -15,6 +15,10 @@ import Spin from './components/utils/Spin'
 import * as AccountAction from './actions/account'
 import AccountService from './relatives/services/Account'
 
+if (process.env.NODE_ENV !== 'production') {
+  const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js')
+  whyDidYouRender(React)
+}
 // 渲染整站开屏动画
 function* renderOpeningScreenAdvertising() {
   yield new Promise((resolve) => {

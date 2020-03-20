@@ -97,9 +97,6 @@ class InterfaceEditor extends Component<
     const prevStates = this.state
     this.setState(InterfaceEditor.mapPropsToState(nextProps, prevStates))
   }
-  // Use shouldComponentUpdate() to let React know if a component's output is not affected by the current change in state or props.
-  // TODO 2.2
-  // shouldComponentUpdate (nextProps, nextState) {}
 
   render() {
     const { auth, repository, mod } = this.props
@@ -119,9 +116,7 @@ class InterfaceEditor extends Component<
           moveInterface={this.handleMoveInterface}
           handleLockInterface={this.handleLockInterface}
           handleMoveInterface={this.handleMoveInterface}
-          handleSaveInterfaceAndProperties={
-            this.handleSaveInterfaceAndProperties
-          }
+          handleSaveInterfaceAndProperties={this.handleSaveInterfaceAndProperties}
           handleUnlockInterface={this.handleUnlockInterface}
         />
         <InterfaceSummary
@@ -139,7 +134,7 @@ class InterfaceEditor extends Component<
           editable={editable}
           repository={repository}
           mod={mod}
-          itf={this.state.itf}
+          interfaceId={itf.id}
           bodyOption={this.state.summaryState.bodyOption}
           requestParamsType={this.state.summaryState.requestParamsType}
           handleChangeProperty={this.handleChangeProperty}
@@ -151,19 +146,21 @@ class InterfaceEditor extends Component<
           editable={editable}
           repository={repository}
           mod={mod}
-          itf={this.state.itf}
+          interfaceId={itf.id}
           handleChangeProperty={this.handleChangeProperty}
           handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
         />
 
-        {this.state.moveInterfaceDialogOpen && <MoveInterfaceForm
-          title="移动/复制接口"
-          mod={mod}
-          repository={repository}
-          itfId={itf.id}
-          open={this.state.moveInterfaceDialogOpen}
-          onClose={() => this.setState({ moveInterfaceDialogOpen: false })}
-        />}
+        {this.state.moveInterfaceDialogOpen && (
+          <MoveInterfaceForm
+            title="移动/复制接口"
+            mod={mod}
+            repository={repository}
+            itfId={itf.id}
+            open={this.state.moveInterfaceDialogOpen}
+            onClose={() => this.setState({ moveInterfaceDialogOpen: false })}
+          />
+        )}
       </article>
     )
   }

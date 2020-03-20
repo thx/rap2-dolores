@@ -17,7 +17,7 @@ class OrganizationList extends Component<any, any> {
         : <div className="fontsize-20 text-center p50">没有数据</div>
     }
     return (
-      <div className="OrganizationList">
+      <div className="OrganizationList row">
         {organizations.map((organization: any) =>
           <Organization key={organization.id} organization={organization} />
         )}

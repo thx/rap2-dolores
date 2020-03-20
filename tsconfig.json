@@ -24,7 +24,7 @@
     "strict": true,
     "declaration": false,
     "emitDecoratorMetadata": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "moduleResolution": "node",
     "noEmitOnError": true,

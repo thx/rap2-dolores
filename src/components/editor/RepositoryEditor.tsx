@@ -9,6 +9,7 @@ import InterfaceList from './InterfaceList'
 import InterfaceEditor from './InterfaceEditor'
 import DuplicatedInterfacesWarning from './DuplicatedInterfacesWarning'
 import RapperInstallerModal from './RapperInstallerModal'
+import ImportSwaggerRepositoryForm from '../repository/ImportSwaggerRepositoryForm'
 
 import {
   addRepository,
@@ -40,7 +41,6 @@ import {
   GoRepo,
   GoPlug,
   GoDatabase,
-  GoJersey,
   GoLinkExternal,
   GoPencil,
   GoCode,
@@ -72,6 +72,7 @@ interface States {
   defaultValuesModalOpen: boolean
   update: boolean
   exportPostman: boolean
+  importSwagger: boolean
 }
 
 // 展示组件
@@ -108,18 +109,32 @@ class RepositoryEditor extends Component<Props, States> {
       exportPostman: false,
       rapperInstallerModalOpen: false,
       defaultValuesModalOpen: false,
+      importSwagger: false,
     }
   }
   getChildContext() {
     return _.pick(this.props, Object.keys(RepositoryEditor.childContextTypes))
   }
 
-  componentDidMount() {
-    // const id = +this.props.location.params.id
-    // if (!this.props.repository.data || this.props.repository.data.id !== id) {
-    //   this.props.onFetchRepository({ id })
-    // }
+  changeDocumentTitle() {
+    const repository = this.props.repository.data
+    if (repository.name) {
+      document.title = `RAP2 ${repository.name}`
+    }
   }
+
+  componentDidUpdate() {
+    this.changeDocumentTitle()
+  }
+
+  componentDidMount() {
+    this.changeDocumentTitle()
+  }
+
+  componentWillUnmount() {
+    document.title = `RAP2`
+  }
+
   render() {
     const {
       location: { params },
@@ -165,9 +180,7 @@ class RepositoryEditor extends Component<Props, States> {
           <span className="title">
             <GoRepo className="mr6 color-9" />
             <Link to={`${ownerlink}`}>
-              {repository.organization
-                ? repository.organization.name
-                : repository.owner.fullname}
+              {repository.organization ? repository.organization.name : repository.owner.fullname}
             </Link>
             <span className="slash"> / </span>
             <span>{repository.name}</span>
@@ -176,10 +189,7 @@ class RepositoryEditor extends Component<Props, States> {
             {/* 编辑权限：拥有者或者成员 */}
 
             {isOwned || isJoined ? (
-              <span
-                className="fake-link edit"
-                onClick={() => this.setState({ update: true })}
-              >
+              <span className="fake-link edit" onClick={() => this.setState({ update: true })}>
                 <GoPencil /> 编辑
               </span>
             ) : null}
@@ -208,13 +218,22 @@ class RepositoryEditor extends Component<Props, States> {
             >
               <GoDatabase /> 数据
             </a>
-            <span
-              className="fake-link edit"
-              onClick={() => this.setState({ exportPostman: true })}
-            >
+            <span className="fake-link edit" onClick={() => this.setState({ importSwagger: true })}>
+              <GoLinkExternal />从 Swagger 导入
+            </span>
+            <ImportSwaggerRepositoryForm
+              open={this.state.importSwagger}
+              onClose={ok => {
+                ok && this.handleUpdate()
+                this.setState({ importSwagger: false })
+              }}
+              repositoryId={repository.id}
+              orgId={(repository.organization || {}).id}
+              mode="manual"
+            />
+            <span className="fake-link edit" onClick={() => this.setState({ exportPostman: true })}>
               <GoLinkExternal /> 导出
             </span>
-
             <ExportPostmanForm
               title="导出"
               open={this.state.exportPostman}
@@ -225,7 +244,8 @@ class RepositoryEditor extends Component<Props, States> {
               className="fake-link edit"
               onClick={() => this.setState({ defaultValuesModalOpen: true })}
             >
-              <GoEllipsis />默认值
+              <GoEllipsis />
+              默认值
             </span>
             <DefaultValueModal
               open={this.state.defaultValuesModalOpen}
@@ -250,24 +270,10 @@ class RepositoryEditor extends Component<Props, States> {
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className="body">
-          <ModuleList
-            mods={repository.modules}
-            repository={repository}
-            mod={mod}
-          />
+          <ModuleList mods={repository.modules} repository={repository} mod={mod} />
           <div className="InterfaceWrapper">
-            <InterfaceList
-              itfs={mod.interfaces}
-              repository={repository}
-              mod={mod}
-              itf={itf}
-            />
-            <InterfaceEditor
-              itf={itf}
-              properties={properties}
-              mod={mod}
-              repository={repository}
-            />
+            <InterfaceList itfs={mod.interfaces} repository={repository} mod={mod} itf={itf} />
+            <InterfaceEditor itf={itf} properties={properties} mod={mod} repository={repository} />
           </div>
         </div>
       </article >
@@ -276,7 +282,7 @@ class RepositoryEditor extends Component<Props, States> {
   handleUpdate = () => {
     const { pathname, hash, search } = this.props.router.location
     this.props.replace(pathname + search + hash)
-  };
+  }
 }
 
 // 容器组件
@@ -306,7 +312,4 @@ const mapDispatchToProps = {
   onSortPropertyList: sortPropertyList,
   replace,
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RepositoryEditor)
+export default connect(mapStateToProps, mapDispatchToProps)(RepositoryEditor)

@@ -6,6 +6,7 @@ import { History } from 'history'
 import { ConnectedRouter } from 'connected-react-router'
 import { MuiThemeProvider } from '@material-ui/core/styles/'
 import { SnackbarProvider } from 'notistack'
+import { GlobalProvider } from './GlobalProvider'
 import { withStyles } from '@material-ui/core'
 import GlobalStyles from '../components/common/GlobalStyles'
 import MuiTheme from '../components/common/MuiTheme'
@@ -28,11 +29,13 @@ const start = (
       return (
         <MuiThemeProvider theme={MuiTheme}>
           <SnackbarProvider maxSnack={3}>
-            <Provider store={store}>
-              <ConnectedRouter history={history}>
-                <Routes/>
-              </ConnectedRouter>
-            </Provider>
+            <GlobalProvider>
+              <Provider store={store}>
+                <ConnectedRouter history={history}>
+                  <Routes />
+                </ConnectedRouter>
+              </Provider>
+            </GlobalProvider>
           </SnackbarProvider>
         </MuiThemeProvider>
       )

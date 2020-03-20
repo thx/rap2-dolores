@@ -28,6 +28,7 @@
     "@material-ui/pickers": "^3.2.6",
     "@material-ui/styles": "^4.4.3",
     "@types/json5": "^0.0.30",
+    "@welldone-software/why-did-you-render": "^4.0.3",
     "animate.css": "3.7.2",
     "awesome-debounce-promise": "^2.1.0",
     "chart.js": "^2.8.0",

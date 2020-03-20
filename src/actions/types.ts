@@ -44,6 +44,14 @@ export interface Organization {
   newOwner?: User
 }
 
+export interface ImportSwagger {
+  version: number
+  docUrl: string
+  orgId?: number
+  mode: string
+  repositoryId?: number
+  swagger?: string
+}
 export interface User {
   id: number
   fullname: string

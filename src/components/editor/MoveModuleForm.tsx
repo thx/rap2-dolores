@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { moveInterface } from '../../actions/interface'
+import { moveModule } from '../../actions/module'
 import { fetchOwnedRepositoryList, fetchJoinedRepositoryList } from '../../actions/repository'
-import EditorService from 'relatives/services/Editor'
 
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core'
 import _ from 'lodash'
@@ -55,20 +54,17 @@ const useStyles = makeStyles(({ spacing }: Theme) => ({
 interface Props {
   title: string
   repository: any
-  itfId: number
   open: boolean
   mod: Module
   onClose: () => void
 }
 
-export default function MoveInterfaceForm(props: Props) {
-  const { repository, title, itfId, onClose, open, mod } = props
+export default function MoveModuleForm(props: Props) {
+  const { repository, title, onClose, open, mod } = props
+  const modId = mod.id
   const classes = useStyles()
   const [repositoryId, setRepositoryId] = useState(repository.id)
-  const [modId, setModId] = useState(mod.id)
   const [op, setOp] = useState(OP_MOVE)
-  const [modules, setModules] = useState(repository.modules)
-
   const dispatch = useDispatch()
 
   const repositories = useSelector((state: RootState) => {
@@ -90,12 +86,6 @@ export default function MoveInterfaceForm(props: Props) {
   ) {
     const repositoryId = e.target.value
     setRepositoryId(repositoryId)
-    EditorService.fetchModuleList({
-      repositoryId,
-    }).then(res => {
-      setModules(res)
-      setModId(res[0] && res[0].id)
-    })
   }
 
   const handleSubmit = (e: any) => {
@@ -103,11 +93,10 @@ export default function MoveInterfaceForm(props: Props) {
     const params = {
       modId,
       op,
-      itfId,
       repositoryId,
     }
     dispatch(
-      moveInterface(params, () => {
+      moveModule(params, () => {
         onClose()
       }),
     )
@@ -128,23 +117,6 @@ export default function MoveInterfaceForm(props: Props) {
                   fullWidth={true}
                 >
                   {repositories.map((x: any) => (
-                    <MenuItem key={x.id} value={x.id}>
-                      {x.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </div>
-            <div className={classes.formItem}>
-              <div className={classes.formTitle}>选择目标模块：</div>
-              <FormControl>
-                <Select
-                  className={classes.select}
-                  onChange={e => setModId(+((e.target.value as any) as string))}
-                  value={modId}
-                  fullWidth={true}
-                >
-                  {modules.map((x: any) => (
                     <MenuItem key={x.id} value={x.id}>
                       {x.name}
                     </MenuItem>

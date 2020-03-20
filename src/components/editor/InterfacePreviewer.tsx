@@ -12,7 +12,7 @@ class Previewer extends Component<any, any> {
     label: PropTypes.string.isRequired,
     scope: PropTypes.string.isRequired,
     properties: PropTypes.array.isRequired,
-    itf: PropTypes.object.isRequired,
+    interfaceId: PropTypes.number.isRequired,
   }
   render() {
     let scopedTemplate
@@ -20,13 +20,17 @@ class Previewer extends Component<any, any> {
     let scopedData: any
     let scopedKeys
     let extraKeys
-    const { label, scope, properties, itf } = this.props
+    const { label, scope, properties, interfaceId } = this.props
 
     try {
       // DONE 2.2 支持引用请求参数
       scopedProperties = {
-        request: properties.map((property: any) => ({ ...property })).filter((property: any) => property.scope === 'request'),
-        response: properties.map((property: any) => ({ ...property })).filter((property: any) => property.scope === 'response'),
+        request: properties
+          .map((property: any) => ({ ...property }))
+          .filter((property: any) => property.scope === 'request'),
+        response: properties
+          .map((property: any) => ({ ...property }))
+          .filter((property: any) => property.scope === 'response'),
       }
       scopedTemplate = {
         request: Tree.treeToJson(Tree.arrayToTree(scopedProperties.request)),
@@ -41,7 +45,7 @@ class Previewer extends Component<any, any> {
         request: Mock.mock(scopedTemplate.request),
       }
       scopedData.response = Mock.mock(
-        Object.assign({}, _.pick(scopedData.request, extraKeys), scopedTemplate.response)
+        Object.assign({}, _.pick(scopedData.request, extraKeys), scopedTemplate.response),
       )
       scopedData.response = _.pick(scopedData.response, scopedKeys.response)
 
@@ -53,11 +57,13 @@ class Previewer extends Component<any, any> {
 
       // DONE 2.1 支持虚拟属性 __root__ √服务端 √前端 √迁移测试
       const keys = Object.keys(data)
-      if (keys.length === 1 && keys[0] === '__root__') { data = data.__root__ }
+      if (keys.length === 1 && keys[0] === '__root__') {
+        data = data.__root__
+      }
 
       const { Assert } = Mock.valid
       const valid = Mock.valid(template, data)
-      for (const i of  valid) {
+      for (const i of valid) {
         console.warn(Assert.message(i))
       }
       return (
@@ -65,37 +71,69 @@ class Previewer extends Component<any, any> {
           <div className="result-template">
             <div className="header">
               <span className="title">{label}模板</span>
-              {scope === 'response'
-                ? <a href={`${serve}/app/mock/template/${itf.id}`} target="_blank" rel="noopener noreferrer"><GoLink className="fontsize-14" /></a>
-                : null}
+              {scope === 'response' ? (
+                <a
+                  href={`${serve}/app/mock/template/${interfaceId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <GoLink className="fontsize-14" />
+                </a>
+              ) : null}
             </div>
-            <pre className="body">{
-              JSON.stringify(template, (_: any, v) => {
-                if (typeof v === 'function') { return v.toString() }
-                if (v !== undefined && v !== null && v.exec) { return v.toString() } else { return v }
-              }, 2)
-            }</pre>
-
+            <pre className="body">
+              {JSON.stringify(
+                template,
+                (_: any, v) => {
+                  if (typeof v === 'function') {
+                    return v.toString()
+                  }
+                  if (v !== undefined && v !== null && v.exec) {
+                    return v.toString()
+                  } else {
+                    return v
+                  }
+                },
+                2,
+              )}
+            </pre>
           </div>
           <div className="result-mocked">
             <div className="header">
               <span className="title">{label}数据</span>
-              {scope === 'response'
-                ? <a href={`${serve}/app/mock/data/${itf.id}`} target="_blank" rel="noopener noreferrer"><GoLink className="mr6 fontsize-14" /></a>
-                : null}
-              <Link to="" onClick={e => this.remock(e)}><GoSync className="mr6 fontsize-14" onAnimationEnd={e => this.removeAnimateClass(e)} /></Link>
+              {scope === 'response' ? (
+                <a
+                  href={`${serve}/app/mock/data/${interfaceId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <GoLink className="mr6 fontsize-14" />
+                </a>
+              ) : null}
+              <Link to="" onClick={e => this.remock(e)}>
+                <GoSync
+                  className="mr6 fontsize-14"
+                  onAnimationEnd={e => this.removeAnimateClass(e)}
+                />
+              </Link>
             </div>
             <pre className="body">{JSON.stringify(data, null, 2)}</pre>
           </div>
-          {scope === 'response'
-            ? <div className="result-valid col-12">
-              {!valid.length
-                ? <span><GoBeaker className="mr6 fontsize-20" />模板与数据匹配 √</span>
-                : <span><GoBug className="mr6 fontsize-20" />模板与数据不匹配</span>
-              }
+          {scope === 'response' ? (
+            <div className="result-valid col-12">
+              {!valid.length ? (
+                <span>
+                  <GoBeaker className="mr6 fontsize-20" />
+                  模板与数据匹配 √
+                </span>
+              ) : (
+                <span>
+                  <GoBug className="mr6 fontsize-20" />
+                  模板与数据不匹配
+                </span>
+              )}
             </div>
-            : null
-          }
+          ) : null}
         </div>
       )
     } catch (ex) {

@@ -102,7 +102,6 @@ function InterfaceForm(props: Props) {
                 repositoryId: repository!.id,
                 moduleId: mod!.id,
               }
-              console.log('itf', itf)
               dispatch(
                 addOrUpdateInterface(itf, () => {
                   dispatch(refresh())

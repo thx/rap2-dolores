@@ -54,7 +54,7 @@ function DefaultValueModal({ open, handleClose, repositoryId, enqueueSnackbar }:
 
   useEffect(() => {
     dispatch(fetchDefaultVals(repositoryId))
-  }, [repositoryId])
+  }, [dispatch, repositoryId])
   const defaultVals: IDefaultVal[] = useSelector((state: any) => state.defaultVals)
 
   useEffect(() => {

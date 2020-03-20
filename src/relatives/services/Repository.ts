@@ -11,7 +11,7 @@ export default {
   fetchRepositoryList({ user = '', organization = '', name = '', cursor = 1, limit = 100 }: any = {}) {
     return fetch(`${serve}/repository/list?user=${user}&organization=${organization}&name=${name}&cursor=${cursor}&limit=${limit}`, { ...CREDENTIALS })
       .then(res => res.json())
-    // .then(json => json.data)
+      // .then(json => json.data)
   },
   fetchOwnedRepositoryList({ user = '', name = '' }: any = {}) {
     return fetch(`${serve}/repository/owned?user=${user}&name=${name}`, { ...CREDENTIALS })
@@ -59,6 +59,22 @@ export default {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+  },
+  importSwaggerRepository(data: any) {
+    return fetch(`${serve}/repository/importswagger`, {
+      ...CREDENTIALS,
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+  },
+  getSwaggerRepository(data: any) {
+    return fetch(`${data.docUrl}`, {
+      mode: 'cors',
+      method: 'GET',
     })
       .then(res => res.json())
   },

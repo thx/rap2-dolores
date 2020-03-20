@@ -109,6 +109,11 @@ function OrganizationForm(props: Props) {
                   resolve(options.map(x => ({ label: `${x.fullname} ${x.empId || x.email}`, value: x.id })))
                 })
               }
+              const newOwner = values.newOwner
+                ? [{ label: values.newOwner.fullname, value: values.newOwner.id }]
+                : values.owner
+                ? [{ label: values.owner.fullname, value: values.owner.id }]
+                : []
               return (
                 <Form>
                   <div className="rmodal-body">
@@ -118,9 +123,11 @@ function OrganizationForm(props: Props) {
                         {values.owner && (values.owner.id === auth.id)
                           ? <UserList
                             isMulti={false}
-                            value={values.newOwner ? [{ label: values.newOwner.fullname, value: values.newOwner.id }] : []}
+                            value={newOwner}
                             loadOptions={loadUserOptions}
-                            onChange={(users: any) => setFieldValue('newOwner', users[0])}
+                            onChange={(users: any) => {
+                            setFieldValue('newOwner', users[0])
+                          }}
                           />
                           : <div className="pt7 pl9">{values.owner!.fullname}</div>
                         }

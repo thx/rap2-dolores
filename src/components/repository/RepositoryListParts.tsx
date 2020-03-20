@@ -11,12 +11,13 @@ import { GoArrowRight } from 'react-icons/go'
 import { Organization, RootState } from 'actions/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { Select, MenuItem, TextField, Button } from '@material-ui/core'
+import OrganizationForm from 'components/organization/OrganizationForm'
 
-export const mapDispatchToProps = ({
+export const mapDispatchToProps = {
   onAddRepository: addRepository,
   onUpdateRepository: updateRepository,
   onDeleteRepository: deleteRepository,
-})
+}
 
 interface CreateButtonProps {
   organization?: Organization
@@ -27,6 +28,7 @@ export function CreateButton(props: CreateButtonProps) {
   const { organization, callback } = props
   const [creating, setCreating] = useState(false)
   const [importing, setImporting] = useState(false)
+  const [updateOrganization, setUpdateOrganization] = useState(false)
   const dispatch = useDispatch()
   const router = useSelector((state: RootState) => state.router)
   const handleUpdate = () => {
@@ -37,9 +39,27 @@ export function CreateButton(props: CreateButtonProps) {
       dispatch(replace(uri.href()))
     }
   }
+
   return (
     <span className="float-right ml10">
-      {/* DONE 2.1 √我加入的仓库、X所有仓库 是否应该有 新建仓库 */}
+      {organization && (
+        <Button
+          style={{ marginRight: 8 }}
+          className="RepositoryCreateButton"
+          variant="contained"
+          color="primary"
+          onClick={() => setUpdateOrganization(true)}
+        >
+          编辑团队
+        </Button>
+      )}
+
+      <OrganizationForm
+        organization={organization}
+        open={updateOrganization}
+        onClose={() => setUpdateOrganization(false)}
+      />
+
       <Button
         className="RepositoryCreateButton"
         variant="contained"
@@ -49,9 +69,16 @@ export function CreateButton(props: CreateButtonProps) {
         新建仓库
       </Button>
 
+      <RepositoryForm
+        title="新建仓库"
+        open={creating}
+        onClose={() => setCreating(false)}
+        organizationId={organization ? organization.id : undefined}
+      />
+
       {organization && (
         <Button
-          style={{marginLeft: 8}}
+          style={{ marginLeft: 8 }}
           className="RepositoryCreateButton"
           variant="contained"
           color="primary"
@@ -60,13 +87,6 @@ export function CreateButton(props: CreateButtonProps) {
           <GoArrowRight /> 导入仓库
         </Button>
       )}
-
-      <RepositoryForm
-        title="新建仓库"
-        open={creating}
-        onClose={() => setCreating(false)}
-        organizationId={organization ? organization.id : undefined}
-      />
 
       {organization && (
         <RModal
@@ -89,11 +109,7 @@ export function RepositoriesTypeDropdown(props: { url: string }) {
     dispatch(push(url))
   }
   return (
-    <Select
-      className="mr8"
-      value={url}
-      onChange={e => handlePush(e.target.value as string)}
-    >
+    <Select className="mr8" value={url} onChange={e => handlePush(e.target.value as string)}>
       <MenuItem value="/repository/joined">我的仓库</MenuItem>
       <MenuItem value="/repository/all">所有仓库</MenuItem>
     </Select>
@@ -126,17 +142,23 @@ export function SearchGroup(props: { name: string }) {
   )
 }
 
-export const RepositoryListWithSpin = ({ name, repositories }: any) => (
-  repositories.fetching
-    ? <Spin />
-    : <RepositoryList name={name} repositories={repositories.data} editor="/repository/editor" />
-)
+export const RepositoryListWithSpin = ({ name, repositories }: any) =>
+  repositories.fetching ? (
+    <Spin />
+  ) : (
+    <RepositoryList name={name} repositories={repositories.data} editor="/repository/editor" />
+  )
 
-export const OrganizationRepositoryListWithSpin = ({ name, repositories }: any) => (
-  repositories.fetching
-    ? <Spin />
-    : <RepositoryList name={name} repositories={repositories.data} editor="/organization/repository/editor" />
-)
+export const OrganizationRepositoryListWithSpin = ({ name, repositories }: any) =>
+  repositories.fetching ? (
+    <Spin />
+  ) : (
+    <RepositoryList
+      name={name}
+      repositories={repositories.data}
+      editor="/organization/repository/editor"
+    />
+  )
 
 export class PaginationWithLocation extends Component<any, any> {
   static contextTypes = {

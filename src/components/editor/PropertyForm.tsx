@@ -37,7 +37,7 @@ class PropertyForm extends Component<any, any> {
     parent: PropTypes.object,
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
-    itf: PropTypes.object.isRequired,
+    interfaceId: PropTypes.number.isRequired,
   }
   static contextTypes = {
     rmodal: PropTypes.instanceOf(Component),
@@ -54,7 +54,7 @@ class PropertyForm extends Component<any, any> {
         <div className="rmodal-header">
           <span className="rmodal-title">{this.props.title}</span>
         </div>
-        <form className="form-horizontal w600" onSubmit={this.handleSubmit} >
+        <form className="form-horizontal w600" onSubmit={this.handleSubmit}>
           <div className="rmodal-body">
             <div className="form-group row" style={{}}>
               <label className="col-sm-2 control-label">名称：</label>
@@ -88,9 +88,11 @@ class PropertyForm extends Component<any, any> {
                   }}
                   className="form-control"
                 >
-                  {TYPES.map(type =>
-                    <option key={type} value={type}>{type}</option>
-                  )}
+                  {TYPES.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -142,7 +144,14 @@ class PropertyForm extends Component<any, any> {
             <div className="form-group row mb0">
               <label className="col-sm-2 control-label" />
               <div className="col-sm-10">
-                <Button type="submit" variant="contained" color="primary" style={{ marginRight: 8 }}>提交</Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  style={{ marginRight: 8 }}
+                >
+                  提交
+                </Button>
                 <Button onClick={() => rmodal.close()}>取消</Button>
               </div>
             </div>
@@ -156,19 +165,21 @@ class PropertyForm extends Component<any, any> {
   }
   handleSubmit = (e: any) => {
     e.preventDefault()
-    const { auth, repository, mod, itf, scope, parent = { id: -1 } } = this.props
+    const { auth, repository, mod, interfaceId, scope, parent = { id: -1 } } = this.props
     const { handleAddMemoryProperty } = this.context
     const property = Object.assign({}, this.state, {
       creatorId: auth.id,
       repositoryId: repository.id,
       moduleId: mod.id,
-      interfaceId: itf.id,
+      interfaceId,
       scope,
       parentId: parent.id,
     })
     handleAddMemoryProperty(property, () => {
       const { rmodal } = this.context
-      if (rmodal) { rmodal.resolve() }
+      if (rmodal) {
+        rmodal.resolve()
+      }
     })
   }
 }

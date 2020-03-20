@@ -1,8 +1,11 @@
 import {
   call,
-  put
+  put,
+  select
 } from 'redux-saga/effects'
+import { RootState } from 'actions/types'
 import * as ModuleAction from '../../actions/module'
+import * as InterfaceAction from '../../actions/interface'
 import * as RepositoryAction from '../../actions/repository'
 import EditorService from '../services/Editor'
 
@@ -43,6 +46,27 @@ export function* updateModule(action: any) {
     console.error(e.message)
     yield put(ModuleAction.updateModuleFailed(e.message))
     if (action.onRejected) { action.onRejected() }
+  }
+}
+export function* moveModule(action: any) {
+  try {
+    const params = action.params
+    const currRepositoryId = yield select(
+      (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
+    )
+    yield call(EditorService.moveModule, params)
+    yield put(InterfaceAction.moveInterfaceSucceeded())
+    yield put(
+      RepositoryAction.fetchRepository({
+        id: currRepositoryId,
+        repository: undefined,
+      }),
+    )
+    action.onResolved && action.onResolved()
+  } catch (e) {
+    console.error(e.message)
+    yield put(InterfaceAction.moveInterfaceFailed(e.message))
+    action.onRejected && action.onRejected()
   }
 }
 export function* deleteModule(action: any) {

@@ -70,6 +70,19 @@ export function* importRepository(action: any) {
     yield put(RepositoryAction.importRepositoryFailed(e.message))
   }
 }
+export function* importSwaggerRepository(action: any) {
+  try {
+    const res = yield call(RepositoryService.importSwaggerRepository, action.data)
+    if (res.isOk) {
+      yield put(RepositoryAction.importSwaggerRepositorySucceeded())
+      if (action.onResolved) { action.onResolved(res) }
+    } else {
+      throw new Error(res.message)
+    }
+  } catch (e) {
+    yield put(RepositoryAction.importSwaggerRepositoryFailed(e.message))
+  }
+}
 
 export function* fetchRepository(action: any) {
   try {

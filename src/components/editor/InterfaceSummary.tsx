@@ -217,7 +217,7 @@ class InterfaceSummary extends Component<
                   style={{ marginTop: 0 }}
                   id="name"
                   label="名称"
-                  value={itf.name}
+                  value={itf.name || ''}
                   fullWidth={true}
                   autoComplete="off"
                   onChange={e => {
@@ -230,7 +230,7 @@ class InterfaceSummary extends Component<
                 <TextField
                   id="url"
                   label="地址"
-                  value={itf.url}
+                  value={itf.url || ''}
                   fullWidth={true}
                   autoComplete="off"
                   onChange={e => {
@@ -246,9 +246,7 @@ class InterfaceSummary extends Component<
                   </InputLabel>
                   <Select
                     value={itf.method}
-                    input={
-                      <Input name="method" id="method-label-placeholder" />
-                    }
+                    input={<Input name="method" id="method-label-placeholder" />}
                     onChange={e => {
                       handleChangeInterface({ method: e.target.value })
                     }}
@@ -268,9 +266,7 @@ class InterfaceSummary extends Component<
                   </InputLabel>
                   <Select
                     value={itf.status}
-                    input={
-                      <Input name="status" id="status-label-placeholder" />
-                    }
+                    input={<Input name="status" id="status-label-placeholder" />}
                     onChange={e => {
                       handleChangeInterface({ status: e.target.value })
                     }}
@@ -289,7 +285,7 @@ class InterfaceSummary extends Component<
                 <TextField
                   id="description"
                   label="描述（可多行）"
-                  value={itf.description}
+                  value={itf.description || ''}
                   fullWidth={true}
                   multiline={true}
                   autoComplete="off"
@@ -303,13 +299,11 @@ class InterfaceSummary extends Component<
           ) : (
             <>
               <li>
-                <CopyToClipboard text={itf.url}>
-                  <span>
+                <CopyToClipboard text={itf.url} type="right">
+                  <span className="mr5">
                     <span className="label">地址：</span>
                     <a
-                      href={`${serve}/app/mock/${repository.id}${getRelativeUrl(
-                        itf.url || ''
-                      )}`}
+                      href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -338,8 +332,12 @@ class InterfaceSummary extends Component<
                 <li>
                   <CopyToClipboard text={itf.description}>
                     <span>
-                      <span className="label">简介：</span>
-                      <span>{itf.description}</span>
+                      <span className="label" style={{ verticalAlign: 'top' }}>
+                        简介：
+                      </span>
+                      <span style={{ whiteSpace: 'pre-wrap', display: 'inline-block' }}>
+                        {itf.description}
+                      </span>
                     </span>
                   </CopyToClipboard>
                 </li>
@@ -351,15 +349,11 @@ class InterfaceSummary extends Component<
           <ul className="nav nav-tabs" role="tablist">
             <li
               className="nav-item"
-              onClick={this.switchRequestParamsType(
-                REQUEST_PARAMS_TYPE.HEADERS
-              )}
+              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}
             >
               <button
                 className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.HEADERS
-                    ? 'active'
-                    : ''
+                  requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''
                 }`}
                 role="tab"
                 data-toggle="tab"
@@ -369,15 +363,11 @@ class InterfaceSummary extends Component<
             </li>
             <li
               className="nav-item"
-              onClick={this.switchRequestParamsType(
-                REQUEST_PARAMS_TYPE.QUERY_PARAMS
-              )}
+              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}
             >
               <button
                 className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS
-                    ? 'active'
-                    : ''
+                  requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''
                 }`}
                 role="tab"
                 data-toggle="tab"
@@ -387,15 +377,11 @@ class InterfaceSummary extends Component<
             </li>
             <li
               className="nav-item"
-              onClick={this.switchRequestParamsType(
-                REQUEST_PARAMS_TYPE.BODY_PARAMS
-              )}
+              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}
             >
               <button
                 className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS
-                    ? 'active'
-                    : ''
+                  requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''
                 }`}
                 role="tab"
                 data-toggle="tab"
@@ -407,10 +393,7 @@ class InterfaceSummary extends Component<
         )}
         {editable && requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? (
           <div className="body-options">
-            <div
-              className="form-check"
-              onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}
-            >
+            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
               <input
                 className="form-check-input"
                 type="radio"
@@ -437,10 +420,7 @@ class InterfaceSummary extends Component<
                 x-www-form-urlencoded
               </label>
             </div>
-            <div
-              className="form-check"
-              onClick={this.switchBodyOption(BODY_OPTION.RAW)}
-            >
+            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
               <input
                 className="form-check-input"
                 type="radio"
@@ -452,10 +432,7 @@ class InterfaceSummary extends Component<
                 raw
               </label>
             </div>
-            <div
-              className="form-check"
-              onClick={this.switchBodyOption(BODY_OPTION.BINARY)}
-            >
+            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
               <input
                 className="form-check-input"
                 type="radio"

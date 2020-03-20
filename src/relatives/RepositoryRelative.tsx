@@ -426,6 +426,8 @@ export default {
       RepositoryEffects.fetchRepositoryList,
     [RepositoryAction.importRepository(undefined, undefined).type]:
       RepositoryEffects.importRepository,
+    [RepositoryAction.importSwaggerRepository(undefined, undefined).type]:
+      RepositoryEffects.importSwaggerRepository,
     [RepositoryAction.fetchOwnedRepositoryList().type]:
       RepositoryEffects.fetchOwnedRepositoryList,
     [RepositoryAction.fetchJoinedRepositoryList().type]:

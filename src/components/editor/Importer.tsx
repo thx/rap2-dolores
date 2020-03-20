@@ -76,6 +76,7 @@ type ImporterProps = {
   rmodal?: any,
   title?: any,
   handleAddMemoryProperties: (...args: any[]) => any,
+  interfaceId: number
   [k: string]: any;
 }
 type ImporterState = {
@@ -143,7 +144,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
   // DONE 2.1 BUG 类型 Number，初始值 ''，被解析为随机字符串
   handleJSONSchema = (schema: any, parent = { id: -1 }, memoryProperties: any, siblings?: any) => {
     if (!schema) { return }
-    const { auth, repository, mod, itf, scope } = this.props
+    const { auth, repository, mod, interfaceId, scope } = this.props
     const hasSiblings = siblings instanceof Array && siblings.length > 0
     // DONE 2.1 需要与 Mock 的 rule.type 规则统一，首字符小写，好烦！应该忽略大小写！
     if (schema.name === lengthAlias) {
@@ -207,7 +208,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
         creator: auth.id,
         repositoryId: repository.id,
         moduleId: mod.id,
-        interfaceId: itf.id,
+        interfaceId,
         scope,
         parentId: parent.id,
       },

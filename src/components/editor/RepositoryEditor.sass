@@ -15,10 +15,9 @@
       a, .fake-link
         margin-right: 1rem
     > .desc
+      white-space: pre-wrap
       margin: 1rem 0 .5rem
       color: #666
-  > .body
-    // padding: 0 2rem
 
 .RelatedProjects 
   display: flex
@@ -151,7 +150,12 @@
     flex-grow: 1
 
 .InterfaceList
+  position: sticky
+  top: 10px
+  height: calc(100vh - 10px)
   .header
+    .newIntf
+      margin-bottom: 1rem
     margin-bottom: 1rem
   ul.body
     margin: 0
@@ -159,7 +163,7 @@
     border: 1px solid rgba(63, 81, 181, 0.5)
     border-radius: .4rem
     list-style: none
-    max-height: 150vh
+    max-height: calc(100vh - 115px)
     overflow-y: auto
     > li
       position: relative
@@ -316,94 +320,94 @@
 .SortableTreeTable
   .SortableTreeTableHeader,
   .SortableTreeTableRow
-  .flex-row
-    display: flex
-    &.highlight
-      .thtd
-        animation: hightlight 1.5s 1
-    .thtd
-      border: 1px solid #eceeef
-      flex-grow: 1
-      // 垂直居中
+    .flex-row
       display: flex
-      align-items: center
-      flex-direction: row
-      margin-right: -1px
-    .th
-      @extend .thtd
-      padding: .75rem
-      font-weight: bold
-    .td
-      @extend .thtd
-      padding: .5rem .75rem
-      margin-bottom: -1px
-    .th, .td
-      &.operations
-        padding: .5rem
-        width: 1rem
-      &.name
-        width: 20rem
-        flex-grow: 3
-      &.type
-        width: 7rem
-      &.rule
-        width: 10rem
-      &.value
-        width: 10rem
-      &.desc
-        width: 15rem
-    .th
-      .helper
-          margin-left: .5rem
-          color: #999
-          &:hover
-            color: $brand
-    .td
-      &.operations
-        height: auto
-        line-height: 1
-        justify-content: flex-end
-        a
-          color: #999
-          margin-right: .5rem
-          &:last-child
-            margin-right: 0
-          &:hover
-            color: $brand
-      &.payload
+      &.highlight
+        .thtd
+          animation: hightlight 1.5s 1
+      .thtd
+        border: 1px solid #eceeef
+        flex-grow: 1
+        // 垂直居中
+        display: flex
+        align-items: center
+        flex-direction: row
+        margin-right: -1px
+      .th
+        @extend .thtd
+        padding: .75rem
+        font-weight: bold
+      .td
+        @extend .thtd
         padding: .5rem .75rem
-        height: auto
-        line-height: 1.5
-      &.payload.name
-        justify-content: space-between
-        position: relative
-        .name-wrapper
-          flex-grow: 1
-        @for $i from 1 through 42
-          &.depth-#{$i}
-            padding-left: $i * 1rem + 0.75rem
-            &:after
-              display: block
-              content: ''
-              position: absolute
-              top: 0
-              bottom: 0
-              left: 0
-              width: $i * 1rem
-              opacity: .5
-              border-right: 1px dashed #707070
-      &.payload.value
-        max-height: 30vh
-        overflow: auto
-        hyphens: auto
-        overflow-wrap: break-word
-        span.value-container
-          white-space: pre
-          margin: auto 0
-      &.payload.required
-        padding: 0
-      &.payload.desc
-        word-break: break-word
+        margin-bottom: -1px
+      .th, .td
+        &.operations
+          padding: .5rem
+          width: 1rem
+        &.name
+          width: 20rem
+          flex-grow: 3
+        &.type
+          width: 7rem
+        &.rule
+          width: 10rem
+        &.value
+          width: 10rem
+        &.desc
+          width: 15rem
+      .th
+        .helper
+            margin-left: .5rem
+            color: #999
+            &:hover
+              color: $brand
+      .td
+        &.operations
+          height: auto
+          line-height: 1
+          justify-content: flex-end
+          a
+            color: #999
+            margin-right: .5rem
+            &:last-child
+              margin-right: 0
+            &:hover
+              color: $brand
+        &.payload
+          padding: .5rem .75rem
+          height: auto
+          line-height: 1.5
+        &.payload.name
+          justify-content: space-between
+          position: relative
+          .name-wrapper
+            flex-grow: 1
+          @for $i from 1 through 42
+            &.depth-#{$i}
+              padding-left: $i * 1rem + 0.75rem
+              &:after
+                display: block
+                content: ''
+                position: absolute
+                top: 0
+                bottom: 0
+                left: 0
+                width: $i * 1rem
+                opacity: .5
+                border-right: 1px dashed #707070
+        &.payload.value
+          max-height: 30vh
+          overflow: auto
+          hyphens: auto
+          overflow-wrap: break-word
+          span.value-container
+            white-space: pre
+            margin: auto 0
+        &.payload.required
+          padding: 0
+        &.payload.desc
+          word-break: break-word
 .SortableTreeTable.editable
   .flex-row    
     .th, .td

@@ -8,6 +8,10 @@ export const importRepository = (data: any, onResolved: any) => ({ type: 'REPOSI
 export const importRepositorySucceeded = () => ({ type: 'REPOSITORY_IMPORT_SUCCEEDED' })
 export const importRepositoryFailed = (message: any) => ({ type: 'REPOSITORY_IMPORT_FAILED', message })
 
+export const importSwaggerRepository = (data: any, onResolved: any) => ({ type: 'REPOSITORY_IMPORT_SWAGGER', onResolved, data })
+export const importSwaggerRepositorySucceeded = () => ({ type: 'REPOSITORY_IMPORT_SUCCEEDED_SWAGGER' })
+export const importSwaggerRepositoryFailed = (message: any) => ({ type: 'REPOSITORY_IMPORT_FAILED_SWAGGER', message })
+
 export const updateRepository = (repository: any, onResolved: any) => ({ type: 'REPOSITORY_UPDATE', repository, onResolved })
 export const updateRepositorySucceeded = (repository: any) => ({ type: 'REPOSITORY_UPDATE_SUCCEEDED', repository })
 export const updateRepositoryFailed = (message: any) => ({ type: 'REPOSITORY_UPDATE_FAILED', message })

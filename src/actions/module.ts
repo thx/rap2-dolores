@@ -26,6 +26,20 @@ export const updateModuleFailed = (message: any) => ({
   message,
 })
 
+export const moveModule = (params: any, onResolved: any) => ({
+  type: 'MODULE_MOVE',
+  params,
+  onResolved,
+})
+export const moveModuleSucceeded = (payload: any) => ({
+  type: 'MODULE_MOVE_SUCCEEDED',
+  payload,
+})
+export const moveModuleFailed = (message: any) => ({
+  type: 'MODULE_MOVE_FAILED',
+  message,
+})
+
 export const deleteModule = (id: any, onResolved: any, repoId: any) => ({
   type: 'MODULE_DELETE',
   id,

@@ -2,13 +2,18 @@ import { CREDENTIALS, serve } from './constant'
 
 export default {
   get({ project, module, page, property }: any) {
-    return fetch(`${serve}/workspace/get?project=${project}&module=${module}&page=${page}&action={action}&property=${property}`, { ...CREDENTIALS })
+    return fetch(
+      `${serve}/workspace/get?project=${project}&module=${module}&page=${page}&action={action}&property=${property}`,
+      { ...CREDENTIALS },
+    )
       .then(res => res.json())
       .then(json => json.data)
   },
   // 模块 Module
   fetchModuleList({ repositoryId = '', name = '' }: any = {}) {
-    return fetch(`${serve}/module/list?repositoryId=${repositoryId}&name=${name}`, { ...CREDENTIALS })
+    return fetch(`${serve}/module/list?repositoryId=${repositoryId}&name=${name}`, {
+      ...CREDENTIALS,
+    })
       .then(res => res.json())
       .then(json => json.data)
   },
@@ -37,6 +42,16 @@ export default {
       .then(res => res.json())
       .then(json => json.data)
   },
+  moveModule(params: any) {
+    return fetch(`${serve}/module/move`, {
+      ...CREDENTIALS,
+      method: 'POST',
+      body: JSON.stringify(params),
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(json => json.data)
+  },
   deleteModule(id: any) {
     return fetch(`${serve}/module/remove?id=${id}`, { ...CREDENTIALS })
       .then(res => res.json())
@@ -54,7 +69,9 @@ export default {
   },
   // 页面 Page
   fetchPageList({ module, cursor = 1, limit = 10 }: any) {
-    return fetch(`${serve}/page/list?module=${module}&cursor=${cursor}&limit=${limit}`, { ...CREDENTIALS })
+    return fetch(`${serve}/page/list?module=${module}&cursor=${cursor}&limit=${limit}`, {
+      ...CREDENTIALS,
+    })
       .then(res => res.json())
       .then(json => json.data)
   },
@@ -90,7 +107,10 @@ export default {
   },
   // 接口 Interface
   fetchInterfaceList({ repositoryId = '', moduleId = '', name = '' }: any = {}) {
-    return fetch(`${serve}/interface/list?repositoryId=${repositoryId}&moduleId=${moduleId}&name=${name}`, { ...CREDENTIALS })
+    return fetch(
+      `${serve}/interface/list?repositoryId=${repositoryId}&moduleId=${moduleId}&name=${name}`,
+      { ...CREDENTIALS },
+    )
       .then(res => res.json())
       .then(json => json.data)
   },
@@ -172,7 +192,10 @@ export default {
   },
   // 属性 Property
   fetchPropertyList({ repositoryId = '', moduleId = '', interfaceId = '', name = '' }: any = {}) {
-    return fetch(`${serve}/property/list?repositoryId=${repositoryId}&moduleId=${moduleId}&interfaceId=${interfaceId}&name=${name}`, { ...CREDENTIALS })
+    return fetch(
+      `${serve}/property/list?repositoryId=${repositoryId}&moduleId=${moduleId}&interfaceId=${interfaceId}&name=${name}`,
+      { ...CREDENTIALS },
+    )
       .then(res => res.json())
       .then(json => json.data)
   },

@@ -178,7 +178,7 @@ function RapperInstallerModal({
           />
         </div>
         <p className={classes.step}>1. 安装 rapper 到项目的开发依赖</p>
-        <pre>npm install rap --save-dev</pre>
+        <pre>npm install rap</pre>
         <p className={classes.step}>2. 给 package.json 的 scripts 对象下添加下面一行脚本</p>
         <pre>
           {codeTmpl({ projectId: repository.id, token: repository.token, rapperType, rapperPath })}

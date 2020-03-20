@@ -1,7 +1,9 @@
 import {
   call,
-  put
+  put,
+  select
 } from 'redux-saga/effects'
+import { RootState } from 'actions/types'
 import * as InterfaceAction from '../../actions/interface'
 import EditorService from '../services/Editor'
 import * as RepositoryAction from '../../actions/repository'
@@ -30,15 +32,18 @@ export function* updateInterface(action: any) {
 }
 export function* moveInterface(action: any) {
   try {
-    const {
-      repoId,
-      ...params
-    } = action.params
+    const params = action.params
+    const currRepositoryId = yield select(
+      (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
+    )
     yield call(EditorService.moveInterface, params)
-    yield put(RepositoryAction.fetchRepository({
-      id: repoId,
-      repository: undefined,
-    }))
+    yield put(InterfaceAction.moveInterfaceSucceeded())
+    yield put(
+      RepositoryAction.fetchRepository({
+        id: currRepositoryId,
+        repository: undefined,
+      }),
+    )
     action.onResolved && action.onResolved()
   } catch (e) {
     console.error(e.message)
