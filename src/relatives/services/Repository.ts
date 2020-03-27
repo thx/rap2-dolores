@@ -25,10 +25,10 @@ export default {
   },
   fetchRepository(id: any, token?: string) {
     return fetch(
-      `${serve}/repository/get?id=${id}${
+      `${serve}/repository/get?id=${id}&excludeProperty=true${
         token !== undefined ? `&token=${token}` : ''
       }`,
-      { ...CREDENTIALS }
+      { ...CREDENTIALS },
     )
       .then(res => res.json())
       .then(json => json.data)

@@ -12,6 +12,7 @@ export default {
     MODULE_MOVE: ModuleEffects.moveModule,
     MODULE_DELETE: ModuleEffects.deleteModule,
 
+    INTERFACE_FETCH: InterfaceEffects.fetchInterface,
     INTERFACE_ADD: InterfaceEffects.addInterface,
     INTERFACE_UPDATE: InterfaceEffects.updateInterface,
     INTERFACE_MOVE: InterfaceEffects.moveInterface,

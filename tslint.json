@@ -113,6 +113,7 @@
     "no-unused-expression": false,
     "jsx-no-lambda": false,
     "no-shadowed-variable": false,
-    "react-hooks-nesting": "error"
+    "react-hooks-nesting": "error",
+    "no-empty": false
   }
 }

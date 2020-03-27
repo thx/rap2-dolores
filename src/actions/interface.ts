@@ -3,12 +3,28 @@ export const addInterface = (itf: any, onResolved: any) => ({
   interface: itf,
   onResolved,
 })
+
 export const addInterfaceSucceeded = (payload: any) => ({
   type: 'INTERFACE_ADD_SUCCEEDED',
   payload,
 })
 export const addInterfaceFailed = (message: any) => ({
   type: 'INTERFACE_ADD_FAILED',
+  message,
+})
+
+export const fetchInterface = (id: number, onResolved: any) => ({
+  type: 'INTERFACE_FETCH',
+  id,
+  onResolved,
+})
+
+export const fetchInterfaceSucceeded = (payload: any) => ({
+  type: 'INTERFACE_FETCH_SUCCEEDED',
+  payload,
+})
+export const fetchInterfaceFailed = (message: any) => ({
+  type: 'INTERFACE_FETCH_FAILED',
   message,
 })
 

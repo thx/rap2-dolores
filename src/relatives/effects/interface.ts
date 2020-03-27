@@ -8,6 +8,22 @@ import * as InterfaceAction from '../../actions/interface'
 import EditorService from '../services/Editor'
 import * as RepositoryAction from '../../actions/repository'
 
+export function* fetchInterface(action: any) {
+  try {
+    const payload = yield call(EditorService.fetchInterface, action.id)
+    yield put(InterfaceAction.fetchInterfaceSucceeded(payload))
+    if (action.onResolved) {
+      action.onResolved()
+    }
+  } catch (e) {
+    console.error(e.message)
+    yield put(InterfaceAction.fetchInterfaceFailed(e.message))
+    if (action.onRejected) {
+      action.onRejected()
+    }
+  }
+}
+
 export function* addInterface(action: any) {
   try {
     const payload = yield call(EditorService.addInterface, action.interface)

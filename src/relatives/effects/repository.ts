@@ -1,7 +1,9 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
+import * as InterfaceAction from '../../actions/interface'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
+import { getCurrentInterfaceId } from '../../selectors/interface'
 import { StoreStateRouterLocationURI } from 'family/index'
 import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
 
@@ -89,17 +91,31 @@ export function* fetchRepository(action: any) {
     const router = yield select((state: RootState) => state.router)
     const uri = StoreStateRouterLocationURI(router)
     const params = uri.search(true)
-    const count = yield call(RepositoryService.fetchRepository, action.repository || action.id, params.token)
-    yield put(RepositoryAction.fetchRepositorySucceeded(count))
+    const repository = yield call(
+      RepositoryService.fetchRepository,
+      action.repository || action.id,
+      params.token,
+    )
+    yield put(RepositoryAction.fetchRepositorySucceeded(repository))
   } catch (e) {
     yield put(RepositoryAction.fetchRepositoryFailed(e.message))
   }
 }
 
 export function* handleRepositoryLocationChange(action: any) {
-  const repositoryId = yield select((state: RootState) => state.repository && state.repository.data && state.repository.data.id)
+  const repositoryId = yield select(
+    (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
+  )
   if (Number(action.id) !== repositoryId) {
+    // 切换仓库
     yield put(RepositoryAction.fetchRepository(action))
+    yield take('REPOSITORY_FETCH_SUCCEEDED')
+    const itfId = yield select(getCurrentInterfaceId)
+    yield put(InterfaceAction.fetchInterface(itfId, () => {}))
+  } else if (repositoryId) {
+    // 切换接口
+    const itfId = yield select(getCurrentInterfaceId)
+    yield put(InterfaceAction.fetchInterface(itfId, () => {}))
   }
 }
 
