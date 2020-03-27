@@ -6,6 +6,7 @@ import * as ModuleAction from '../actions/module'
 import * as ModuleEffects from './effects/module'
 import * as RepositoryAction from '../actions/repository'
 import * as RepositoryEffects from './effects/repository'
+import _ from 'lodash'
 export default {
   reducers: {
     repository(
@@ -51,7 +52,9 @@ export default {
               modules: modules.map((mod: any) => ({
                 ...mod,
                 interfaces: mod.interfaces.map((itf: any) => {
-                  if (itf.id !== itfId) { return itf }
+                  if (itf.id !== itfId) {
+                    return itf
+                  }
                   return {
                     ...itf,
                     lockerId: locker.id,
@@ -62,6 +65,28 @@ export default {
               })),
             },
           }
+        case 'INTERFACE_FETCH_SUCCEEDED': {
+          modules = state.data.modules
+          const fetchedItf = _.omit(action.payload, ['requestProperties', 'responseProperties'])
+          return {
+            ...state,
+            data: {
+              ...state.data,
+              modules: modules.map((mod: any) => ({
+                ...mod,
+                interfaces: mod.interfaces.map((itf: any) => {
+                  if (itf.id !== fetchedItf.id) {
+                    return itf
+                  }
+                  return {
+                    ...itf,
+                    ...fetchedItf,
+                  }
+                }),
+              })),
+            },
+          }
+        }
         case InterfaceAction.unlockInterfaceSucceeded(undefined).type:
           modules = state.data.modules
           itfId = action.payload.itfId
@@ -72,7 +97,9 @@ export default {
               modules: modules.map((mod: any) => ({
                 ...mod,
                 interfaces: mod.interfaces.map((itf: any) => {
-                  if (itf.id !== itfId) { return itf }
+                  if (itf.id !== itfId) {
+                    return itf
+                  }
                   return {
                     ...itf,
                     lockerId: null,
@@ -94,7 +121,9 @@ export default {
               modules: modules.map((mod: any) => ({
                 ...mod,
                 interfaces: mod.interfaces.map((itf: any) => {
-                  if (itf.id !== itfId) { return itf }
+                  if (itf.id !== itfId) {
+                    return itf
+                  }
                   return {
                     ...itf,
                     properties,
@@ -114,7 +143,9 @@ export default {
               modules: modules.map((mod: any) => ({
                 ...mod,
                 interfaces: mod.interfaces.map((x: any) => {
-                  if (x.id !== itf.id) { return x }
+                  if (x.id !== itf.id) {
+                    return x
+                  }
                   return {
                     ...itf,
                     locker: x.locker,
@@ -147,10 +178,10 @@ export default {
               modules: modules.map((mod: any) =>
                 mod.id === itf.moduleId
                   ? {
-                    ...mod,
-                    interfaces: [...mod.interfaces, itf],
-                  }
-                  : mod
+                      ...mod,
+                      interfaces: [...mod.interfaces, itf],
+                    }
+                  : mod,
               ),
             },
           }
@@ -164,11 +195,11 @@ export default {
               modules: modules.map((x: any) =>
                 x.id === mod.id
                   ? {
-                    ...x,
-                    name: mod.name,
-                    description: mod.description,
-                  }
-                  : x
+                      ...x,
+                      name: mod.name,
+                      description: mod.description,
+                    }
+                  : x,
               ),
             },
           }
@@ -187,10 +218,12 @@ export default {
               modules: modules.map((mod: any) =>
                 mod.id === moduleId
                   ? {
-                    ...mod,
-                    interfaces: [...mod.interfaces].sort((a: any, b: any) => itfIdsMap[a.id] - itfIdsMap[b.id]),
-                  }
-                  : mod
+                      ...mod,
+                      interfaces: [...mod.interfaces].sort(
+                        (a: any, b: any) => itfIdsMap[a.id] - itfIdsMap[b.id],
+                      ),
+                    }
+                  : mod,
               ),
             },
           }
@@ -206,7 +239,9 @@ export default {
             ...state,
             data: {
               ...state.data,
-              modules: [...modules].sort((a: any, b: any) => moduleIdsMap[a.id] - moduleIdsMap[b.id]),
+              modules: [...modules].sort(
+                (a: any, b: any) => moduleIdsMap[a.id] - moduleIdsMap[b.id],
+              ),
             },
           }
         }

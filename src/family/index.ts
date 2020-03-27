@@ -14,7 +14,7 @@ export const PropTypes = _PropTypes
 export { render, findDOMNode } from 'react-dom' // ReactDOM
 export { connect, Provider } from 'react-redux'
 export { createStore, applyMiddleware, combineReducers, compose } from 'redux'
-export { BrowserRouter, HashRouter, NavLink, Link, Redirect, Router, Route, Switch } from 'react-router-dom'
+export { NavLink, Link, Redirect, Router, Route, Switch } from 'react-router-dom'
 export { push, replace, go, goBack, goForward } from 'connected-react-router'
 export { call, put, take, takeLatest } from 'redux-saga/effects'
 export { delay } from 'redux-saga/effects'

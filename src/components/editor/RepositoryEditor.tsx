@@ -155,15 +155,12 @@ class RepositoryEditor extends Component<Props, States> {
 
     const mod: Module =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find(item => item.id === +params.mod) ||
-          repository.modules[0]
-        : {} as Module
+        ? repository.modules.find(item => item.id === +params.mod) || repository.modules[0]
+        : ({} as Module)
     const itf: Interface =
       mod.interfaces && mod.interfaces.length
-        ? mod.interfaces.find((item: any) => item.id === +params.itf) ||
-          mod.interfaces[0]
-        : {} as Interface
-    const properties = itf.properties || []
+        ? mod.interfaces.find((item: any) => item.id === +params.itf) || mod.interfaces[0]
+        : ({} as Interface)
 
     const ownerlink = repository.organization
       ? `/organization/repository?organization=${repository.organization.id}`
@@ -273,7 +270,7 @@ class RepositoryEditor extends Component<Props, States> {
           <ModuleList mods={repository.modules} repository={repository} mod={mod} />
           <div className="InterfaceWrapper">
             <InterfaceList itfs={mod.interfaces} repository={repository} mod={mod} itf={itf} />
-            <InterfaceEditor itf={itf} properties={properties} mod={mod} repository={repository} />
+            <InterfaceEditor itf={itf} mod={mod} repository={repository} />
           </div>
         </div>
       </article >
