@@ -7,9 +7,8 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import Slide from '@material-ui/core/Slide'
 import TextField from '@material-ui/core/TextField'
-import { TransitionProps } from '@material-ui/core/transitions'
+import { SlideUp } from 'components/common/Transition'
 import { Table, TableHead, TableRow, TableCell, TableBody, DialogContent } from '@material-ui/core'
 import Delete from '@material-ui/icons/Delete'
 import { useDispatch, useSelector } from 'react-redux'
@@ -41,10 +40,6 @@ const useStyles = makeStyles(({ spacing }: Theme) =>
     },
   })
 )
-
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
 
 function DefaultValueModal({ open, handleClose, repositoryId, enqueueSnackbar }:
   { open: boolean, handleClose: () => void, repositoryId: number } & WithSnackbarProps) {
@@ -95,7 +90,7 @@ function DefaultValueModal({ open, handleClose, repositoryId, enqueueSnackbar }:
   }
 
   return (
-    <Dialog fullScreen={true} open={open} onClose={handleClose} TransitionComponent={Transition}>
+    <Dialog fullScreen={true} open={open} onClose={handleClose} TransitionComponent={SlideUp}>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">

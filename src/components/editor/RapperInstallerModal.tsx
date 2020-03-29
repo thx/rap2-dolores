@@ -8,8 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import Slide from '@material-ui/core/Slide'
-import { TransitionProps } from '@material-ui/core/transitions'
+import { SlideUp } from 'components/common/Transition'
 import { DialogContent } from '@material-ui/core'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -18,10 +17,6 @@ import FormLabel from '@material-ui/core/FormLabel'
 import { Repository } from 'actions/types'
 
 type RapperType = 'normal' | 'redux'
-
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
 
 const codeTmpl = ({ projectId, token, rapperType, rapperPath }: {
   projectId: number
@@ -137,7 +132,7 @@ function RapperInstallerModal({
       fullScreen={true}
       open={open}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUp}
     >
       <AppBar className={classes.appBar}>
         <Toolbar>

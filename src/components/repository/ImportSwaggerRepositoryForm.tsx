@@ -8,14 +8,13 @@ import {
   Button,
   Theme,
   Dialog,
-  Slide,
   DialogActions,
   DialogContentText,
   DialogContent,
   DialogTitle,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { TransitionProps } from '@material-ui/core/transitions/transition'
+import { SlideUp } from 'components/common/Transition'
 import { ImportSwagger } from '../../actions/types'
 import RepositoryService from '../../relatives/services/Repository'
 import './ImportSwaggerRepositoryForm.css'
@@ -56,10 +55,6 @@ const FORM_STATE_INIT: ImportSwagger = {
   repositoryId: 0,
 }
 
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 interface Props {
   open: boolean
   onClose: (isOk?: boolean) => void
@@ -79,7 +74,7 @@ function ImportSwaggerRepositoryForm(props: Props) {
       <Dialog
         open={open}
         onClose={(_event, reason) => reason !== 'backdropClick' && onClose()}
-        TransitionComponent={Transition}
+        TransitionComponent={SlideUp}
       >
         <DialogTitle>导入 Swagger 仓库</DialogTitle>
         <DialogContent dividers={true}>

@@ -5,9 +5,9 @@ import { FORM, YUP_MSG } from '../../family/UIConst'
 import { Formik, Field, Form } from 'formik'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
-import { Button, Theme, Dialog, Slide, DialogContent, DialogTitle } from '@material-ui/core'
+import { Button, Theme, Dialog, DialogContent, DialogTitle } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { TransitionProps } from '@material-ui/core/transitions/transition'
+import { SlideUp } from 'components/common/Transition'
 import { Organization, RootState } from '../../actions/types'
 import UserList from '../common/UserList'
 import AccountService from '../../relatives/services/Account'
@@ -57,10 +57,6 @@ const FORM_STATE_INIT: Organization = {
   visibility: false,
 }
 
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 interface Props {
   open: boolean
   onClose: (isOk?: boolean) => void
@@ -77,7 +73,7 @@ function OrganizationForm(props: Props) {
     <Dialog
       open={open}
       onClose={(_event, reason) => (reason !== 'backdropClick' && onClose())}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUp}
     >
       <DialogTitle>新建团队</DialogTitle>
       <DialogContent dividers={true}>
