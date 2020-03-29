@@ -5,13 +5,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Slide
 } from '@material-ui/core'
-import { TransitionProps } from '@material-ui/core/transitions/transition'
-
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
+import { SlideUp } from 'components/common/Transition'
 
 export default function ExportPostmanForm(props: {
   repoId: number;
@@ -28,7 +23,7 @@ export default function ExportPostmanForm(props: {
     <Dialog
       open={open}
       onClose={() => onClose()}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUp}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers={true}>

@@ -4,9 +4,9 @@ import { YUP_MSG } from '../../family/UIConst'
 import { Formik, Field, Form } from 'formik'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
-import { Button, Theme, Dialog, Slide, DialogContent, DialogTitle } from '@material-ui/core'
+import { Button, Theme, Dialog, DialogContent, DialogTitle } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { TransitionProps } from '@material-ui/core/transitions/transition'
+import { SlideUp } from 'components/common/Transition'
 import { RepositoryFormData, RootState, Repository } from '../../actions/types'
 import UserList from '../common/UserList'
 import Select from '../common/Select'
@@ -60,11 +60,6 @@ const FORM_STATE_INIT: RepositoryFormData = {
   collaborators: [],
   collaboratorIdstring: '',
 }
-
-const Transition = React.forwardRef<unknown, TransitionProps>((props, ref) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 interface Props {
   title?: string
   open: boolean
@@ -113,7 +108,7 @@ function RepositoryForm(props: Props) {
     <Dialog
       open={open}
       onClose={(_event, reason) => reason !== 'backdropClick' && onClose()}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUp}
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers={true}>
