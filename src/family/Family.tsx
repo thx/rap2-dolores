@@ -121,6 +121,12 @@ const Family: {
     Family.store = store
     Family.history = history
 
+    // 给 location 添加解析好的 query 对象 params
+    history.listen((location) => {
+      // @ts-ignore
+      location.params = URI(location.search || '').search(true)
+    })
+
     /** init store end */
 
     function* rootSaga() {
@@ -131,11 +137,10 @@ const Family: {
       } catch (error) {
         return
       }
-
       // 在执行 prefilter 之后再开始渲染主UI
       start(container, { store, history })
 
-      // 监听 connected-react-router 地质变化的 action 而不是用 hisory.listen 以防冲突
+      // 监听 connected-react-router 地址变化的 action 而不是用 hisory.listen 以防重复监听
       yield takeLatest(LOCATION_CHANGE, (action: any) => {
         handleLocation({ store, listeners: _listeners, location: action.payload.location })
       })
