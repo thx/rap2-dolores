@@ -20,11 +20,11 @@ type RapperType = 'normal' | 'redux'
 
 const codeTmpl = ({ projectId, token, rapperType, rapperPath }: {
   projectId: number
-  token: string
+  token?: string
   rapperType: RapperType
   rapperPath: string
 }) => {
-  const apiUrl = `${config.serve}/repository/get?id=${projectId}&token=${token}`
+  const apiUrl = `${config.serve}/repository/get?id=${projectId}${token ? `&token=${token}` : ''}`
   const rapUrl = window.location.origin
   return String.raw`"rapper": "rapper --type ${rapperType} --rapperPath \"${rapperPath}\" --apiUrl \"${apiUrl}\" --rapUrl \"${rapUrl}\""`
 }
@@ -35,6 +35,11 @@ const useReadmeStyles = makeStyles({
       fontSize: 16,
     },
   },
+  badge: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })
 
 function Readme() {
@@ -42,15 +47,32 @@ function Readme() {
 
   return (
     <div className={classes.root}>
-      <p style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center' }}>
         <a href="https://github.com/thx/rapper" target="_blank" rel="noopener noreferrer">
-          <img src="https://img.alicdn.com/tfs/TB1SlW9lQT2gK0jSZPcXXcKkpXa-1138-220.png" alt="Logo" width="250" />
+          <img
+            src="https://img.alicdn.com/tfs/TB1SlW9lQT2gK0jSZPcXXcKkpXa-1138-220.png"
+            alt="Logo"
+            width="250"
+          />
         </a>
         <h3>一个自带类型的请求库（内测）</h3>
-        <p>
-          <a href="https://www.yuque.com/rap/rapper/readme" target="_blank" rel="noopener noreferrer">文档</a>
-        </p>
-      </p>
+        <div className={classes.badge}>
+          <iframe
+            src="https://ghbtns.com/github-btn.html?user=thx&repo=rapper&type=star&count=true"
+            scrolling="0"
+            frameBorder="0"
+            width="100px"
+            height="20px"
+          ></iframe>
+          <a
+            href="https://www.yuque.com/rap/rapper/readme"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            文档
+          </a>
+        </div>
+      </div>
 
       <h2>Rapper 是什么？</h2>
       <p>Rapper 是 TypeScript 的最佳拍档，它可以帮你生成具有类型定义的请求方案。</p>
@@ -59,10 +81,19 @@ function Readme() {
         <li>请求参数/返回数据类型化，静态校验、自动补全快到飞起</li>
         <li>对 React/Redux 特别优化，提供全局数据方案，hooks 轻松使用</li>
       </ul>
-      <p>更多了解请移步：<a href="https://www.yuque.com/rap/rapper/readme" target="_blank" rel="noopener noreferrer">文档</a></p>
+      <p>
+        更多了解请移步：
+        <a href="https://www.yuque.com/rap/rapper/readme" target="_blank" rel="noopener noreferrer">
+          文档
+        </a>
+      </p>
       <p>使用期间有疑问欢迎加入钉钉群：21912534</p>
       {/* <div style={{ textAlign: 'center' }}> */}
-        <img src="https://img.alicdn.com/tfs/TB1mLzfnF67gK0jSZPfXXahhFXa-828-1068.png" alt="dingtalk" width="200" />
+      <img
+        src="https://img.alicdn.com/tfs/TB1mLzfnF67gK0jSZPfXXahhFXa-828-1068.png"
+        alt="dingtalk"
+        width="200"
+      />
       {/* </div> */}
       <h2>快速配置</h2>
     </div>
@@ -172,8 +203,8 @@ function RapperInstallerModal({
             onChange={(event) => setRapperPath(event.target.value)}
           />
         </div>
-        <p className={classes.step}>1. 安装 rapper 到项目的开发依赖</p>
-        <pre>npm install rap</pre>
+        <p className={classes.step}>1. 安装 rapper 到项目依赖</p>
+        <pre>npm install rap --save</pre>
         <p className={classes.step}>2. 给 package.json 的 scripts 对象下添加下面一行脚本</p>
         <pre>
           {codeTmpl({ projectId: repository.id, token: repository.token, rapperType, rapperPath })}
