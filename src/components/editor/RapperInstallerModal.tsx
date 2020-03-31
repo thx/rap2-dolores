@@ -63,7 +63,7 @@ function Readme() {
             frameBorder="0"
             width="100px"
             height="20px"
-          ></iframe>
+          />
           <a
             href="https://www.yuque.com/rap/rapper/readme"
             target="_blank"
