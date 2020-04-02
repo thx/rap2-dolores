@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/styles'
 import { SlideUp } from 'components/common/Transition'
 import { Interface, Repository, RootState, Module } from '../../actions/types'
 import { updateInterface, addInterface } from '../../actions/interface'
-import { refresh } from '../../actions/common'
 export const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
 export const STATUS_LIST = [200, 301, 403, 404, 500, 502, 503, 504]
 
@@ -100,7 +99,7 @@ function InterfaceForm(props: Props) {
               }
               dispatch(
                 addOrUpdateInterface(itf, () => {
-                  dispatch(refresh())
+                  // dispatch(refresh())
                   onClose(true)
                 })
               )

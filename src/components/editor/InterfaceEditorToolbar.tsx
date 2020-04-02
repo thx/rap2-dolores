@@ -39,14 +39,13 @@ interface Props {
 }
 
 function InterfaceEditorToolbar(props: Props) {
-  const { editable, locker, auth, repository, handleLockInterface, handleMoveInterface,
+  const { editable, locker, repository, handleLockInterface, handleMoveInterface,
     handleSaveInterfaceAndProperties, handleUnlockInterface } = props
-  const isOwned = repository.owner.id === auth.id
-  const isJoined = repository.members.find((item: any) => item.id === auth.id)
+
   const loading = useSelector((state: RootState) => state.loading)
 
   const classes = useStyles()
-  if (!isOwned && !isJoined) { return null }
+  if (!repository.canUserEdit) { return null }
   if (editable) {
     return (
       <div className="InterfaceEditorToolbar">

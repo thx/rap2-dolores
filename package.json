@@ -59,6 +59,7 @@
     "prop-types": "15.7.2",
     "rc-tooltip": "^3.7.3",
     "react": "^16.9.0",
+    "react-custom-scroll": "^4.2.0",
     "react-dom": "^16.9.0",
     "react-hotkeys": "^2.0.0",
     "react-icons": "3.7.0",
@@ -114,7 +115,7 @@
     "tslint": "^5.20.0",
     "tslint-react": "^4.1.0",
     "tslint-react-hooks": "^2.2.1",
-    "typescript": "^3.6.3"
+    "typescript": "^3.8.3"
   },
   "pre-commit": [
     "lint"

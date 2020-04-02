@@ -102,6 +102,17 @@ export function* fetchRepository(action: any) {
   }
 }
 
+export function* refreshRepository() {
+  // 刷新仓库和当前的接口
+  const repositoryId = yield select(
+    (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
+  )
+  yield put(RepositoryAction.fetchRepository({id: repositoryId}))
+  yield take('REPOSITORY_FETCH_SUCCEEDED')
+  const itfId = yield select(getCurrentInterfaceId)
+  yield put(InterfaceAction.fetchInterface(itfId, () => {}))
+}
+
 export function* handleRepositoryLocationChange(action: any) {
   const repositoryId = yield select(
     (state: RootState) => state.repository && state.repository.data && state.repository.data.id,

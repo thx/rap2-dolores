@@ -58,6 +58,7 @@ function Readme() {
         <h3>一个自带类型的请求库（内测）</h3>
         <div className={classes.badge}>
           <iframe
+            title="star"
             src="https://ghbtns.com/github-btn.html?user=thx&repo=rapper&type=star&count=true"
             scrolling="0"
             frameBorder="0"

@@ -102,6 +102,8 @@ export interface RepositoryFormData {
   collaboratorIds?: string[]
 
   collaboratorIdstring?: string
+
+  token?: string
 }
 
 export interface Repository {
@@ -137,6 +139,8 @@ export interface Repository {
   modules: Module[]
 
   collaboratorIds: string[]
+
+  canUserEdit?: boolean
 }
 
 export interface Module {

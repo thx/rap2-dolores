@@ -41,9 +41,9 @@ import {
   GoRepo,
   GoPlug,
   GoDatabase,
+  GoCode,
   GoLinkExternal,
   GoPencil,
-  GoCode,
   GoEllipsis
 } from 'react-icons/go'
 
@@ -138,7 +138,6 @@ class RepositoryEditor extends Component<Props, States> {
   render() {
     const {
       location: { params },
-      auth,
     } = this.props
     const { repository: repositoryAsync } = this.props
     if (!repositoryAsync.fetching && !repositoryAsync.data) {
@@ -166,11 +165,6 @@ class RepositoryEditor extends Component<Props, States> {
       ? `/organization/repository?organization=${repository.organization.id}`
       : `/repository/joined?user=${repository.owner.id}`
 
-    const isOwned = repository.owner.id === auth.id
-    const isJoined = repository.members && repository.members.find(
-      (item: any) => item.id === auth.id
-    )
-
     return (
       <article className="RepositoryEditor">
         <div className="header">
@@ -185,7 +179,7 @@ class RepositoryEditor extends Component<Props, States> {
           <div className="toolbar">
             {/* 编辑权限：拥有者或者成员 */}
 
-            {isOwned || isJoined ? (
+            {repository.canUserEdit ? (
               <span className="fake-link edit" onClick={() => this.setState({ update: true })}>
                 <GoPencil /> 编辑
               </span>
@@ -251,10 +245,10 @@ class RepositoryEditor extends Component<Props, States> {
             />
             <span
               className="fake-link edit"
-              style={{color: '#f95e49'}}
+              style={{ color: '#f95e49' }}
               onClick={() => this.setState({ rapperInstallerModalOpen: true })}
             >
-              <GoCode /> 内测用户你好，点这里可以帮你生成 TS 代码！
+              <GoCode /> 试试点这里帮你生成 TypeScript 代码！
             </span>
             <RapperInstallerModal
               open={this.state.rapperInstallerModalOpen}

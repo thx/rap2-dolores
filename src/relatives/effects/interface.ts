@@ -3,10 +3,12 @@ import {
   put,
   select
 } from 'redux-saga/effects'
-import { RootState } from 'actions/types'
 import * as InterfaceAction from '../../actions/interface'
 import EditorService from '../services/Editor'
 import * as RepositoryAction from '../../actions/repository'
+import { RootState } from 'actions/types'
+import { replace } from 'connected-react-router'
+import { StoreStateRouterLocationURI } from 'family'
 
 export function* fetchInterface(action: any) {
   try {
@@ -49,17 +51,10 @@ export function* updateInterface(action: any) {
 export function* moveInterface(action: any) {
   try {
     const params = action.params
-    const currRepositoryId = yield select(
-      (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
-    )
+
     yield call(EditorService.moveInterface, params)
     yield put(InterfaceAction.moveInterfaceSucceeded())
-    yield put(
-      RepositoryAction.fetchRepository({
-        id: currRepositoryId,
-        repository: undefined,
-      }),
-    )
+    yield put(RepositoryAction.refreshRepository())
     action.onResolved && action.onResolved()
   } catch (e) {
     console.error(e.message)
@@ -73,6 +68,8 @@ export function* deleteInterface(action: any) {
     yield put(InterfaceAction.deleteInterfaceSucceeded({
       id: action.id,
     }))
+    const router = yield select((state: RootState) => state.router)
+    yield put(replace(StoreStateRouterLocationURI(router).removeQuery('itf').toString()))
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     console.error(e.message)

@@ -88,6 +88,8 @@
 
 .DuplicatedInterfacesWarning
   margin-top: 1rem
+  .more-link
+    float: right
 
 
 .ModuleList
@@ -157,15 +159,17 @@
     .newIntf
       margin-bottom: 1rem
     margin-bottom: 1rem
+  .scrollWrapper
+    border: 1px solid rgba(63, 81, 181, 0.5)
+    border-radius: .4rem
+  .rcs-inner-handle
+    background-color: rgba(63, 81, 181, 0.3)
   ul.body
     margin: 0
     padding: 0
-    border: 1px solid rgba(63, 81, 181, 0.5)
-    border-radius: .4rem
     list-style: none
     max-height: calc(100vh - 115px)
-    overflow-y: auto
-    > li
+    li
       position: relative
       padding: 1rem 1rem
       border-bottom: 1px solid rgba(63, 81, 181, 0.5)
@@ -205,10 +209,10 @@
         .locked
           font-size: 1.4rem
           color: $warning
-    > li:hover
+    li:hover
       .toolbar
         display: block
-    > li.active
+    li.active
       .Interface
         .name a
           color: #333
@@ -216,16 +220,9 @@
             color: #333
         .toolbar
           display: block
-    > li.active
+    li.active
       border-left: 2px solid #3f51b5
-      // &::before
-      //   position: absolute
-      //   top: 0
-      //   bottom: 0
-      //   left: 0
-      //   width: 2px
-      //   content: ""
-      //   background-color: #3f51b5
+
 
 .InterfaceEditor
   margin-left: 2rem
@@ -303,6 +300,7 @@
             margin-right: .75rem
         > pre.body
           max-height: 90vh
+          height: 100%
           overflow: auto
       > .result-valid
         padding-top: 2.5rem
