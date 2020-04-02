@@ -3,7 +3,6 @@ import { connect, Link, StoreStateRouterLocationURI, replace } from '../../famil
 import { sortInterfaceList, deleteInterface } from '../../actions/interface'
 import { deleteModule } from '../../actions/module'
 import { Module, Repository, RootState, Interface, User } from '../../actions/types'
-import { refresh } from '../../actions/common'
 import { RSortable } from '../utils'
 import InterfaceForm from './InterfaceForm'
 import { useConfirm } from 'hooks/useConfirm'
@@ -14,6 +13,8 @@ import ModuleForm from './ModuleForm'
 import MoveModuleForm from './MoveModuleForm'
 import { useSelector, useDispatch } from 'react-redux'
 import './InterfaceList.css'
+import 'react-custom-scroll/dist/customScroll.css'
+const CustomScroll = require('react-custom-scroll/dist/reactCustomScroll').default
 
 interface InterfaceBaseProps {
   repository: Repository
@@ -33,10 +34,7 @@ function InterfaceBase(props: InterfaceBaseProps) {
   const selectHref = StoreStateRouterLocationURI(router)
     .setSearch('itf', itf!.id.toString())
     .href()
-  const isOwned = repository.owner!.id === auth.id
-  const isJoined = repository.members!.find((i: any) => i.id === auth.id)
   const [open, setOpen] = useState(false)
-  const dispatch = useDispatch()
 
   const handleDeleteInterface: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault()
@@ -44,7 +42,6 @@ function InterfaceBase(props: InterfaceBaseProps) {
     if (window.confirm(message)) {
       const { deleteInterface } = props
       deleteInterface(props.itf!.id, () => {
-        dispatch(refresh())
       })
       const { pathname, hash, search } = router.location
       replace(pathname + hash + search)
@@ -76,7 +73,7 @@ function InterfaceBase(props: InterfaceBaseProps) {
           <div className="url">{itf!.url}</div>
         </Link>
       </span>
-      {isOwned || isJoined ? (
+      {repository.canUserEdit ? (
         <div className="toolbar">
           {itf!.locker ? (
             <span className="locked mr5">
@@ -130,10 +127,7 @@ function InterfaceList(props: InterfaceListProps) {
   const dispatch = useDispatch()
   const confirm = useConfirm()
   const auth = useSelector((state: RootState) => state.auth)
-  const router = useSelector((state: RootState) => state.router)
   const { repository, itf, itfs = [], mod } = props
-  const isOwned = repository.owner!.id === auth.id
-  const isJoined = repository.members!.find((item: any) => item.id === auth.id)
 
   const handleDeleteModule: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
@@ -154,13 +148,10 @@ function InterfaceList(props: InterfaceListProps) {
         deleteModule(
           props.mod.id,
           () => {
-            dispatch(refresh())
           },
           repository!.id,
         ),
       )
-      const { pathname, hash, search } = router.location
-      dispatch(replace(pathname + hash + search))
     })
   }
 
@@ -173,7 +164,7 @@ function InterfaceList(props: InterfaceListProps) {
   }
   return (
     <article className="InterfaceList">
-      {isOwned || isJoined ? (
+      {repository.canUserEdit ? (
         <div className="header">
           <Button
             className="newIntf"
@@ -227,25 +218,29 @@ function InterfaceList(props: InterfaceListProps) {
         </div>
       ) : null}
       {itfs.length ? (
-        <RSortable onChange={handleSort} disabled={!isOwned && !isJoined}>
-          <ul className="body">
-            {itfs.map((item: any) => (
-              <li
-                key={item.id}
-                className={item.id === itf!.id ? 'active sortable' : 'sortable'}
-                data-id={item.id}
-              >
-                <InterfaceWrap
-                  repository={repository}
-                  mod={mod}
-                  itf={item}
-                  active={item.id === itf!.id}
-                  auth={auth}
-                />
-              </li>
-            ))}
-          </ul>
-        </RSortable>
+        <div className="scrollWrapper">
+          <CustomScroll>
+            <RSortable onChange={handleSort} disabled={!repository.canUserEdit}>
+              <ul className="body">
+                {itfs.map((item: any) => (
+                  <li
+                    key={item.id}
+                    className={item.id === itf!.id ? 'active sortable' : 'sortable'}
+                    data-id={item.id}
+                  >
+                    <InterfaceWrap
+                      repository={repository}
+                      mod={mod}
+                      itf={item}
+                      active={item.id === itf!.id}
+                      auth={auth}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </RSortable>
+          </CustomScroll>
+        </div>
       ) : (
         <div className="alert alert-info">暂无接口，请新建</div>
       )}

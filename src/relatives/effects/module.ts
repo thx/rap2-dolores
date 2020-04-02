@@ -3,20 +3,17 @@ import {
   put,
   select
 } from 'redux-saga/effects'
-import { RootState } from 'actions/types'
 import * as ModuleAction from '../../actions/module'
-import * as InterfaceAction from '../../actions/interface'
 import * as RepositoryAction from '../../actions/repository'
 import EditorService from '../services/Editor'
+import { RootState } from 'actions/types'
+import { replace } from 'family'
 
 export function* addModule(action: any) {
   try {
     const module = yield call(EditorService.addModule, action.module)
     yield put(ModuleAction.addModuleSucceeded(module))
-    yield put(RepositoryAction.fetchRepository({
-      id: action.module.repositoryId,
-      repository: undefined,
-    }))
+    yield put(RepositoryAction.refreshRepository())
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     console.error(e.message)
@@ -51,21 +48,14 @@ export function* updateModule(action: any) {
 export function* moveModule(action: any) {
   try {
     const params = action.params
-    const currRepositoryId = yield select(
-      (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
-    )
     yield call(EditorService.moveModule, params)
-    yield put(InterfaceAction.moveInterfaceSucceeded())
-    yield put(
-      RepositoryAction.fetchRepository({
-        id: currRepositoryId,
-        repository: undefined,
-      }),
-    )
+    const router = yield select((state: RootState) => state.router)
+    const { pathname, hash, query } = router.location
+    yield put(replace(pathname + hash + `?id=${query.id}`))
+    yield put(RepositoryAction.refreshRepository())
     action.onResolved && action.onResolved()
   } catch (e) {
     console.error(e.message)
-    yield put(InterfaceAction.moveInterfaceFailed(e.message))
     action.onRejected && action.onRejected()
   }
 }
@@ -73,10 +63,10 @@ export function* deleteModule(action: any) {
   try {
     const count = yield call(EditorService.deleteModule, action.id)
     yield put(ModuleAction.deleteModuleSucceeded(count))
-    yield put(RepositoryAction.fetchRepository({
-      id: action.repoId,
-      repository: undefined,
-    }))
+    const router = yield select((state: RootState) => state.router)
+    const { pathname, hash, query } = router.location
+    yield put(replace(pathname + hash + `?id=${query.id}`))
+    yield put(RepositoryAction.refreshRepository())
     if (action.onResolved) { action.onResolved() }
   } catch (e) {
     console.error(e.message)

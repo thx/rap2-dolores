@@ -18,6 +18,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { Module, RootState } from 'actions/types'
 
+import { SlideUp } from 'components/common/Transition'
+
 export const OP_MOVE = 1
 export const OP_COPY = 2
 
@@ -102,7 +104,7 @@ export default function MoveModuleForm(props: Props) {
     )
   }
   return (
-    <Dialog open={open} onClose={(_event, reason) => reason !== 'backdropClick' && onClose()}>
+    <Dialog open={open} onClose={(_event, reason) => reason !== 'backdropClick' && onClose()} TransitionComponent={SlideUp}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent dividers={true}>
         <form className={classes.form} onSubmit={handleSubmit}>
@@ -134,8 +136,8 @@ export default function MoveModuleForm(props: Props) {
                 }}
                 row={true}
               >
-                <FormControlLabel value={String(OP_COPY)} control={<Radio />} label="复制" />
                 <FormControlLabel value={String(OP_MOVE)} control={<Radio />} label="移动" />
+                <FormControlLabel value={String(OP_COPY)} control={<Radio />} label="复制" />
               </RadioGroup>
             </div>
             <div className={classes.ctl}>

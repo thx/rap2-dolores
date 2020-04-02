@@ -162,8 +162,8 @@ export default function MoveInterfaceForm(props: Props) {
                 }}
                 row={true}
               >
-                <FormControlLabel value={String(OP_COPY)} control={<Radio />} label="复制" />
                 <FormControlLabel value={String(OP_MOVE)} control={<Radio />} label="移动" />
+                <FormControlLabel value={String(OP_COPY)} control={<Radio />} label="复制" />
               </RadioGroup>
             </div>
             <div className={classes.ctl}>

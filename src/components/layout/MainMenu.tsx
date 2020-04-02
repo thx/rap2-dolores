@@ -134,11 +134,16 @@ const useStyles = makeStyles((theme: Theme) =>
         fontSize: '1.4rem',
       },
     },
-    logo: {
-      marginRight: theme.spacing(2),
-      display: 'inline',
+    links: {
+      display: 'flex',
+      alignItems: 'center',
     },
-  })
+    logo: {
+      display: 'block',
+      marginRight: theme.spacing(2),
+      padding: `${theme.spacing(1.5)}px  0 ${theme.spacing(1.5)}px 0`,
+    },
+  }),
 )
 
 interface Props {
@@ -152,8 +157,8 @@ export default function MainMenu(props: Props) {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar className={classes.toolbar}>
-          <div>
+        <Toolbar className={classes.toolbar} variant="dense">
+          <div className={classes.links}>
             <Link to="/" className={classes.logo}><Logo /> </Link>
             <Link to="/" className={classes.link}><Button color="inherit"> 首页 </Button></Link>
             <Link to="/repository/joined" className={classes.link}><Button color="inherit"> 仓库 </Button></Link>

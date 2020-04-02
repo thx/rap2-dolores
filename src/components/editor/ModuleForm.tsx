@@ -9,7 +9,6 @@ import { makeStyles } from '@material-ui/styles'
 import { SlideUp } from 'components/common/Transition'
 import { Module, Repository, RootState } from '../../actions/types'
 import { updateModule, addModule } from '../../actions/module'
-import { refresh } from '../../actions/common'
 
 const useStyles = makeStyles(({ spacing }: Theme) => ({
   root: {
@@ -89,7 +88,6 @@ function ModuleForm(props: Props) {
                 repositoryId: repository!.id,
               }
               dispatch(addOrUpdateModule(module, () => {
-                dispatch(refresh())
                 onClose(true)
               }))
             }}

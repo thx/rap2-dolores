@@ -455,6 +455,8 @@ export default {
       .type]: RepositoryEffects.fetchRepository,
     REPOSITORY_LOCATION_CHANGE:
       RepositoryEffects.handleRepositoryLocationChange,
+    REPOSITORY_REFRESH:
+      RepositoryEffects.refreshRepository,
     [RepositoryAction.fetchRepositoryCount().type]:
       RepositoryEffects.fetchRepositoryCount,
     [RepositoryAction.fetchRepositoryList().type]:

@@ -1,4 +1,4 @@
-import React, { useState, MouseEventHandler } from 'react'
+import React, { useState } from 'react'
 import { connect, Link, replace, StoreStateRouterLocationURI } from '../../family'
 import {  RSortable } from '../utils'
 import ModuleForm from './ModuleForm'
@@ -50,15 +50,13 @@ function ModuleList(props: ModuleListProps) {
   const dispatch = useDispatch()
   const auth = useSelector((state: RootState) => state.auth)
   const { repository, mods = [], mod } = props
-  const isOwned = repository.owner!.id === auth.id
-  const isJoined = repository.members!.find((item: any) => item.id === auth.id)
   const handleSort = (_: any, sortable: any) => {
     dispatch(sortModuleList(sortable.toArray(), () => {
       /** empty */
     }))
   }
   return (
-    <RSortable onChange={handleSort} disabled={!isOwned && !isJoined}>
+    <RSortable onChange={handleSort} disabled={!repository.canUserEdit}>
       <ul className="ModuleList clearfix">
         {mods.map((item: any) => (
           <li
@@ -76,7 +74,7 @@ function ModuleList(props: ModuleListProps) {
           </li>
         ))}
         {/* 编辑权限：拥有者或者成员 */}
-        {isOwned || isJoined ? (
+        {repository.canUserEdit ? (
           <li>
             <span className="fake-link" onClick={() => setOpen(true)}>
               <GoPackage className="fontsize-14" /> 新建模块

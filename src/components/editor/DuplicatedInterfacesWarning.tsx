@@ -5,14 +5,25 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { RouterState } from 'connected-react-router'
 
-type DuplicatedInterfacesWarningState = any
+type DuplicatedInterfacesWarningState = {
+  showMore: boolean
+}
 type DuplicatedInterfacesWarningProps = {
   repository: any
   router: RouterState
 }
-class DuplicatedInterfacesWarning extends Component<DuplicatedInterfacesWarningProps, DuplicatedInterfacesWarningState> {
+class DuplicatedInterfacesWarning extends Component<
+  DuplicatedInterfacesWarningProps,
+  DuplicatedInterfacesWarningState
+> {
   static contextTypes = {
     store: PropTypes.object,
+  }
+  constructor(props: DuplicatedInterfacesWarningProps) {
+    super(props)
+    this.state = {
+      showMore: false,
+    }
   }
 
   static parseDuplicatedInterfaces(repository: any) {
@@ -20,7 +31,9 @@ class DuplicatedInterfacesWarning extends Component<DuplicatedInterfacesWarningP
     for (const mod of repository.modules) {
       for (const itf of mod.interfaces) {
         const key = `${itf.method} ${itf.url}`
-        if (!counter[key]) { counter[key] = [] }
+        if (!counter[key]) {
+          counter[key] = []
+        }
         counter[key] = [...counter[key], { ...itf, mod }]
       }
     }
@@ -42,39 +55,64 @@ class DuplicatedInterfacesWarning extends Component<DuplicatedInterfacesWarningP
       console.groupEnd()
     })
   }
+
   render() {
     const { repository, router } = this.props
-    if (!repository) { return null }
+    const { showMore } = this.state
+    if (!repository) {
+      return null
+    }
     const duplicated = DuplicatedInterfacesWarning.parseDuplicatedInterfaces(repository)
-    if (!duplicated.length) { return null }
+    if (!duplicated.length) {
+      return null
+    }
     const uri = StoreStateRouterLocationURI(router)
       .removeSearch('page')
       .removeSearch('itf')
     return (
       <div className="DuplicatedInterfacesWarning">
-        {duplicated.map((interfaces, index) => (
-          <div key={index} className="alert alert-warning">
-            <span className="title">
-              <GoAlert className="icon" />
-              <span className="msg">警告：检测到重复接口</span>
-              <span className="itf">
-                {interfaces[0].method} {interfaces[0].url || '-'}
-              </span>
-            </span>
-            {interfaces.map((itf: any) => (
-              <Link
-                key={itf.id}
-                to={uri
-                  .setSearch('mod', itf.mod.id)
-                  .setSearch('itf', itf.id)
-                  .href()}
-                className="mr12"
-              >
-                {itf.name}
-              </Link>
-            ))}
-          </div>
-        ))}
+        {duplicated.map(
+          (interfaces, index) =>
+            (index === 0 || showMore) && (
+              <div key={index} className="alert alert-warning">
+                <span className="title">
+                  {index === 0 && (
+                    <>
+                      <GoAlert className="icon" />
+                      <span className="msg">警告：检测到 {duplicated.length} 组重复接口</span>
+                    </>
+                  )}
+                  <span className="itf">
+                    {interfaces[0].method} {interfaces[0].url || '-'}
+                  </span>
+                </span>
+                {interfaces.map((itf: any) => (
+                  <Link
+                    key={itf.id}
+                    to={uri
+                      .setSearch('mod', itf.mod.id)
+                      .setSearch('itf', itf.id)
+                      .href()}
+                    className="mr12"
+                  >
+                    {itf.name}
+                  </Link>
+                ))}
+                {index === 0 && (
+                  <span
+                    className="fake-link more-link"
+                    onClick={() => {
+                      this.setState({
+                        showMore: !showMore,
+                      })
+                    }}
+                  >
+                    {duplicated.length > 1 && showMore ? '收起' : '展开'}
+                  </span>
+                )}
+              </div>
+            ),
+        )}
       </div>
     )
   }

@@ -66,8 +66,7 @@ function Repository(props: Props) {
             <GoPlug />
           </a>
           {/* 编辑权限：拥有者或者成员 */}
-          {repository.owner.id === auth.id ||
-          repository.members.find((item: any) => item.id === auth.id) ? (
+          {repository.canUserEdit ? (
             <span className="fake-link" onClick={() => setOpen(true)}>
               <GoPencil />
             </span>
