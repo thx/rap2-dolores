@@ -12,6 +12,7 @@ import RSortable from './RSortable'
 import RParsley from './RParsley'
 import RChart from './RChart'
 import CopyToClipboard from './CopyToClipboard'
+import CustomScroll from './CustomScroll'
 
 export {
   NoMatch,
@@ -27,5 +28,6 @@ export {
   RSortable,
   RParsley,
   RChart,
-  CopyToClipboard
+  CopyToClipboard,
+  CustomScroll,
 }

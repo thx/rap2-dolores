@@ -98,7 +98,7 @@ class DuplicatedInterfacesWarning extends Component<
                     {itf.name}
                   </Link>
                 ))}
-                {index === 0 && (
+                {index === 0 && duplicated.length > 1 && (
                   <span
                     className="fake-link more-link"
                     onClick={() => {
@@ -107,7 +107,7 @@ class DuplicatedInterfacesWarning extends Component<
                       })
                     }}
                   >
-                    {duplicated.length > 1 && showMore ? '收起' : '展开'}
+                    {showMore ? '收起' : '展开'}
                   </span>
                 )}
               </div>

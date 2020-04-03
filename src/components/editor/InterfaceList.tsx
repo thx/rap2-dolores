@@ -3,7 +3,7 @@ import { connect, Link, StoreStateRouterLocationURI, replace } from '../../famil
 import { sortInterfaceList, deleteInterface } from '../../actions/interface'
 import { deleteModule } from '../../actions/module'
 import { Module, Repository, RootState, Interface, User } from '../../actions/types'
-import { RSortable } from '../utils'
+import { RSortable, CustomScroll } from '../utils'
 import InterfaceForm from './InterfaceForm'
 import { useConfirm } from 'hooks/useConfirm'
 import { GoPencil, GoTrashcan, GoLock } from 'react-icons/go'
@@ -13,8 +13,6 @@ import ModuleForm from './ModuleForm'
 import MoveModuleForm from './MoveModuleForm'
 import { useSelector, useDispatch } from 'react-redux'
 import './InterfaceList.css'
-import 'react-custom-scroll/dist/customScroll.css'
-const CustomScroll = require('react-custom-scroll/dist/reactCustomScroll').default
 
 interface InterfaceBaseProps {
   repository: Repository
