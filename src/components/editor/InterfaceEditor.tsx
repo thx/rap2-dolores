@@ -10,7 +10,7 @@ import PropertyList from './PropertyList'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
 import { RootState } from 'actions/types'
-import { lockInterface, unlockInterface } from 'actions/interface'
+import { lockInterface, unlockInterface, fetchInterface } from 'actions/interface'
 import { updateProperties } from 'actions/property'
 import { updateInterface } from 'actions/interface'
 import Spin from '../../components/utils/Spin'
@@ -27,6 +27,7 @@ type InterfaceEditorProps = {
   mod: any
   repository: any
   lockInterface: typeof lockInterface
+  fetchInterface: typeof fetchInterface
   unlockInterface: typeof unlockInterface
   updateInterface: typeof updateInterface
   updateProperties: typeof updateProperties
@@ -96,6 +97,21 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
     }
     const prevStates = this.state
     this.setState(InterfaceEditor.mapPropsToState(nextProps, prevStates))
+  }
+
+  fetchInterfaceProperties() {
+    // 发现接口信息没有 properties 就发起请求
+    if (this.state.properties === undefined) {
+      this.props.fetchInterface(this.state.itf.id, () => {})
+    }
+  }
+
+  componentDidMount() {
+    this.fetchInterfaceProperties()
+  }
+
+  componentDidUpdate() {
+    this.fetchInterfaceProperties()
   }
 
   render() {
@@ -279,6 +295,7 @@ const mapStateToProps = (state: RootState) => ({
 
 const mapDispatchToProps = {
   lockInterface,
+  fetchInterface,
   unlockInterface,
   updateProperties,
   updateInterface,

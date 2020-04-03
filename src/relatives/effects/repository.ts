@@ -1,9 +1,7 @@
-import { call, put, select, take } from 'redux-saga/effects'
+import { call, put, select } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
-import * as InterfaceAction from '../../actions/interface'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
-import { getCurrentInterfaceId } from '../../selectors/interface'
 import { StoreStateRouterLocationURI } from 'family/index'
 import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
 
@@ -108,9 +106,6 @@ export function* refreshRepository() {
     (state: RootState) => state.repository && state.repository.data && state.repository.data.id,
   )
   yield put(RepositoryAction.fetchRepository({id: repositoryId}))
-  yield take('REPOSITORY_FETCH_SUCCEEDED')
-  const itfId = yield select(getCurrentInterfaceId)
-  yield put(InterfaceAction.fetchInterface(itfId, () => {}))
 }
 
 export function* handleRepositoryLocationChange(action: any) {
@@ -120,13 +115,6 @@ export function* handleRepositoryLocationChange(action: any) {
   if (Number(action.id) !== repositoryId) {
     // 切换仓库
     yield put(RepositoryAction.fetchRepository(action))
-    yield take('REPOSITORY_FETCH_SUCCEEDED')
-    const itfId = yield select(getCurrentInterfaceId)
-    yield put(InterfaceAction.fetchInterface(itfId, () => {}))
-  } else if (repositoryId) {
-    // 切换接口
-    const itfId = yield select(getCurrentInterfaceId)
-    yield put(InterfaceAction.fetchInterface(itfId, () => {}))
   }
 }
 

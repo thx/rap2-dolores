@@ -118,7 +118,7 @@ class RepositoryEditor extends Component<Props, States> {
 
   changeDocumentTitle() {
     const repository = this.props.repository.data
-    if (repository.name) {
+    if (repository && repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
   }
