@@ -14,6 +14,8 @@ import EditorRelative from './relatives/EditorRelative'
 import Spin from './components/utils/Spin'
 import * as AccountAction from './actions/account'
 import AccountService from './relatives/services/Account'
+import { CACHE_KEY } from 'utils/consts'
+import { AnyAction } from 'redux'
 
 if (process.env.NODE_ENV !== 'production') {
   const whyDidYouRender = require('@welldone-software/why-did-you-render/dist/no-classes-transpile/umd/whyDidYouRender.min.js')
@@ -41,6 +43,7 @@ function* authenticate() {
   const auth = yield call(AccountService.fetchLoginInfo)
   if (auth) {
     yield put(AccountAction.fetchLoginInfoSucceeded(auth))
+    yield put(AccountAction.fetchUserSettings([CACHE_KEY.THEME_ID]) as AnyAction)
   } else {
     const { pathname, search, hash } = window.location
     // const uri = URI(pathname + search + hash)

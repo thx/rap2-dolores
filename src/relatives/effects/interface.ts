@@ -12,10 +12,13 @@ import { StoreStateRouterLocationURI } from 'family'
 
 export function* fetchInterface(action: any) {
   try {
+    if (!action.id) {
+      return
+    }
     const payload = yield call(EditorService.fetchInterface, action.id)
     yield put(InterfaceAction.fetchInterfaceSucceeded(payload))
     if (action.onResolved) {
-      action.onResolved()
+      action.onResolved(payload)
     }
   } catch (e) {
     console.error(e.message)

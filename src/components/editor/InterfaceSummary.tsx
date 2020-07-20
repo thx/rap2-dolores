@@ -2,25 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import copy from 'clipboard-copy'
 import { GlobalHotKeys } from 'react-hotkeys'
-import {
-  replace,
-  StoreStateRouterLocationURI,
-  PropTypes
-} from '../../family'
+import { replace, StoreStateRouterLocationURI, PropTypes } from '../../family'
 import { serve } from '../../relatives/services/constant'
 import { METHODS, STATUS_LIST } from './InterfaceForm'
 import { CopyToClipboard } from '../utils/'
 import { getRelativeUrl } from '../../utils/URLUtils'
 import './InterfaceSummary.css'
 import { showMessage, MSG_TYPE } from 'actions/common'
-import {
-  TextField,
-  Select,
-  FormControl,
-  InputLabel,
-  Input,
-  MenuItem
-} from '@material-ui/core'
+import { TextField, Select, InputLabel, Input, MenuItem } from '@material-ui/core'
+import Markdown from 'markdown-to-jsx'
 
 export const BODY_OPTION = {
   FORM_DATA: 'FORM_DATA',
@@ -106,7 +96,7 @@ type InterfaceSummaryState = {
 class InterfaceSummary extends Component<
   InterfaceSummaryProps,
   InterfaceSummaryState
-> {
+  > {
   static contextTypes = {
     onDeleteInterface: PropTypes.func.isRequired,
   }
@@ -211,8 +201,8 @@ class InterfaceSummary extends Component<
         )}
         <ul className="summary">
           {editable ? (
-            <>
-              <li style={{ width: '50%' }}>
+            <div style={{ maxWidth: 600 }}>
+              <div>
                 <TextField
                   style={{ marginTop: 0 }}
                   id="name"
@@ -225,8 +215,8 @@ class InterfaceSummary extends Component<
                   }}
                   margin="normal"
                 />
-              </li>
-              <li style={{ width: '50%' }}>
+              </div>
+              <div>
                 <TextField
                   id="url"
                   label="地址"
@@ -238,12 +228,10 @@ class InterfaceSummary extends Component<
                   }}
                   margin="normal"
                 />
-              </li>
-              <li style={{ marginTop: 24 }}>
-                <FormControl>
-                  <InputLabel shrink={true} htmlFor="method-label-placeholder">
-                    类型
-                  </InputLabel>
+              </div>
+              <div>
+                <div style={{ width: 90, display: 'inline-block' }}>
+                  <InputLabel shrink={true} htmlFor="method-label-placeholder"> 类型 </InputLabel>
                   <Select
                     value={itf.method}
                     input={<Input name="method" id="method-label-placeholder" />}
@@ -259,11 +247,9 @@ class InterfaceSummary extends Component<
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
-                <FormControl style={{ marginLeft: 20 }}>
-                  <InputLabel shrink={true} htmlFor="status-label-placeholder">
-                    状态码
-                  </InputLabel>
+                </div>
+                <div style={{ width: 120, display: 'inline-block' }}>
+                  <InputLabel shrink={true} htmlFor="status-label-placeholder" style={{ width: 100 }}> 状态码 </InputLabel>
                   <Select
                     value={itf.status}
                     input={<Input name="status" id="status-label-placeholder" />}
@@ -279,174 +265,170 @@ class InterfaceSummary extends Component<
                       </MenuItem>
                     ))}
                   </Select>
-                </FormControl>
-              </li>
-              <li style={{ width: '50%' }}>
-                <TextField
-                  id="description"
-                  label="描述（可多行）"
-                  value={itf.description || ''}
-                  fullWidth={true}
-                  multiline={true}
-                  autoComplete="off"
-                  onChange={e => {
-                    handleChangeInterface({ description: e.target.value })
-                  }}
-                  margin="normal"
-                />
-              </li>
-            </>
+                </div>
+              </div>
+              <TextField
+                id="description"
+                label="描述（可多行, 支持Markdown）"
+                value={itf.description || ''}
+                fullWidth={true}
+                multiline={true}
+                autoComplete="off"
+                rowsMax={8}
+                onChange={e => {
+                  handleChangeInterface({ description: e.target.value })
+                }}
+                margin="normal"
+              />
+            </div>
           ) : (
-            <>
-              <li>
-                <CopyToClipboard text={itf.url} type="right">
+              <>
+                <li>
                   <span className="mr5">
-                    <span className="label">地址：</span>
-                    <a
-                      href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {itf.url}
-                    </a>
+                    <span className="label">接口ID：</span>
+                    {itf.id}
                   </span>
-                </CopyToClipboard>
-              </li>
-              <li>
-                <CopyToClipboard text={itf.method}>
+                </li>
+                <li>
+                  <CopyToClipboard text={itf.url} type="right">
+                    <span className="mr5">
+                      <span className="label">地址：</span>
+                      <a
+                        href={`${serve}/app/mock/${repository.id}${getRelativeUrl(itf.url || '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {itf.url}
+                      </a>
+                    </span>
+                  </CopyToClipboard>
+                </li>
+                <li>
                   <span>
                     <span className="label">类型：</span>
                     <span>{itf.method}</span>
                   </span>
-                </CopyToClipboard>
-              </li>
-              <li>
-                <CopyToClipboard text={itf.status}>
+                </li>
+                <li>
                   <span>
                     <span className="label">状态码：</span>
                     <span>{itf.status}</span>
                   </span>
-                </CopyToClipboard>
-              </li>
-              {itf.description && (
-                <li>
-                  <CopyToClipboard text={itf.description}>
-                    <span>
-                      <span className="label" style={{ verticalAlign: 'top' }}>
-                        简介：
-                      </span>
-                      <span style={{ whiteSpace: 'pre-wrap', display: 'inline-block' }}>
-                        {itf.description}
-                      </span>
-                    </span>
-                  </CopyToClipboard>
                 </li>
-              )}
-            </>
-          )}
+              </>
+            )}
         </ul>
-        {editable && (
-          <ul className="nav nav-tabs" role="tablist">
-            <li
-              className="nav-item"
-              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}
-            >
-              <button
-                className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''
-                }`}
-                role="tab"
-                data-toggle="tab"
-              >
-                headers
-              </button>
-            </li>
-            <li
-              className="nav-item"
-              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}
-            >
-              <button
-                className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''
-                }`}
-                role="tab"
-                data-toggle="tab"
-              >
-                Query Params
-              </button>
-            </li>
-            <li
-              className="nav-item"
-              onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}
-            >
-              <button
-                className={`nav-link ${
-                  requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''
-                }`}
-                role="tab"
-                data-toggle="tab"
-              >
-                Body Params
-              </button>
-            </li>
-          </ul>
+        {itf.description && (
+          <CopyToClipboard text={itf.description}>
+            <Markdown>{itf.description}</Markdown>
+          </CopyToClipboard>
         )}
-        {editable && requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? (
-          <div className="body-options">
-            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio1"
-                value="option1"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio1">
-                form-data
+        {
+          editable && (
+            <ul className="nav nav-tabs" role="tablist">
+              <li
+                className="nav-item"
+                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}
+              >
+                <button
+                  className={`nav-link ${
+                    requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''
+                    }`}
+                  role="tab"
+                  data-toggle="tab"
+                >
+                  headers
+              </button>
+              </li>
+              <li
+                className="nav-item"
+                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}
+              >
+                <button
+                  className={`nav-link ${
+                    requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''
+                    }`}
+                  role="tab"
+                  data-toggle="tab"
+                >
+                  Query Params
+              </button>
+              </li>
+              <li
+                className="nav-item"
+                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}
+              >
+                <button
+                  className={`nav-link ${
+                    requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''
+                    }`}
+                  role="tab"
+                  data-toggle="tab"
+                >
+                  Body Params
+              </button>
+              </li>
+            </ul>
+          )
+        }
+        {
+          editable && requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? (
+            <div className="body-options">
+              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio1"
+                  value="option1"
+                />
+                <label className="form-check-label" htmlFor="inlineRadio1">
+                  form-data
               </label>
-            </div>
-            <div
-              className="form-check"
-              onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}
-            >
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio2"
-                value="option2"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio2">
-                x-www-form-urlencoded
+              </div>
+              <div
+                className="form-check"
+                onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}
+              >
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio2"
+                  value="option2"
+                />
+                <label className="form-check-label" htmlFor="inlineRadio2">
+                  x-www-form-urlencoded
               </label>
-            </div>
-            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio3"
-                value="option3"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio3">
-                raw
+              </div>
+              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio3"
+                  value="option3"
+                />
+                <label className="form-check-label" htmlFor="inlineRadio3">
+                  raw
               </label>
-            </div>
-            <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
-              <input
-                className="form-check-input"
-                type="radio"
-                name="inlineRadioOptions"
-                id="inlineRadio4"
-                value="option4"
-              />
-              <label className="form-check-label" htmlFor="inlineRadio4">
-                binary
+              </div>
+              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio4"
+                  value="option4"
+                />
+                <label className="form-check-label" htmlFor="inlineRadio4">
+                  binary
               </label>
+              </div>
             </div>
-          </div>
-        ) : null}
-      </div>
+          ) : null
+        }
+      </div >
     )
   }
   handleDelete = (e: any, itf: any) => {

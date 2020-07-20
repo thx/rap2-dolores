@@ -3,6 +3,7 @@ import start from './start'
 import handleLocation from './handleLocation'
 import { createBrowserHistory as createHistory, History } from 'history'
 import { createStore, applyMiddleware, combineReducers, compose, Store } from 'redux'
+import { apiMiddleware } from 'redux-api-middleware'
 import {
   routerMiddleware as createRouterMiddleware,
   connectRouter,
@@ -109,8 +110,8 @@ const Family: {
         })) ||
       compose
     const middlewares = logger
-      ? [loggerMiddleware, routerMiddleware, sagaMiddleware]
-      : [routerMiddleware, sagaMiddleware]
+      ? [loggerMiddleware, routerMiddleware, apiMiddleware, sagaMiddleware]
+      : [routerMiddleware, apiMiddleware, sagaMiddleware]
     const store = createStore<any, any, any, any>(
       combineReducers({ ..._reducers, router: connectRouter(history) }),
       composeEnhancers(applyMiddleware(...middlewares)),

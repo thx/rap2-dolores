@@ -1,13 +1,52 @@
-import { call, put, select } from 'redux-saga/effects'
+import { call, put, select, take } from 'redux-saga/effects'
 import * as AccountAction from '../actions/account'
 import * as CommonAction from '../actions/common'
 import AccountService from './services/Account'
 import { StoreStateRouterLocationURI, replace, push } from '../family'
 import { RootState } from '../actions/types'
 import { showMessage, MSG_TYPE } from 'actions/common'
+import { THEME_TEMPLATE_KEY } from 'components/account/ThemeChangeOverlay'
+import { CHANGE_THEME, DoUpdateUserSettingAction, updateUserSetting, UPDATE_USER_SETTING_SUCCESS, DO_UPDATE_USER_SETTING } from '../actions/account'
+import { AnyAction } from 'redux'
 
 const relatives = {
   reducers: {
+    userSettings(state: RootState['userSettings'] = {}, action: any) {
+      switch (action.type) {
+        case AccountAction.FETCH_USER_SETTINGS_SUCCESS: {
+          if (action.payload.isOk) {
+            return {
+              ...state,
+              ...action.payload.data,
+            }
+          }
+          break
+        }
+      }
+      return state
+    },
+    userSettingsIsUpdating(state: boolean = false, action: any) {
+      switch (action.type) {
+        case AccountAction.UPDATE_USER_SETTING_REQUEST:
+        case AccountAction.FETCH_USER_SETTINGS_REQUEST:
+          return true
+        case AccountAction.UPDATE_USER_SETTING_FAILURE:
+        case AccountAction.UPDATE_USER_SETTING_SUCCESS:
+        case AccountAction.FETCH_USER_SETTINGS_FAILURE:
+        case AccountAction.FETCH_USER_SETTINGS_SUCCESS:
+          return false
+      }
+      return state
+    },
+    themeId(state: THEME_TEMPLATE_KEY = THEME_TEMPLATE_KEY.INDIGO, action: any) {
+      switch (action.type) {
+        case CHANGE_THEME:
+          return action.payload
+
+        default:
+          return state
+      }
+    },
     loading(state: boolean = false, action: any) {
       switch (action.type) {
         case 'INTERFACE_LOCK':
@@ -87,6 +126,18 @@ const relatives = {
     },
   },
   sagas: {
+    *[AccountAction.DO_FETCH_USER_SETTINGS](action: AccountAction.DoFetchUserSettingsAction) {
+      const { keys, cb } = action.payload
+      yield put(AccountAction.fetchUserSettings(keys) as AnyAction)
+      const resultAction = yield take(AccountAction.FETCH_USER_SETTINGS_SUCCESS)
+      cb && cb(true, resultAction.payload)
+    },
+    *[AccountAction.FETCH_USER_SETTINGS_SUCCESS](action: any) {
+      const themeId = action.payload?.data?.THEME_ID
+      if (themeId) {
+        yield put(AccountAction.changeTheme(themeId))
+      }
+    },
     *[CommonAction.refresh().type]() {
       const router = yield select((state: RootState) => state.router)
       const uri = StoreStateRouterLocationURI(router)
@@ -209,6 +260,13 @@ const relatives = {
         yield put(showMessage(e.message, MSG_TYPE.WARNING))
         yield put(AccountAction.resetpwdFailed(e.message))
       }
+    },
+    *[DO_UPDATE_USER_SETTING](action: DoUpdateUserSettingAction) {
+      console.log('什么鬼啊')
+      const { key, value, cb } = action.payload
+      yield put(updateUserSetting(key, value) as AnyAction)
+      const opAction = yield take(UPDATE_USER_SETTING_SUCCESS)
+      cb && cb(opAction.payload.isOk)
     },
   },
   listeners: {

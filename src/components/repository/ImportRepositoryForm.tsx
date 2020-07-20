@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import RadioList from '../utils/RadioList'
 import './ImportRepositoryForm.css'
 import { importRepository, fetchRepositoryList } from '../../actions/repository'
-import { Button } from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
 
 class ImportRepositoryForm extends Component<any, any> {
   static contextTypes = {
@@ -21,11 +21,12 @@ class ImportRepositoryForm extends Component<any, any> {
       version: 1,
       docUrl: '',
       disableSubmit: false,
+      projectData: '',
     }
   }
   render() {
     const { rmodal } = this.context
-    const { disableSubmit } = this.state
+    const { disableSubmit, version, projectData } = this.state
     return (
       <section className="ImportRepositoryForm">
         <div className="rmodal-header">
@@ -34,19 +35,19 @@ class ImportRepositoryForm extends Component<any, any> {
         <form className="form-horizontal" onSubmit={this.handleSubmit} >
           <div className="rmodal-body">
             <div className="form-group row">
-              <label className="col-sm-2 control-label">版本</label>
+              <label className="col-sm-4 control-label">版本</label>
               <div className="col-sm-10">
                 <RadioList
-                  data={[{ 'label': 'RAP1', 'value': 1 }]}
-                  curVal={this.state.version}
+                  data={[{ 'label': 'RAP1在线地址', 'value': 1 }, { 'label': 'RAP1 Project Data', 'value': 2 }]}
+                  curVal={version}
                   name="version"
-                  disabled={true}
+                  onChange={val => this.setState({ version: val })}
                 />
               </div>
             </div>
-            <div>
+            {+version === 1 && (
               <div className="form-group row">
-                <label className="col-sm-2 control-label">文档URL</label>
+                <label className="col-sm-4 control-label">文档URL</label>
                 <div className="col-sm-10">
                   <input
                     name="projectId"
@@ -58,23 +59,39 @@ class ImportRepositoryForm extends Component<any, any> {
                     autoFocus={true}
                     required={true}
                     data-parsley-maxlength="256"
+                    style={{ width: 500 }}
                   />
                 </div>
               </div>
-              <div className="form-group row mb0">
-                <label className="col-sm-2 control-label" />
+            )}
+            {+version === 2 && (
+              <div className="form-group row">
+                <label className="col-sm-4 control-label">文档数据</label>
                 <div className="col-sm-10">
-                  <Button
-                    type="submit"
-                    id="btnSubmitImportRAP"
-                    disabled={disableSubmit}
-                    variant="contained"
-                    color="primary"
-                    style={{ marginRight: 8 }}
-                  >{disableSubmit ? '导入中，请稍等...' : '提交'}
-                  </Button>
-                  <Button onClick={() => rmodal.close()}>取消</Button>
+                  <TextField
+                    value={projectData}
+                    onChange={e => this.setState({ projectData: e.target.value })}
+                    placeholder="请将projectData粘贴到此处"
+                    multiline={true}
+                    style={{ width: 600, height: 300, margin: 16 }}
+                    rowsMax={10}
+                  />
                 </div>
+              </div>
+            )}
+            <div className="form-group row mb0">
+              <label className="col-sm-2 control-label" />
+              <div className="col-sm-10">
+                <Button
+                  type="submit"
+                  id="btnSubmitImportRAP"
+                  disabled={disableSubmit}
+                  variant="contained"
+                  color="primary"
+                  style={{ marginRight: 8 }}
+                >{disableSubmit ? '导入中，请稍等...' : '提交'}
+                </Button>
+                <Button onClick={() => rmodal.close()}>取消</Button>
               </div>
             </div>
           </div>
@@ -90,15 +107,14 @@ class ImportRepositoryForm extends Component<any, any> {
       disableSubmit: true,
     })
     e.preventDefault()
-    const { docUrl, orgId } = this.state
-    this.props.importRepository({ docUrl, orgId }, (res: any) => {
+    const { docUrl, orgId, version, projectData } = this.state
+    this.props.importRepository({ docUrl, orgId, version, projectData }, (res: any) => {
       this.setState({
         disableSubmit: false,
       })
       if (res.isOk) {
         this.context.rmodal.resolve()
       } else {
-        console.log(res.message)
       }
     })
   }

@@ -44,7 +44,6 @@ type InterfaceEditorState = {
 // TODO 2.x 支持复制整个接口到其他模块、其他项目
 class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorState> {
   static childContextTypes = {
-    handleLockInterface: PropTypes.func.isRequired,
     handleUnlockInterface: PropTypes.func.isRequired,
     handleSaveInterfaceAndProperties: PropTypes.func.isRequired,
     handleMoveInterface: PropTypes.func.isRequired,
@@ -91,6 +90,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
     if (
       nextProps.itf.id === this.state.itf.id &&
       nextProps.itf.updatedAt === this.state.itf.updatedAt &&
+      nextProps.itf.locker === this.state.itf.locker &&
       this.state.properties !== undefined
     ) {
       return
@@ -130,7 +130,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
           editable={editable}
           itfId={itf.id}
           moveInterface={this.handleMoveInterface}
-          handleLockInterface={this.handleLockInterface}
+          handleEditInterface={this.handleEditInterface}
           handleMoveInterface={this.handleMoveInterface}
           handleSaveInterfaceAndProperties={this.handleSaveInterfaceAndProperties}
           handleUnlockInterface={this.handleUnlockInterface}
@@ -212,7 +212,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
   }
   handleDeleteMemoryProperty = (property: any, cb: any) => {
     const properties = [...this.state.properties]
-    const index = properties.findIndex(item => item.id === property.id)
+    const index = properties.findIndex((item) => item.id === property.id)
     if (index >= 0) {
       properties.splice(index, 1)
 
@@ -235,7 +235,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
   }
   handleChangeProperty = (property: any) => {
     const properties = [...this.state.properties]
-    const index = properties.findIndex(item => item.id === property.id)
+    const index = properties.findIndex((item) => item.id === property.id)
     if (index >= 0) {
       properties.splice(index, 1, property)
       this.setState({ properties })
@@ -278,9 +278,13 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
   handleMoveInterfaceSubmit = () => {
     /** empty */
   }
-  handleLockInterface = () => {
-    const { itf, lockInterface } = this.props
-    lockInterface(itf.id)
+  handleEditInterface = () => {
+    const { lockInterface, fetchInterface } = this.props
+    fetchInterface(this.state.itf.id, (res: any) => {
+      if (!res.locker) {
+        lockInterface(res.id)
+      }
+    })
   }
   handleUnlockInterface = () => {
     const { itf, unlockInterface } = this.props

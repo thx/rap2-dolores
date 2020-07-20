@@ -30,7 +30,7 @@ export const GlobalContext = React.createContext<GlobalContext>({
 
 export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
   const [options, setOptions] = useState<Options>({ ...defaultOptions })
-  const [resolveReject, setResolveReject] = useState<Array<() => void>>([])
+  const [resolveReject, setResolveReject] = useState<(() => void)[]>([])
   const [resolve, reject] = resolveReject
 
   const confirm = useCallback((options: CallOptions) => {

@@ -186,7 +186,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
         type: any;
         rule: string;
         value: any;
-        descripton: string;
+        description: string;
         creator: any;
         repositoryId: any;
         moduleId: any;
@@ -202,7 +202,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
         type,
         rule,
         value,
-        descripton: '',
+        description: '',
       },
       {
         creator: auth.id,
@@ -239,7 +239,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
     }
 
     if (result instanceof Array) {
-      result = { _root_: result }
+      result = { __root__: result }
     }
     const schema = Mock.toJSONSchema(result)
     const memoryProperties: any = []

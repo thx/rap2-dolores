@@ -173,7 +173,7 @@ function InterfaceForm(props: Props) {
                     <div className={classes.formItem}>
                       <Field
                         name="description"
-                        label="简介"
+                        label="说明"
                         component={TextField}
                         multiline={true}
                         fullWidth={true}

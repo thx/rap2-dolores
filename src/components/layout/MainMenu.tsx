@@ -5,7 +5,6 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
-import Divider from '@material-ui/core/Divider'
 import Paper from '@material-ui/core/Paper'
 import Popper from '@material-ui/core/Popper'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -14,97 +13,17 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import { Link } from 'react-router-dom'
 import { User } from 'actions/types'
 import Logo from './Logo'
+import { push } from '../../family'
 import { useDispatch } from 'react-redux'
 import { logout } from 'actions/account'
 
-const useAccountButtonStyles = makeStyles(({ spacing }: Theme) => ({
-  accountName: {
-    padding: spacing(1),
-    textAlign: 'center',
-    fontSize: '1.3714285714285714rem',
-  },
-}))
-
 const options = [{
+  key: 'preferences',
+  text: '偏好设置',
+}, {
   key: 'logout',
   text: '注销',
 }]
-
-function AccountButton({ user }: { user: User }) {
-  const [open, setOpen] = React.useState(false)
-  const dispatch = useDispatch()
-  const classes = useAccountButtonStyles()
-
-  const anchorRef = React.useRef<HTMLButtonElement>(null)
-
-  const handleMenuItemClick = (_event: React.MouseEvent<HTMLLIElement, MouseEvent>, key: string) => {
-    if (key === 'logout') {
-      dispatch(logout())
-    }
-    setOpen(false)
-  }
-
-  const handleToggle = () => {
-    setOpen(prevOpen => !prevOpen)
-  }
-
-  const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
-
-    if (anchorRef && anchorRef.current && event.target instanceof Node && anchorRef.current.contains(event.target)) {
-      return
-    }
-
-    setOpen(false)
-  }
-
-  return (
-    <div>
-      <Button
-        color="inherit"
-        aria-haspopup="true"
-        aria-label="账户"
-        onClick={handleToggle}
-        ref={anchorRef}
-      >
-        <span className="mr5">
-          {user.fullname}
-        </span>
-        <ExpandMoreIcon fontSize="small" />
-      </Button>
-      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition={true}>
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <div>
-                  <div className={classes.accountName}>
-                    {user.fullname}
-                  </div>
-                  <Divider />
-                  <MenuList id="split-button-menu">
-                    {options.map(({ key, text }) => (
-                      <MenuItem
-                        key={key}
-                        onClick={event => handleMenuItemClick(event, key)}
-                      >
-                        {text}
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-                </div>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
-    </div>
-  )
-}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -131,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       '& :not(.logo)': {
-        fontSize: '1.4rem',
+        fontSize: '1.2rem',
       },
     },
     links: {
@@ -143,8 +62,84 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
       padding: `${theme.spacing(1.5)}px  0 ${theme.spacing(1.5)}px 0`,
     },
+    accountName: {
+      color: '#FFFFFF',
+    },
   }),
 )
+
+function AccountButton({ user }: { user: User }) {
+  const [open, setOpen] = React.useState(false)
+  const anchorRef = React.useRef<HTMLButtonElement>(null)
+  const classes = useStyles()
+  const dispatch = useDispatch()
+
+
+  const handleMenuItemClick = (_event: React.MouseEvent<HTMLLIElement, MouseEvent>, key: string) => {
+    if (key === 'logout') {
+      dispatch(logout())
+    } else if (key === 'preferences') {
+      dispatch(push('/preferences'))
+    }
+    setOpen(false)
+  }
+
+  const handleToggle = () => {
+    setOpen(prevOpen => !prevOpen)
+  }
+
+  const handleClose = (event: React.MouseEvent<Document, MouseEvent>) => {
+
+    if (anchorRef && anchorRef.current && event.target instanceof Node && anchorRef.current.contains(event.target)) {
+      return
+    }
+
+    setOpen(false)
+  }
+
+  return (
+    <div>
+      <Button
+        color="inherit"
+        aria-haspopup="true"
+        aria-label="账户"
+        onClick={handleToggle}
+        ref={anchorRef}
+      >
+        <span className={`mr5 ${classes.accountName} guide-3`}>
+          {user.fullname}
+        </span>
+        <ExpandMoreIcon fontSize="small" style={{ color: '#FFFFFF' }} />
+      </Button>
+      <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition={true}>
+        {({ TransitionProps, placement }) => (
+          <Grow
+            {...TransitionProps}
+            style={{
+              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+            }}
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleClose}>
+                <MenuList id="split-button-menu">
+                  {options.map(({ key, text }) => (
+                    <MenuItem
+                      key={key}
+                      onClick={event => handleMenuItemClick(event, key)}
+                    >
+                      {text}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
+        )}
+      </Popper>
+    </div>
+  )
+}
+
 
 interface Props {
   user: User
@@ -165,6 +160,7 @@ export default function MainMenu(props: Props) {
             <Link to="/organization/joined" className={classes.link}><Button color="inherit"> 团队 </Button></Link>
             <Link to="/api" className={classes.link}><Button color="inherit"> 接口 </Button></Link>
             <Link to="/status" className={classes.link}><Button color="inherit"> 状态 </Button></Link>
+            <Link to="/about" className={classes.link}><Button color="inherit"> 关于 </Button></Link>
           </div>
           <AccountButton user={user} />
         </Toolbar>

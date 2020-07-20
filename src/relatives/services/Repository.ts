@@ -1,5 +1,6 @@
 import { CREDENTIALS, serve } from './constant'
 import { IDefaultVal } from 'components/editor/DefaultValueModal'
+import { ENTITY_TYPE } from 'utils/consts'
 
 // 仓库
 export default {
@@ -11,7 +12,7 @@ export default {
   fetchRepositoryList({ user = '', organization = '', name = '', cursor = 1, limit = 100 }: any = {}) {
     return fetch(`${serve}/repository/list?user=${user}&organization=${organization}&name=${name}&cursor=${cursor}&limit=${limit}`, { ...CREDENTIALS })
       .then(res => res.json())
-      // .then(json => json.data)
+    // .then(json => json.data)
   },
   fetchOwnedRepositoryList({ user = '', name = '' }: any = {}) {
     return fetch(`${serve}/repository/owned?user=${user}&name=${name}`, { ...CREDENTIALS })
@@ -23,13 +24,8 @@ export default {
       .then(res => res.json())
     // .then(json => json.data)
   },
-  fetchRepository(id: any, token?: string) {
-    return fetch(
-      `${serve}/repository/get?id=${id}&excludeProperty=true${
-        token !== undefined ? `&token=${token}` : ''
-      }`,
-      { ...CREDENTIALS },
-    )
+  fetchRepository(id: any) {
+    return fetch(`${serve}/repository/get?id=${id}&excludeProperty=true`, { ...CREDENTIALS })
       .then(res => res.json())
       .then(json => json.data)
   },
@@ -97,4 +93,10 @@ export default {
     })
       .then(res => res.json())
   },
+  fetchHistoryLogs({ entityId, entityType, limit, offset }:
+    { entityId: number, entityType: ENTITY_TYPE.INTERFACE | ENTITY_TYPE.REPOSITORY, limit: number, offset: number }) {
+    return fetch(`${serve}/${entityType === ENTITY_TYPE.INTERFACE ? 'interface' : 'repository'}/history/${entityId}?limit=${limit}&offset=${offset}`, { ...CREDENTIALS })
+      .then(res => res.json())
+      .then(json => json.data)
+  }
 }

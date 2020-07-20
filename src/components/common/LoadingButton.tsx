@@ -24,19 +24,17 @@ interface Props extends ButtonProps {
   label: string
 }
 
-export default function LoadingButton(props: Props) {
+export default React.forwardRef((props: Props, ref: any) => {
   const { children, label, ...rest } = props
   const classes = useStyles()
   const loading = props.disabled
   return (
-    <div className={classes.root}>
-      <Button
-        {...rest}
-      >
+    <div className={classes.root} ref={ref}>
+      <Button {...rest}>
         {loading ? '处理中...' : label}
         {children}
       </Button>
       {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
     </div>
   )
-}
+})

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { PropTypes, Link, StoreStateRouterLocationURI, connect } from '../../family'
 import AwesomeDebouncePromise from 'awesome-debounce-promise'
+import { TextField, InputAdornment } from '@material-ui/core'
+import Search from '@material-ui/icons/Search'
 
 class Highlight extends Component<any, any> {
   static replace = (clip: any, seed: any) => {
@@ -40,7 +42,8 @@ class DropdownMenuBase extends Component<any, any> {
         const matchInterface =
           nextInterface.name.toLowerCase().indexOf(seed) !== -1 ||
           nextInterface.url.toLowerCase().indexOf(seed) !== -1 ||
-          nextInterface.method === seed
+          nextInterface.method === seed ||
+          nextInterface.id === +seed
         if (matchInterface) {
           counter++
           if (!matchModule) {
@@ -139,15 +142,23 @@ class RepositorySearcher extends Component<any, IState> {
 
     return (
       <div className="RepositorySearcher dropdown">
-        <input
+        <TextField
           value={seed}
           onChange={e => {
             const val = e.target.value
             this.setState({ seed: val })
             this.debouncedInput(val)
           }}
+          style={{ backgroundColor: '#fafbfc', marginRight: 12 }}
           className="dropdown-input form-control"
-          placeholder="工作区搜索"
+          placeholder="检索名称或ID"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
         />
         {result && <DropdownMenu repository={repository} seed={result} onSelect={this.clearSeed} />}
       </div>

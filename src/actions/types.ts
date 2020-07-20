@@ -1,4 +1,5 @@
 import { RouterState } from 'connected-react-router'
+import { THEME_TEMPLATE_KEY } from 'components/account/ThemeChangeOverlay'
 
 export interface RootState {
   auth: any
@@ -17,6 +18,11 @@ export interface RootState {
   logs: any
   loading: boolean
   message: IMessage
+
+  userSettings: { [key: string]: string }
+  userSettingsIsUpdating: boolean
+
+  themeId: THEME_TEMPLATE_KEY
 }
 
 export interface Organization {
@@ -103,7 +109,11 @@ export interface RepositoryFormData {
 
   collaboratorIdstring?: string
 
+  canUserEdit?: boolean
+
   token?: string
+
+  modules?: Module[]
 }
 
 export interface Repository {
