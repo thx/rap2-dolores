@@ -628,6 +628,7 @@ class PropertyList extends PureComponent<any, any> {
       interfaceId,
       scope,
       parentId: parent.id,
+      pos: scope === 'request' ? this.props.posFilter : undefined,
     }
     this.setState({
       highlightId: childId,

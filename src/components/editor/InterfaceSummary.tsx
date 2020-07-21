@@ -116,7 +116,7 @@ class InterfaceSummary extends Component<
     this.switchBodyOption = this.switchBodyOption.bind(this)
     this.switchPos = this.switchPos.bind(this)
     this.copyModelName = this.copyModelName.bind(this)
-    props.stateChangeHandler(this.state)
+    props.stateChangeHandler && props.stateChangeHandler(this.state)
   }
   switchBodyOption(val: BODY_OPTION) {
     this.setState({ bodyOption: val },
