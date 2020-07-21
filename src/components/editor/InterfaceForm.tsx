@@ -9,6 +9,7 @@ import { makeStyles } from '@material-ui/styles'
 import { SlideUp } from 'components/common/Transition'
 import { Interface, Repository, RootState, Module } from '../../actions/types'
 import { updateInterface, addInterface } from '../../actions/interface'
+import { StoreStateRouterLocationURI, push } from 'family'
 export const METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH', 'HEAD']
 export const STATUS_LIST = [200, 301, 403, 404, 500, 502, 503, 504]
 
@@ -71,6 +72,7 @@ function InterfaceForm(props: Props) {
   const { open, onClose, itf, title, repository, mod } = props
   const classes = useStyles()
   const dispatch = useDispatch()
+  const router = useSelector((state: RootState) => state.router)
 
   return (
     <Dialog
@@ -98,8 +100,13 @@ function InterfaceForm(props: Props) {
                 moduleId: mod!.id,
               }
               dispatch(
-                addOrUpdateInterface(itf, () => {
-                  // dispatch(refresh())
+                addOrUpdateInterface(itf, (e) => {
+                  if (e && e.id) {
+                    const href = StoreStateRouterLocationURI(router)
+                      .setSearch('itf', e.id)
+                      .href()
+                    dispatch(push(href))
+                  }
                   onClose(true)
                 })
               )

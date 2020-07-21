@@ -33,7 +33,7 @@ export function* addInterface(action: any) {
   try {
     const payload = yield call(EditorService.addInterface, action.interface)
     yield put(InterfaceAction.addInterfaceSucceeded(payload))
-    if (action.onResolved) { action.onResolved() }
+    if (action.onResolved) { action.onResolved(payload.itf) }
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.addInterfaceFailed(e.message))
