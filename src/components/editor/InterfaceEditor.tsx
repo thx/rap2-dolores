@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { PropTypes, connect, _ } from '../../family'
 import InterfaceEditorToolbar from './InterfaceEditorToolbar'
-import InterfaceSummary, {
-  BODY_OPTION,
-  REQUEST_PARAMS_TYPE,
-  rptFromStr2Num,
-} from './InterfaceSummary'
+import InterfaceSummary from './InterfaceSummary'
 import PropertyList from './PropertyList'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
@@ -57,8 +53,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
     this.state = {
       ...InterfaceEditor.mapPropsToState(props),
       summaryState: {
-        bodyOption: BODY_OPTION.FORM_DATA,
-        requestParamsType: REQUEST_PARAMS_TYPE.QUERY_PARAMS,
+        bodyOption: props.bodyOption,
       },
       moveInterfaceDialogOpen: false,
     }
@@ -117,7 +112,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
   render() {
     const { auth, repository, mod } = this.props
     const { editable, itf } = this.state
-    const { id, locker } = this.state.itf
+    const { id, locker, bodyOption } = this.state.itf
     if (!id) {
       return null
     }
@@ -154,8 +149,8 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
               repository={repository}
               mod={mod}
               interfaceId={itf.id}
-              bodyOption={this.state.summaryState.bodyOption}
-              requestParamsType={this.state.summaryState.requestParamsType}
+              bodyOption={bodyOption}
+              posFilter={this.state.summaryState.posFilter}
               handleChangeProperty={this.handleChangeProperty}
               handleDeleteMemoryProperty={this.handleDeleteMemoryProperty}
             />
@@ -191,8 +186,6 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
     this.handleAddMemoryProperties([property], cb)
   }
   handleAddMemoryProperties = (properties: any, cb: any) => {
-    const requestParamsType = this.state.summaryState.requestParamsType
-    const rpt = rptFromStr2Num(requestParamsType)
 
     properties.forEach((item: any) => {
       if (item.memory === undefined) {
@@ -201,7 +194,6 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
       if (item.id === undefined) {
         item.id = _.uniqueId('memory-')
       }
-      item.pos = rpt
     })
     const nextState = { properties: [...this.state.properties, ...properties] }
     this.setState(nextState, () => {
@@ -227,9 +219,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
       }
 
       this.setState({ properties }, () => {
-        if (cb) {
-          cb()
-        }
+        cb && cb()
       })
     }
   }

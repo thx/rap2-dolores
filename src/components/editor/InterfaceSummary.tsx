@@ -9,29 +9,34 @@ import { CopyToClipboard } from '../utils/'
 import { getRelativeUrl } from '../../utils/URLUtils'
 import './InterfaceSummary.css'
 import { showMessage, MSG_TYPE } from 'actions/common'
-import { TextField, Select, InputLabel, Input, MenuItem } from '@material-ui/core'
+import { TextField, Select, InputLabel, Input, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio } from '@material-ui/core'
 import Markdown from 'markdown-to-jsx'
 
-export const BODY_OPTION = {
-  FORM_DATA: 'FORM_DATA',
-  FORM_URLENCODED: 'FORM_URLENCODED',
-  RAW: 'RAW',
-  BINARY: 'BINARY',
+export enum BODY_OPTION {
+  FORM_DATA = 'FORM_DATA',
+  FORM_URLENCODED = 'FORM_URLENCODED',
+  RAW = 'RAW',
+  BINARY = 'BINARY',
 }
-export const REQUEST_PARAMS_TYPE = {
-  HEADERS: 'HEADERS',
-  QUERY_PARAMS: 'QUERY_PARAMS',
-  BODY_PARAMS: 'BODY_PARAMS',
+
+export const BODY_OPTION_LIST = [
+  { label: 'form-data', value: BODY_OPTION.FORM_DATA },
+  { label: 'x-www-form-urlencoded', value: BODY_OPTION.FORM_URLENCODED },
+  { label: 'raw', value: BODY_OPTION.RAW },
+  { label: 'binary', value: BODY_OPTION.BINARY },
+]
+
+/**
+ * 参数类型
+ */
+export enum POS_TYPE {
+  QUERY = 2,
+  HEADER = 1,
+  BODY = 3,
+  PRE_REQUEST_SCRIPT = 4,
+  TEST = 5
 }
-export function rptFromStr2Num(rpt: any) {
-  let pos = 2
-  if (rpt === 'HEADERS') {
-    pos = 1
-  } else if (rpt === 'BODY_PARAMS') {
-    pos = 3
-  }
-  return pos
-}
+
 function url2name(itf: any) {
   // copy from http://gitlab.alibaba-inc.com/thx/magix-cli/blob/master/platform/rap.js#L306
   const method = itf.method.toLowerCase()
@@ -87,11 +92,11 @@ type InterfaceSummaryProps = {
   [x: string]: any;
 }
 type InterfaceSummaryState = {
-  bodyOption?: any;
-  requestParamsType?: any;
-  method?: any;
-  status?: any;
-  [x: string]: any;
+  bodyOption?: any
+  method?: any
+  status?: any
+  posFilter: POS_TYPE
+  [x: string]: any
 }
 class InterfaceSummary extends Component<
   InterfaceSummaryProps,
@@ -103,38 +108,26 @@ class InterfaceSummary extends Component<
   constructor(props: any) {
     super(props)
     this.state = {
-      bodyOption: BODY_OPTION.FORM_DATA,
-      requestParamsType:
-        props.itf.method === 'POST'
-          ? REQUEST_PARAMS_TYPE.BODY_PARAMS
-          : REQUEST_PARAMS_TYPE.QUERY_PARAMS,
+      bodyOption: props?.itf?.bodyOption ?? BODY_OPTION.FORM_DATA,
+      posFilter: props?.itf?.method === 'POST' ? POS_TYPE.BODY : POS_TYPE.QUERY,
     }
     this.changeMethod = this.changeMethod.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.switchBodyOption = this.switchBodyOption.bind(this)
-    this.switchRequestParamsType = this.switchRequestParamsType.bind(this)
+    this.switchPos = this.switchPos.bind(this)
     this.copyModelName = this.copyModelName.bind(this)
-    this.state.requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS &&
-      props.stateChangeHandler(this.state)
+    props.stateChangeHandler(this.state)
   }
-  switchBodyOption(val: any) {
-    return () => {
-      this.setState(
-        {
-          bodyOption: val,
-        },
-        () => {
-          this.props.stateChangeHandler(this.state)
-        }
-      )
-    }
+  switchBodyOption(val: BODY_OPTION) {
+    this.setState({ bodyOption: val },
+      () => {
+        this.props.stateChangeHandler(this.state)
+      }
+    )
   }
-  switchRequestParamsType(val: any) {
+  switchPos(val: POS_TYPE) {
     return () => {
-      this.setState(
-        {
-          requestParamsType: val,
-        },
+      this.setState( { posFilter: val },
         () => {
           this.props.stateChangeHandler(this.state)
         }
@@ -178,7 +171,7 @@ class InterfaceSummary extends Component<
       editable,
       handleChangeInterface,
     } = this.props
-    const { requestParamsType } = this.state
+    const { posFilter } = this.state
     const keyMap = {
       COPY_MODEL_NAME: ['ctrl+alt+c'],
     }
@@ -186,6 +179,7 @@ class InterfaceSummary extends Component<
     const handlers = {
       COPY_MODEL_NAME: this.copyModelName,
     }
+
     if (!itf.id) {
       return null
     }
@@ -326,42 +320,27 @@ class InterfaceSummary extends Component<
         {
           editable && (
             <ul className="nav nav-tabs" role="tablist">
-              <li
-                className="nav-item"
-                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.HEADERS)}
-              >
+              <li className="nav-item" onClick={this.switchPos(POS_TYPE.HEADER)} >
                 <button
-                  className={`nav-link ${
-                    requestParamsType === REQUEST_PARAMS_TYPE.HEADERS ? 'active' : ''
-                    }`}
+                  className={`nav-link ${posFilter === POS_TYPE.HEADER ? 'active' : ''}`}
                   role="tab"
                   data-toggle="tab"
                 >
-                  headers
+                  Headers
               </button>
               </li>
-              <li
-                className="nav-item"
-                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.QUERY_PARAMS)}
-              >
+              <li className="nav-item" onClick={this.switchPos(POS_TYPE.QUERY)} >
                 <button
-                  className={`nav-link ${
-                    requestParamsType === REQUEST_PARAMS_TYPE.QUERY_PARAMS ? 'active' : ''
-                    }`}
+                  className={`nav-link ${posFilter === POS_TYPE.QUERY ? 'active' : ''}`}
                   role="tab"
                   data-toggle="tab"
                 >
                   Query Params
               </button>
               </li>
-              <li
-                className="nav-item"
-                onClick={this.switchRequestParamsType(REQUEST_PARAMS_TYPE.BODY_PARAMS)}
-              >
+              <li className="nav-item" onClick={this.switchPos(POS_TYPE.BODY)} >
                 <button
-                  className={`nav-link ${
-                    requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? 'active' : ''
-                    }`}
+                  className={`nav-link ${posFilter === POS_TYPE.BODY ? 'active' : ''}`}
                   role="tab"
                   data-toggle="tab"
                 >
@@ -372,60 +351,18 @@ class InterfaceSummary extends Component<
           )
         }
         {
-          editable && requestParamsType === REQUEST_PARAMS_TYPE.BODY_PARAMS ? (
-            <div className="body-options">
-              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.FORM_DATA)}>
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio1"
-                  value="option1"
-                />
-                <label className="form-check-label" htmlFor="inlineRadio1">
-                  form-data
-              </label>
-              </div>
-              <div
-                className="form-check"
-                onClick={this.switchBodyOption(BODY_OPTION.FORM_URLENCODED)}
+          editable && posFilter === POS_TYPE.BODY ? (
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="body type"
+                name="body-type"
+                value={this.state.bodyOption}
+                onChange={e => this.switchBodyOption(e.target.value as BODY_OPTION)}
+                row={true}
               >
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio2"
-                  value="option2"
-                />
-                <label className="form-check-label" htmlFor="inlineRadio2">
-                  x-www-form-urlencoded
-              </label>
-              </div>
-              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.RAW)}>
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio3"
-                  value="option3"
-                />
-                <label className="form-check-label" htmlFor="inlineRadio3">
-                  raw
-              </label>
-              </div>
-              <div className="form-check" onClick={this.switchBodyOption(BODY_OPTION.BINARY)}>
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="inlineRadioOptions"
-                  id="inlineRadio4"
-                  value="option4"
-                />
-                <label className="form-check-label" htmlFor="inlineRadio4">
-                  binary
-              </label>
-              </div>
-            </div>
+                {BODY_OPTION_LIST.map(x => <FormControlLabel key={x.value} value={x.value} control={<Radio />} label={x.label} />)}
+              </RadioGroup>
+            </FormControl>
           ) : null
         }
       </div >

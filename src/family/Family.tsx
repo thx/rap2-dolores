@@ -9,7 +9,6 @@ import {
   connectRouter,
   LOCATION_CHANGE,
 } from 'connected-react-router'
-import loggerMiddleware from './loggerMiddleware'
 import createSagaMiddleware from 'redux-saga'
 import URI from 'urijs'
 
@@ -110,7 +109,7 @@ const Family: {
         })) ||
       compose
     const middlewares = logger
-      ? [loggerMiddleware, routerMiddleware, apiMiddleware, sagaMiddleware]
+      ? [routerMiddleware, apiMiddleware, sagaMiddleware] // 真的不需要这个logger d-  o-b|||
       : [routerMiddleware, apiMiddleware, sagaMiddleware]
     const store = createStore<any, any, any, any>(
       combineReducers({ ..._reducers, router: connectRouter(history) }),

@@ -262,7 +262,6 @@ const relatives = {
       }
     },
     *[DO_UPDATE_USER_SETTING](action: DoUpdateUserSettingAction) {
-      console.log('什么鬼啊')
       const { key, value, cb } = action.payload
       yield put(updateUserSetting(key, value) as AnyAction)
       const opAction = yield take(UPDATE_USER_SETTING_SUCCESS)
