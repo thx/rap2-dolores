@@ -159,3 +159,32 @@ export interface DoFetchUserSettingsAction {
     cb?: (isOk: boolean, payload?: any) => void
   }
 }
+
+export type UPDATE_ACCOUNT_REQUEST = 'UPDATE_ACCOUNT_REQUEST'
+export const UPDATE_ACCOUNT_REQUEST: UPDATE_ACCOUNT_REQUEST = 'UPDATE_ACCOUNT_REQUEST'
+
+export type UPDATE_ACCOUNT_SUCCESS = 'UPDATE_ACCOUNT_SUCCESS'
+export const UPDATE_ACCOUNT_SUCCESS: UPDATE_ACCOUNT_SUCCESS = 'UPDATE_ACCOUNT_SUCCESS'
+
+export type UPDATE_ACCOUNT_FAILURE = 'UPDATE_ACCOUNT_FAILURE'
+export const UPDATE_ACCOUNT_FAILURE: UPDATE_ACCOUNT_FAILURE = 'UPDATE_ACCOUNT_FAILURE'
+
+export const updateAccount = (payload: { fullname?: string, password?: string}) => ({
+  [RSAA]: mergeRSAABase({
+    endpoint: `${serve}/account/updateAccount`,
+    method: 'POST',
+    body: JSON.stringify(payload),
+    types: [UPDATE_ACCOUNT_REQUEST, UPDATE_ACCOUNT_SUCCESS, UPDATE_ACCOUNT_FAILURE],
+  }),
+})
+
+export type DO_UPDATE_ACCOUNT = 'DO_UPDATE_ACCOUNT'
+export const DO_UPDATE_ACCOUNT = 'DO_UPDATE_ACCOUNT'
+
+export const doUpdateAccount = (params: {fullname?: string, password?: string}, cb: TCB) => ({
+  type: DO_UPDATE_ACCOUNT,
+  payload: {
+    params,
+    cb,
+  },
+})

@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from 'actions/types'
 import MySettingsView from './components/account/MySettingsView'
 import AboutView from './components/home/AboutView'
+import MyAccountView from 'components/account/MyAccountView'
 
 const UserList = lazy(() => import(/* webpackChunkName: "./components/account/UserList" */ './components/account/UserList'))
 
@@ -119,6 +120,7 @@ const Routes = () => {
               path="/account"
               children={() => (
                 <Switch>
+                  <Route exact={true} path="/account/myAccount" component={MyAccountView} />
                   <Route exact={true} path="/account" component={UserList} />
                   <Route path="/account/users" component={UserList} />
                   <Route path="/account/login" component={LoginForm} />

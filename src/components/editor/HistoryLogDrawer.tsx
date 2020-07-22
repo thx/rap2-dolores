@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { List, ListItem, ListItemText, Drawer, makeStyles, Avatar, ListItemAvatar, ListItemSecondaryAction, IconButton, TablePagination, Button } from '@material-ui/core'
+import { List, ListItem, ListItemText, Drawer, makeStyles, ListItemSecondaryAction, IconButton, TablePagination, Button } from '@material-ui/core'
 import { ENTITY_TYPE, TablePaginationProps } from 'utils/consts'
 import RepositoryService from '../../relatives/services/Repository'
 import DateUtility from 'utils/DateUtility'
@@ -102,11 +102,6 @@ function HistoryLogDrawer({ entityId, entityType, open, onClose }:
       <List className={classes.list}>
         {result.rows.map(row => (
           <ListItem key={row.id}>
-            <ListItemAvatar>
-              <Avatar>
-                <img alt={String(row.user.empId)} src={`https://work.alibaba-inc.com/photo/${row.user.empId}.40x40.jpg`} className="avatar" />
-              </Avatar>
-            </ListItemAvatar>
             <ListItemText primary={<FormattedRow row={row} />} secondary={`${DateUtility.formatDate(row.createdAt)} by ${row.user.fullname}`} />
             {!row.jsonDataIsNull &&
               <ListItemSecondaryAction>

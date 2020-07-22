@@ -18,6 +18,9 @@ import { useDispatch } from 'react-redux'
 import { logout } from 'actions/account'
 
 const options = [{
+  key: 'myAccount',
+  text: '我的账户',
+}, {
   key: 'preferences',
   text: '偏好设置',
 }, {
@@ -80,6 +83,8 @@ function AccountButton({ user }: { user: User }) {
       dispatch(logout())
     } else if (key === 'preferences') {
       dispatch(push('/preferences'))
+    } else if (key === 'myAccount') {
+      dispatch(push('/account/myAccount'))
     }
     setOpen(false)
   }
@@ -106,10 +111,10 @@ function AccountButton({ user }: { user: User }) {
         onClick={handleToggle}
         ref={anchorRef}
       >
-        <span className={`mr5 ${classes.accountName} guide-3`}>
+        <span className={`mr1 ${classes.accountName} guide-3`}>
           {user.fullname}
+          <ExpandMoreIcon fontSize="small" style={{ color: '#FFFFFF' }} />
         </span>
-        <ExpandMoreIcon fontSize="small" style={{ color: '#FFFFFF' }} />
       </Button>
       <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition={true}>
         {({ TransitionProps, placement }) => (

@@ -2,7 +2,12 @@ import { RouterState } from 'connected-react-router'
 import { THEME_TEMPLATE_KEY } from 'components/account/ThemeChangeOverlay'
 
 export interface RootState {
-  auth: any
+  auth: {
+    id: number
+    empId: string
+    fullname: string
+    email: string
+  }
   router: RouterState
   repository: any
   repositories: any
@@ -62,6 +67,7 @@ export interface User {
   id: number
   fullname: string
   email: string
+  empId: string
 }
 
 export interface INumItem {

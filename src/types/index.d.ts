@@ -28,3 +28,20 @@ declare interface IPagerList<T> {
   rows: T[]
   count: number
 }
+
+declare interface AnyDoAction {
+  type: string
+  payload: {
+    cb?: TCB
+    params: any
+  }
+}
+
+declare type TCommonDoAction = {
+  type: string
+  payload: {
+    isOk: true
+    data?: any
+    errMsg?: string
+  } | TCommonError
+}
