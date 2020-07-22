@@ -19,6 +19,21 @@ export enum BODY_OPTION {
   BINARY = 'BINARY',
 }
 
+export function formatBodyOption(type: BODY_OPTION) {
+  switch (type) {
+    case BODY_OPTION.BINARY:
+      return 'Binary'
+    case BODY_OPTION.FORM_DATA:
+      return 'FormData'
+    case BODY_OPTION.FORM_URLENCODED:
+      return 'UrlEncoded'
+    case BODY_OPTION.RAW:
+      return 'Raw'
+    default:
+      return '-'
+  }
+}
+
 export const BODY_OPTION_LIST = [
   { label: 'form-data', value: BODY_OPTION.FORM_DATA },
   { label: 'x-www-form-urlencoded', value: BODY_OPTION.FORM_URLENCODED },

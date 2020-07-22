@@ -19,7 +19,7 @@ import _ from 'lodash'
 import Mock from 'mockjs'
 import JSON5 from 'json5'
 import { elementInViewport } from 'utils/ElementInViewport'
-import { POS_TYPE, BODY_OPTION } from './InterfaceSummary'
+import { POS_TYPE, BODY_OPTION, formatBodyOption } from './InterfaceSummary'
 
 const mockProperty =
   process.env.NODE_ENV === 'development'
@@ -282,7 +282,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                           <>
                             <CopyToClipboard text={item.name} type="right">
                               <span className="name-wrapper nowrap">
-                                {item.name}{item.pos === POS_TYPE.BODY ? <BodyParamLabel type={bodyOption} /> : null}
+                                {item.name}{item.pos === POS_TYPE.BODY && item.scope === 'request' ? <BodyParamLabel type={bodyOption} /> : null}
                               </span>
                             </CopyToClipboard>
                             {item.scope === 'request' && item.depth === 0 ? (
@@ -431,7 +431,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
 
 function BodyParamLabel({ type }: { type: BODY_OPTION }) {
   return (
-    <Chip label={type} className="ml1" size="small" />
+    <Chip label={formatBodyOption(type)} className="ml1" size="small" />
   )
 }
 class SortableTreeTable extends Component<any, any> {

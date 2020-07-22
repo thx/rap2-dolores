@@ -67,10 +67,16 @@ function InterfaceEditorToolbar(props: Props) {
           color="primary"
           disabled={loading}
           label="保存"
+          size="small"
         >
           <Save className={classes.rightIcon} />
         </LoadingButton>
-        <Button className={classes.button} onClick={handleUnlockInterface} variant="contained">
+        <Button
+          className={classes.button}
+          onClick={handleUnlockInterface}
+          variant="contained"
+          size="small"
+        >
           取消
           <Cancel className={classes.rightIcon} />
         </Button>
@@ -88,13 +94,23 @@ function InterfaceEditorToolbar(props: Props) {
   return (
     <div className="InterfaceEditorToolbar">
       <Tooltip title="查看该接口中的所有改动历史">
-        <Button className={`${classes.button} guide-2`} variant="contained" onClick={() => setShowHistory(true)}>
+        <Button
+          className={`${classes.button} guide-2`}
+          variant="contained"
+          onClick={() => setShowHistory(true)}
+          size="small"
+        >
           历史
         <History className={classes.rightIcon} />
         </Button>
       </Tooltip>
       <Tooltip title="移动或复制该接口">
-        <Button className={classes.button} onClick={handleMoveInterface} variant="contained">
+        <Button
+          className={classes.button}
+          onClick={handleMoveInterface}
+          variant="contained"
+          size="small"
+        >
           移动
         <KeyboardTab className={classes.rightIcon} />
         </Button>
@@ -107,6 +123,7 @@ function InterfaceEditorToolbar(props: Props) {
           color="primary"
           disabled={loading}
           label="编辑"
+          size="small"
         >
           <Create className={classes.rightIcon} />
         </LoadingButton>
