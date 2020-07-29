@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import { doUpdateAccount } from 'actions/account'
 
-
 function EditMyAccountDialog({ handleClose }: { handleClose: (isOk: boolean) => void }) {
   const [pwd, setPwd] = useState('')
   const [name, setName] = useState('')

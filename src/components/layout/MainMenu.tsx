@@ -77,7 +77,6 @@ function AccountButton({ user }: { user: User }) {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-
   const handleMenuItemClick = (_event: React.MouseEvent<HTMLLIElement, MouseEvent>, key: string) => {
     if (key === 'logout') {
       dispatch(logout())
@@ -144,7 +143,6 @@ function AccountButton({ user }: { user: User }) {
     </div>
   )
 }
-
 
 interface Props {
   user: User

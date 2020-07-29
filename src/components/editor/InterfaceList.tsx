@@ -177,7 +177,6 @@ function InterfaceList(props: InterfaceListProps) {
     return <div style={{ height: 600 }}>请先添加模块</div>
   }
 
-
   return (
     <article className="InterfaceList">
       {repository.canUserEdit ? (

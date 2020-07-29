@@ -104,8 +104,6 @@ function ThemeChangeOverlay(props: Props) {
   )
 }
 
-
-
 export const THEME_TEMPLATES: { [key: string]: { theme: ThemeOptions, name: string } } = {
   [THEME_TEMPLATE_KEY.INDIGO]: {
     name: '沉靛蓝',

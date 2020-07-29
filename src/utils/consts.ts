@@ -24,7 +24,6 @@ export enum CACHE_KEY {
 
 }
 
-
 export const TablePaginationProps = {
   labelRowsPerPage: '每页条目数',
   backIconButtonProps: {
