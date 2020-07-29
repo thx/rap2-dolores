@@ -28,7 +28,7 @@ class RChart extends Component<any, any> {
       <canvas ref={$canvas => { this.$canvas = $canvas }} width={width} height={height} />
     )
   }
-  componentDidUpdate() {
+  componentDidMount() {
     const ctx = this.$canvas.getContext('2d')
     this.$chart = new Chart(ctx, {
       type: this.props.type,

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { connect, Link, replace, StoreStateRouterLocationURI } from '../../family'
-import {  RSortable } from '../utils'
+import { RSortable } from '../utils'
 import ModuleForm from './ModuleForm'
 import { useSelector, useDispatch } from 'react-redux'
 import { GoPackage } from 'react-icons/go'
 import { deleteModule, sortModuleList } from '../../actions/module'
 import { Module, Repository, RootState, User } from '../../actions/types'
+import { makeStyles, Theme } from '@material-ui/core'
 
 interface ModuleBaseProps {
   repository: Repository
@@ -16,7 +17,7 @@ interface ModuleBaseProps {
   replace?: typeof replace
 }
 function ModuleBase(props: ModuleBaseProps) {
-  const { mod} = props
+  const { mod } = props
   const router = useSelector((state: RootState) => state.router)
   const uri = StoreStateRouterLocationURI(router).removeSearch('itf')
   const selectHref = uri.setSearch('mod', mod!.id.toString()).href()
@@ -45,11 +46,19 @@ interface ModuleListProps {
   mod?: Module
   repository: Repository
 }
+
+const useStyles = makeStyles(({ palette }: Theme) => ({
+  li: {
+    borderColor: `${palette.primary.main} #e1e4e8 transparent #e1e4e8 !important`,
+  },
+}))
+
 function ModuleList(props: ModuleListProps) {
   const [open, setOpen] = useState(false)
   const dispatch = useDispatch()
   const auth = useSelector((state: RootState) => state.auth)
   const { repository, mods = [], mod } = props
+  const classes = useStyles()
   const handleSort = (_: any, sortable: any) => {
     dispatch(sortModuleList(sortable.toArray(), () => {
       /** empty */
@@ -61,7 +70,7 @@ function ModuleList(props: ModuleListProps) {
         {mods.map((item: any) => (
           <li
             key={item.id}
-            className={item.id === mod!.id ? 'active sortable' : 'sortable'}
+            className={`${item.id === mod!.id ? 'active ' + classes.li : ''} sortable `}
             data-id={item.id}
           >
             <ModuleWrap
@@ -76,7 +85,7 @@ function ModuleList(props: ModuleListProps) {
         {/* 编辑权限：拥有者或者成员 */}
         {repository.canUserEdit ? (
           <li>
-            <span className="fake-link" onClick={() => setOpen(true)}>
+            <span onClick={() => setOpen(true)} className="g-link">
               <GoPackage className="fontsize-14" /> 新建模块
             </span>
             <ModuleForm

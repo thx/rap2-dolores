@@ -12,10 +12,13 @@ import { StoreStateRouterLocationURI } from 'family'
 
 export function* fetchInterface(action: any) {
   try {
+    if (!action.id) {
+      return
+    }
     const payload = yield call(EditorService.fetchInterface, action.id)
     yield put(InterfaceAction.fetchInterfaceSucceeded(payload))
     if (action.onResolved) {
-      action.onResolved()
+      action.onResolved(payload)
     }
   } catch (e) {
     console.error(e.message)
@@ -30,7 +33,7 @@ export function* addInterface(action: any) {
   try {
     const payload = yield call(EditorService.addInterface, action.interface)
     yield put(InterfaceAction.addInterfaceSucceeded(payload))
-    if (action.onResolved) { action.onResolved() }
+    if (action.onResolved) { action.onResolved(payload.itf) }
   } catch (e) {
     console.error(e.message)
     yield put(InterfaceAction.addInterfaceFailed(e.message))

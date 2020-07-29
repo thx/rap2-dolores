@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { RChart } from '../utils/'
 import './Status.css'
 import { Card } from '@material-ui/core'
+import { withTheme } from '@material-ui/styles'
 
 // TODO 2.3 仓库曲线 接口曲线
 // TODO 2.3 接口覆盖率
@@ -10,14 +11,16 @@ import { Card } from '@material-ui/core'
 // TODO 2.3 用户曲线
 
 class Status extends Component<any, any> {
-  static adapt(list: any, label: any) {
+  adapt(list: any, label: any) {
+    const theme = this.props.theme
+    const mainColor = theme.palette.primary.main
     return {
       labels: list.map((item: any) => item.label),
       datasets: [{
         label: label || '-',
         data: list.map((item: any) => item.value),
-        backgroundColor: RChart.COLORS.blue,
-        borderColor: RChart.COLORS.blue,
+        backgroundColor: mainColor,
+        borderColor: mainColor,
         borderWidth: 1,
         fill: false,
       }],
@@ -71,19 +74,19 @@ class Status extends Component<any, any> {
           <div className="row">
             <Card className="chart">
               <div className="header"><span className="title">最近 30 天新建仓库数</span></div>
-              <RChart type="line" data={Status.adapt(analyticsRepositoriesCreated, '新建仓库数')} options={{}} />
+              <RChart type="line" data={this.adapt(analyticsRepositoriesCreated, '新建仓库数')} options={{}} />
             </Card>
             <Card className="chart">
               <div className="header"><span className="title">最近 30 天活跃仓库数</span></div>
-              <RChart type="line" data={Status.adapt(analyticsRepositoriesUpdated, '活跃仓库数')} options={{}} />
+              <RChart type="line" data={this.adapt(analyticsRepositoriesUpdated, '活跃仓库数')} options={{}} />
             </Card>
             <Card className="chart">
               <div className="header"><span className="title">最近 30 天活跃用户排行</span></div>
-              <RChart type="horizontalBar" data={Status.adapt(analyticsUsersActivation, '操作')} options={{}} />
+              <RChart type="horizontalBar" data={this.adapt(analyticsUsersActivation, '操作')} options={{}} />
             </Card>
             <Card className="chart">
               <div className="header"><span className="title">最近 30 天活跃仓库排行</span></div>
-              <RChart type="horizontalBar" data={Status.adapt(analyticsRepositoriesActivation, '操作')} options={{}} />
+              <RChart type="horizontalBar" data={this.adapt(analyticsRepositoriesActivation, '操作')} options={{}} />
             </Card>
           </div>
         </div>
@@ -108,4 +111,4 @@ const mapDispatchToProps = ({})
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Status)
+)(withTheme(Status))

@@ -144,7 +144,6 @@ const Message = withStyles(styles)(
       const { timestamp, message, type } = messageInfo
       const Icon = getIcon(type)
       const className = this.getClassName(type)
-      console.log(messageInfo)
       return (
         <div>
           <Snackbar

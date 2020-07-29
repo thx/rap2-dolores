@@ -121,7 +121,7 @@ function DefaultValueModal({ open, handleClose, repositoryId, enqueueSnackbar }:
           <TableBody>
             {editingData.map((row, i) => (
               <TableRow key={i}>
-                <TableCell component="th" scope="row">
+                <TableCell scope="row">
                   <TextField
                     value={row.name}
                     onChange={e => onChange('name', i, e.target.value)}

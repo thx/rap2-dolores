@@ -51,8 +51,8 @@ class Previewer extends Component<any, any> {
 
       const template = (scopedTemplate as any)[scope]
       let data = scopedData[scope]
-      if (data._root_) {
-        data = data._root_
+      if (data.__root__) {
+        data = data.__root__
       }
 
       // DONE 2.1 支持虚拟属性 __root__ √服务端 √前端 √迁移测试
@@ -137,7 +137,9 @@ class Previewer extends Component<any, any> {
         </div>
       )
     } catch (ex) {
-      scopedData.response = `无法预览Mock数据，因为您编写规则导致如下错误：${ex.message}`
+      if (scopedData) {
+        scopedData.response = `无法预览Mock数据，因为您编写规则导致如下错误：${ex.message}`
+      }
     }
     return <div>发生错误...</div>
   }

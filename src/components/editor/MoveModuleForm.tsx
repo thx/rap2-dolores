@@ -78,7 +78,7 @@ export default function MoveModuleForm(props: Props) {
       dispatch(fetchJoinedRepositoryList())
       dispatch(fetchOwnedRepositoryList())
     }
-  }, [])
+  }, [dispatch, repositories.length])
 
   function onRepositoryChange(
     e: React.ChangeEvent<{

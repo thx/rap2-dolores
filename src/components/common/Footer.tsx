@@ -9,6 +9,7 @@ const Footer = ({ counter = {} }: { counter: any }) => (
     <ul className="friend_links">
       <li><a href="https://github.com/thx/rap2-delos" target="_blank" rel="noopener noreferrer">GitHub</a></li>
       <li><a href="http://mockjs.com/" target="_blank" rel="noopener noreferrer">Mock.js</a></li>
+      <li><a href="https://thx.github.io/" target="_blank" rel="noopener noreferrer">阿里妈妈前端团队出品</a></li>
     </ul>
   </div>
 )

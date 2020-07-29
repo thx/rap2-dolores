@@ -100,6 +100,9 @@ const LogView = ({ log }: any) => {
     if (log.type === 'join') { return <JoinLogView log={log} /> }
     if (log.type === 'exit') { return <ExitLogView log={log} /> }
   }
+  if (!log.repository) {
+    return null
+  }
   return (
     <div className="Log clearfix">
       <div className="Log-body">
@@ -166,19 +169,18 @@ export const Log = ({ log }: any) => {
     targetLink = !log.repository.deletedAt
       ? <Link to={`/repository/editor?id=${log.repository.id}`}>{targetName}</Link>
       : targetName
-  }
-  if (log.repository && log.module && !log.interface) { // 模块
+  } else if (log.repository && log.module && !log.interface) { // 模块
     targetName = `${log.repository.name} / ${log.module.name}`
     targetLink = !log.repository.deletedAt && !log.module.deletedAt
       ? <Link to={`/repository/editor?id=${log.repository.id}&mod=${log.module.id}`}>{targetName}</Link>
       : targetName
-  }
-  if (log.repository && log.module && log.interface) { // 接口
+  } else if (log.repository && log.module && log.interface) { // 接口
     targetName = `${log.repository.name} / ${log.module.name} / ${log.interface.name}`
     targetLink = !log.repository.deletedAt && !log.module.deletedAt && !log.interface.deletedAt
       ? <Link to={`/repository/editor?id=${log.repository.id}&mod=${log.module.id}&itf=${log.interface.id}`}>{targetName}</Link>
       : targetName
   }
+
   switch (log.type) {
     case 'create':
       return targetLink ? (

@@ -51,12 +51,6 @@ function Repository(props: Props) {
           <Link to={`${editor}?id=${repository.id}`}>{repository.name}</Link>
         </div>
         <div className="desc">{repository.description}</div>
-        {/* TODO 2.x 成员列表参考 ProductHunt，仓库成员不怎么重要，暂时不现实 */}
-        {/* <div className='members'>
-            {repository.members.map(user =>
-              <img key={user.id} alt={user.id} title={user.fullname} src={`https://work.alibaba-inc.com/photo/${user.id}.220x220.jpg`} className='avatar' />
-            )}
-          </div> */}
         <div className="toolbar">
           <a
             href={`${serve}/app/plugin/${repository.id}`}

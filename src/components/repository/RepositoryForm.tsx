@@ -6,7 +6,6 @@ import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 import { Button, Theme, Dialog, DialogContent, DialogTitle } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { SlideUp } from 'components/common/Transition'
 import { RepositoryFormData, RootState, Repository } from '../../actions/types'
 import UserList from '../common/UserList'
 import Select from '../common/Select'
@@ -15,6 +14,7 @@ import * as _ from 'lodash'
 import { updateRepository, addRepository } from '../../actions/repository'
 import { fetchOwnedOrganizationList, fetchJoinedOrganizationList } from '../../actions/organization'
 import { refresh } from '../../actions/common'
+import { SlideUp } from 'components/common/Transition'
 
 const useStyles = makeStyles(({ spacing }: Theme) => ({
   root: {},
@@ -44,10 +44,8 @@ const useStyles = makeStyles(({ spacing }: Theme) => ({
   },
 }))
 
-const schema = Yup.object().shape<Partial<Repository>>({
-  name: Yup.string()
-    .required(YUP_MSG.REQUIRED)
-    .max(20, YUP_MSG.MAX_LENGTH(20)),
+const schema = Yup.object().shape<Partial<RepositoryFormData>>({
+  name: Yup.string().required(YUP_MSG.REQUIRED).max(20, YUP_MSG.MAX_LENGTH(20)),
   description: Yup.string().max(1000, YUP_MSG.MAX_LENGTH(1000)),
 })
 
@@ -76,7 +74,7 @@ function RepositoryForm(props: Props) {
   }
   const auth = useSelector((state: RootState) => state.auth)
   const organizations = useSelector((state: RootState) => {
-    return _.uniqBy([...state.ownedOrganizations.data, ...state.joinedOrganizations.data], 'id')
+    return [...state.ownedOrganizations.data, ...state.joinedOrganizations.data]
   }).map(org => ({
     label: org.name,
     value: org.id,
@@ -88,7 +86,7 @@ function RepositoryForm(props: Props) {
   useEffect(() => {
     dispatch(fetchJoinedOrganizationList())
     dispatch(fetchOwnedOrganizationList())
-  }, [])
+  }, [dispatch])
 
   if (repository) {
     repository = { ...FORM_STATE_INIT, ...repository }
@@ -137,7 +135,7 @@ function RepositoryForm(props: Props) {
             render={({ isSubmitting, setFieldValue, values }) => {
               function loadUserOptions(
                 input: string,
-              ): Promise<Array<{ label: string; value: number }>> {
+              ): Promise<{ label: string; value: number }[]> {
                 return new Promise(async resolve => {
                   const users = await AccountService.fetchUserList({ name: input })
                   const options = _.differenceWith(users.data, values.members || [], _.isEqual)
@@ -187,10 +185,11 @@ function RepositoryForm(props: Props) {
                     <div className={classes.formItem}>
                       <Field
                         name="description"
-                        label="简介"
+                        label="说明(多行，支持Markdown)"
                         multiline={true}
                         component={TextField}
                         fullWidth={true}
+                        rowsMax={8}
                       />
                     </div>
                     <div className={classes.formItem}>

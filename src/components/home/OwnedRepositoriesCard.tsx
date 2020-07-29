@@ -13,7 +13,7 @@ const OwnedRepositoriesCard = ({ repositories }: any) => (
         )}
         {repositories.data.length === 0 ? <span>-</span> : null}
         {repositories.data.length > 10
-          ? <Link to="/repository/joined">=> 查看全部 {repositories.data.length} 个仓库</Link>
+          ? <Link to="/repository/joined">{'=>'} 查看全部 {repositories.data.length} 个仓库</Link>
           : null
         }
       </div>)

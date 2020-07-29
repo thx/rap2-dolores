@@ -8,49 +8,24 @@ import ModuleList from './ModuleList'
 import InterfaceList from './InterfaceList'
 import InterfaceEditor from './InterfaceEditor'
 import DuplicatedInterfacesWarning from './DuplicatedInterfacesWarning'
-import RapperInstallerModal from './RapperInstallerModal'
-import ImportSwaggerRepositoryForm from '../repository/ImportSwaggerRepositoryForm'
-
-import {
-  addRepository,
-  updateRepository,
-  clearRepository,
-  fetchRepository
-} from '../../actions/repository'
-import {
-  addModule,
-  updateModule,
-  deleteModule,
-  sortModuleList
-} from '../../actions/module'
-import {
-  addInterface,
-  updateInterface,
-  deleteInterface,
-  lockInterface,
-  unlockInterface
-} from '../../actions/interface'
-import {
-  addProperty,
-  updateProperty,
-  deleteProperty,
-  updateProperties,
-  sortPropertyList
-} from '../../actions/property'
-import {
-  GoRepo,
-  GoPlug,
-  GoDatabase,
-  GoCode,
-  GoLinkExternal,
-  GoPencil,
-  GoEllipsis
-} from 'react-icons/go'
-
+import { addRepository, updateRepository, clearRepository, fetchRepository } from '../../actions/repository'
+import { addModule, updateModule, deleteModule, sortModuleList } from '../../actions/module'
+import { addInterface, updateInterface, deleteInterface, lockInterface, unlockInterface } from '../../actions/interface'
+import { addProperty, updateProperty, deleteProperty, updateProperties, sortPropertyList } from '../../actions/property'
+import { GoRepo, GoVersions, GoPlug, GoDatabase, GoCode, GoLinkExternal, GoPencil, GoEllipsis } from 'react-icons/go'
+import { FaHistory } from 'react-icons/fa'
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
-import { RootState, Repository, Module, Interface } from 'actions/types'
+import ImportSwaggerRepositoryForm from '../repository/ImportSwaggerRepositoryForm'
+import { RootState, Repository } from 'actions/types'
 import DefaultValueModal from './DefaultValueModal'
+import RapperInstallerModal from './RapperInstallerModal'
+import HistoryLogDrawer from './HistoryLogDrawer'
+import Joyride from 'react-joyride'
+import { Typography } from '@material-ui/core'
+import { doFetchUserSettings, updateUserSetting } from 'actions/account'
+import Markdown from 'markdown-to-jsx'
+import { CACHE_KEY, ENTITY_TYPE } from 'utils/consts'
 
 // DONE 2.1 import Spin from '../utils/Spin'
 // TODO 2.2 缺少测试器
@@ -62,17 +37,20 @@ interface Props {
   repository: any
   location: any
   onClearRepository: any
-  room: any
   replace: any
   router: any
+  doFetchUserSettings: typeof doFetchUserSettings
+  updateUserSetting: typeof updateUserSetting
 }
 
 interface States {
   rapperInstallerModalOpen: boolean
   defaultValuesModalOpen: boolean
+  historyLogDrawerOpen: boolean
   update: boolean
   exportPostman: boolean
   importSwagger: boolean
+  guideOpen: boolean
 }
 
 // 展示组件
@@ -110,15 +88,18 @@ class RepositoryEditor extends Component<Props, States> {
       rapperInstallerModalOpen: false,
       defaultValuesModalOpen: false,
       importSwagger: false,
+      historyLogDrawerOpen: false,
+      guideOpen: false,
     }
   }
+
   getChildContext() {
     return _.pick(this.props, Object.keys(RepositoryEditor.childContextTypes))
   }
 
   changeDocumentTitle() {
     const repository = this.props.repository.data
-    if (repository && repository.name) {
+    if (repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
   }
@@ -129,6 +110,13 @@ class RepositoryEditor extends Component<Props, States> {
 
   componentDidMount() {
     this.changeDocumentTitle()
+    this.props.doFetchUserSettings([CACHE_KEY.GUIDE_20200714], (isOk, payload) => {
+      const open = !payload.data?.GUIDE_20200714
+      if (open) {
+        this.setState({ guideOpen: true })
+        this.props.updateUserSetting(CACHE_KEY.GUIDE_20200714, '1')
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -152,14 +140,15 @@ class RepositoryEditor extends Component<Props, States> {
       document.title = `RAP2 ${repository.name}`
     }
 
-    const mod: Module =
+    const mod: any =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find(item => item.id === +params.mod) || repository.modules[0]
-        : ({} as Module)
-    const itf: Interface =
+        ? repository.modules.find((item: any) => item.id === +params.mod) || repository.modules[0]
+        : {}
+
+    const itf =
       mod.interfaces && mod.interfaces.length
         ? mod.interfaces.find((item: any) => item.id === +params.itf) || mod.interfaces[0]
-        : ({} as Interface)
+        : {}
 
     const ownerlink = repository.organization
       ? `/organization/repository?organization=${repository.organization.id}`
@@ -170,7 +159,7 @@ class RepositoryEditor extends Component<Props, States> {
         <div className="header">
           <span className="title">
             <GoRepo className="mr6 color-9" />
-            <Link to={`${ownerlink}`}>
+            <Link to={`${ownerlink}`} className="g-link">
               {repository.organization ? repository.organization.name : repository.owner.fullname}
             </Link>
             <span className="slash"> / </span>
@@ -180,7 +169,7 @@ class RepositoryEditor extends Component<Props, States> {
             {/* 编辑权限：拥有者或者成员 */}
 
             {repository.canUserEdit ? (
-              <span className="fake-link edit" onClick={() => this.setState({ update: true })}>
+              <span className="g-link edit mr1" onClick={() => this.setState({ update: true })}>
                 <GoPencil /> 编辑
               </span>
             ) : null}
@@ -197,7 +186,7 @@ class RepositoryEditor extends Component<Props, States> {
               href={`${serve}/app/plugin/${repository.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="api"
+              className="g-link"
             >
               <GoPlug /> 插件
             </a>
@@ -205,12 +194,12 @@ class RepositoryEditor extends Component<Props, States> {
               href={`${serve}/repository/get?id=${repository.id}&token=${repository.token}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="api"
+              className="g-link"
             >
               <GoDatabase /> 数据
             </a>
-            <span className="fake-link edit" onClick={() => this.setState({ importSwagger: true })}>
-              <GoLinkExternal />从 Swagger 导入
+            <span className="g-link edit mr1" onClick={() => this.setState({ importSwagger: true })}>
+              <GoLinkExternal /> Swagger导入
             </span>
             <ImportSwaggerRepositoryForm
               open={this.state.importSwagger}
@@ -222,7 +211,7 @@ class RepositoryEditor extends Component<Props, States> {
               orgId={(repository.organization || {}).id}
               mode="manual"
             />
-            <span className="fake-link edit" onClick={() => this.setState({ exportPostman: true })}>
+            <span className="g-link edit mr1" onClick={() => this.setState({ exportPostman: true })}>
               <GoLinkExternal /> 导出
             </span>
             <ExportPostmanForm
@@ -232,23 +221,33 @@ class RepositoryEditor extends Component<Props, States> {
               onClose={() => this.setState({ exportPostman: false })}
             />
             <span
-              className="fake-link edit"
+              className="g-link edit mr1"
               onClick={() => this.setState({ defaultValuesModalOpen: true })}
             >
-              <GoEllipsis />
-              默认值
+              <GoEllipsis /> 默认值
+            </span>
+            <span
+              className="g-link edit mr1 guide-1"
+              onClick={() => this.setState({ historyLogDrawerOpen: true })}
+            >
+              <FaHistory /> 历史
             </span>
             <DefaultValueModal
               open={this.state.defaultValuesModalOpen}
               handleClose={() => this.setState({ defaultValuesModalOpen: false })}
               repositoryId={repository.id}
             />
+            <HistoryLogDrawer
+              open={this.state.historyLogDrawerOpen}
+              onClose={() => this.setState({ historyLogDrawerOpen: false })}
+              entityId={repository?.id}
+              entityType={ENTITY_TYPE.REPOSITORY}
+            />
             <span
-              className="fake-link edit"
-              style={{ color: '#f95e49' }}
+              className="g-link edit"
               onClick={() => this.setState({ rapperInstallerModalOpen: true })}
             >
-              <GoCode /> 试试点这里帮你生成 TypeScript 代码！
+              <GoCode /> Rapper
             </span>
             <RapperInstallerModal
               open={this.state.rapperInstallerModalOpen}
@@ -257,7 +256,8 @@ class RepositoryEditor extends Component<Props, States> {
             />
           </div>
           <RepositorySearcher repository={repository} />
-          <div className="desc">{repository.description}</div>
+          <div className="desc"><Markdown>{repository.description}</Markdown></div>
+          {this.renderRelatedProjects()}
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className="body">
@@ -267,7 +267,61 @@ class RepositoryEditor extends Component<Props, States> {
             <InterfaceEditor itf={itf} mod={mod} repository={repository} />
           </div>
         </div>
-      </article >
+        <Joyride
+          continuous={true}
+          scrollToFirstStep={true}
+          showProgress={true}
+          showSkipButton={true}
+          run={this.state.guideOpen}
+          locale={{
+            skip: '跳过',
+            next: '下一步',
+            back: '上一步',
+            last: '完成',
+          }}
+          steps={[
+            {
+              title: '历史记录上线',
+              disableBeacon: true,
+              content: <Typography variant="h6">现在您可以查看项目修改历史了!</Typography>,
+              placement: 'top',
+              target: '.guide-1',
+            },
+            {
+              title: '历史记录上线',
+              disableBeacon: true,
+              content: <Typography variant="h6">您也可以查看指定接口的所有改动记录。</Typography>,
+              placement: 'top',
+              target: '.guide-2',
+            }, {
+              title: '皮肤自定义上线',
+              disableBeacon: true,
+              content: <Typography variant="h6">在系统偏好设置里，选择一个喜爱的颜色吧！比如原谅绿？</Typography>,
+              placement: 'top',
+              target: '.guide-3',
+            }
+          ]}
+        />
+      </article>
+    )
+  }
+  renderRelatedProjects() {
+    const { repository } = this.props
+    const { collaborators } = repository.data
+    return (
+      <div className="RelatedProjects">
+        {collaborators &&
+          Array.isArray(collaborators) &&
+          collaborators.map(collab => (
+            <div className="CollabProject Project" key={`collab-${collab.id}`}>
+              <span className="title">
+                <GoVersions className="mr5" />
+                协同
+              </span>
+              <Link to={`/repository/editor?id=${collab.id}`}>{collab.name}</Link>
+            </div>
+          ))}
+      </div>
     )
   }
   handleUpdate = () => {
@@ -302,5 +356,7 @@ const mapDispatchToProps = {
   onDeleteProperty: deleteProperty,
   onSortPropertyList: sortPropertyList,
   replace,
+  doFetchUserSettings,
+  updateUserSetting,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(RepositoryEditor)

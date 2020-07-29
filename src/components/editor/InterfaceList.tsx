@@ -8,7 +8,7 @@ import InterfaceForm from './InterfaceForm'
 import { useConfirm } from 'hooks/useConfirm'
 import { GoPencil, GoTrashcan, GoLock } from 'react-icons/go'
 import { getCurrentInterface } from '../../selectors/interface'
-import { Button, ButtonGroup } from '@material-ui/core/'
+import { Button, ButtonGroup, makeStyles, Theme } from '@material-ui/core/'
 import ModuleForm from './ModuleForm'
 import MoveModuleForm from './MoveModuleForm'
 import { useSelector, useDispatch } from 'react-redux'
@@ -118,6 +118,17 @@ interface InterfaceListProps {
   mod: Module
   repository: Repository
 }
+const useStyles = makeStyles(({ palette }: Theme) => ({
+  interface: {
+    border: `1px solid ${palette.primary.main}`,
+  },
+  interfaceActive: {
+    borderLeft: `3px solid ${palette.primary.main}`,
+  },
+  li: {
+    borderBottom: `1px solid ${palette.primary.main}`,
+  },
+}))
 function InterfaceList(props: InterfaceListProps) {
   const [interfaceFormOpen, setInterfaceFormOpen] = useState(false)
   const [moduleFormOpen, setModuleFormOpen] = useState(false)
@@ -126,6 +137,7 @@ function InterfaceList(props: InterfaceListProps) {
   const confirm = useConfirm()
   const auth = useSelector((state: RootState) => state.auth)
   const { repository, itf, itfs = [], mod } = props
+  const classes = useStyles()
 
   const handleDeleteModule: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
@@ -160,6 +172,12 @@ function InterfaceList(props: InterfaceListProps) {
       }),
     )
   }
+
+  if (repository.modules.length === 0) {
+    return <div style={{ height: 600 }}>请先添加模块</div>
+  }
+
+
   return (
     <article className="InterfaceList">
       {repository.canUserEdit ? (
@@ -182,7 +200,7 @@ function InterfaceList(props: InterfaceListProps) {
             onClose={() => setInterfaceFormOpen(false)}
           />
 
-          <ButtonGroup fullWidth={true} size="small">
+          <ButtonGroup fullWidth={true} size="medium">
             <Button variant="outlined" color="primary" onClick={() => setModuleFormOpen(true)}>
               修改模块
             </Button>
@@ -216,14 +234,14 @@ function InterfaceList(props: InterfaceListProps) {
         </div>
       ) : null}
       {itfs.length ? (
-        <div className="scrollWrapper">
+        <div className={`scrollWrapper ${classes.interface}`}>
           <CustomScroll>
             <RSortable onChange={handleSort} disabled={!repository.canUserEdit}>
               <ul className="body">
                 {itfs.map((item: any) => (
                   <li
                     key={item.id}
-                    className={item.id === itf!.id ? 'active sortable' : 'sortable'}
+                    className={`${item.id === itf!.id ? classes.interfaceActive : ''} sortable ${classes.li}`}
                     data-id={item.id}
                   >
                     <InterfaceWrap
@@ -240,8 +258,8 @@ function InterfaceList(props: InterfaceListProps) {
           </CustomScroll>
         </div>
       ) : (
-        <div className="alert alert-info">暂无接口，请新建</div>
-      )}
+          <div className="alert alert-info">暂无接口，请新建</div>
+        )}
     </article>
   )
 }

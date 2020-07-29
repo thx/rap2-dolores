@@ -2,7 +2,6 @@ import { call, put, select } from 'redux-saga/effects'
 import * as RepositoryAction from '../../actions/repository'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
-import { StoreStateRouterLocationURI } from 'family/index'
 import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
 
 //
@@ -86,14 +85,7 @@ export function* importSwaggerRepository(action: any) {
 
 export function* fetchRepository(action: any) {
   try {
-    const router = yield select((state: RootState) => state.router)
-    const uri = StoreStateRouterLocationURI(router)
-    const params = uri.search(true)
-    const repository = yield call(
-      RepositoryService.fetchRepository,
-      action.repository || action.id,
-      params.token,
-    )
+    const repository = yield call(RepositoryService.fetchRepository, action.repository || action.id)
     yield put(RepositoryAction.fetchRepositorySucceeded(repository))
   } catch (e) {
     yield put(RepositoryAction.fetchRepositoryFailed(e.message))

@@ -1,3 +1,4 @@
+
 const config: IConfig = {
   serve: 'http://rap2api.taobao.org',
   keys: ['some secret hurr'],

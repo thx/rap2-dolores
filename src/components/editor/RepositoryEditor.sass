@@ -3,34 +3,34 @@
 .RepositoryEditor
   > .header
     position: relative
-    padding: 2rem 2rem 1rem 2rem
+    padding: 1.3rem
     background-color: #fafbfc
     > .title
-      font-size: 2rem
-      margin-right: 1rem
+      font-size: 1.6em
+      margin-right: 0.65rem
       .slash
         color: #999
     > .toolbar
       display: inline-block
       a, .fake-link
-        margin-right: 1rem
+        margin-right: 0.65rem
     > .desc
       white-space: pre-wrap
-      margin: 1rem 0 .5rem
+      margin: 1rem 0 .5rem 0
       color: #666
 
 .RelatedProjects 
   display: flex
   flex-wrap: wrap
   align-items: stretch
-  margin: 1rem 0 -1rem
+  margin: 0.65rem 0 -1rem
   color: #888
   > .Project
     border: 1px solid #E6E6E6
     background: #FFF
-    padding: 0 1rem
-    margin-bottom: 1rem
-    margin-right: 1rem
+    padding: 0 0.65rem
+    margin-bottom: 0.65rem
+    margin-right: 0.65rem
     line-height: 2.44
     .title
       margin-right: .7rem
@@ -43,8 +43,8 @@
 
 .RepositorySearcher.dropdown
   position: absolute
-  top: 2rem
-  right: 2rem
+  top: 1.3rem
+  right: 1.3rem
   left: auto
   > .dropdown-input
     margin-bottom: 0
@@ -87,14 +87,14 @@
             color: #FFF
 
 .DuplicatedInterfacesWarning
-  margin-top: 1rem
+  margin-top: 2rem
   .more-link
     float: right
 
 
 .ModuleList
   margin: 0
-  padding: 0 2rem
+  padding: 0 1.3rem
   list-style: none
   border-bottom: 1px solid #e1e4e8
   background-color: #fafbfc
@@ -103,7 +103,7 @@
     display: block
     float: left
     margin-bottom: -1px
-    padding: .8rem 1.2rem
+    padding: .8rem 0.78rem
     border: 1px solid transparent
     border-width: 3px 1px 0px 1px
     border-radius: .4rem .4rem 0 0
@@ -112,7 +112,6 @@
       border-bottom-color: transparent
       background-color: white
       cursor: default
-      border-color: #3f51b5 #e1e4e8 transparent #e1e4e8
     &.active:hover
       background-color: white
     > .Module
@@ -123,8 +122,8 @@
         // float: right
         display: inline-block
         a, .fake-link
-          margin-left: 0.5rem
-          font-size: 1.4rem
+          margin-left: 0.325rem
+          font-size: 1rem
           color: #999
           &:hover
             color: $brand
@@ -136,13 +135,13 @@
         color: #333
       .toolbar
         display: inline-block
-        // font-size: 1.4rem
+        // font-size: 1rem
 
 .InterfaceWrapper
   display: flex
   flex-direction: row
   background-color: #FFFFFF
-  padding: 2rem
+  padding: 1.3rem
   .InterfaceList
     width: 23rem
     flex-shrink: 0
@@ -157,10 +156,9 @@
   height: calc(100vh - 10px)
   .header
     .newIntf
-      margin-bottom: 1rem
-    margin-bottom: 1rem
+      margin-bottom: 0.65rem
+    margin-bottom: 0.65rem
   .scrollWrapper
-    border: 1px solid rgba(63, 81, 181, 0.5)
     border-radius: .4rem
   .rcs-inner-handle
     background-color: rgba(63, 81, 181, 0.3)
@@ -171,8 +169,7 @@
     max-height: calc(100vh - 115px)
     li
       position: relative
-      padding: 1rem 1rem
-      border-bottom: 1px solid rgba(63, 81, 181, 0.5)
+      padding: 0.65rem 0.65rem
       &:first-child
         border-top-left-radius: .3rem
       &:last-child
@@ -180,10 +177,10 @@
         border-bottom-left-radius: .3rem
       .Interface
         position: relative
-        padding-right: 4rem
+        padding-right: 2.6rem
         .name
           position: relative
-          font-size: 1.3rem
+          font-size: 1.1rem
           width: 100%
           overflow: hidden
           white-space: nowrap
@@ -200,14 +197,14 @@
           position: absolute
           right: 0
           top: 0
-          font-size: 1.4rem
+          font-size: 1rem
           a, .fake-link
-            margin-left: 0.5rem
+            margin-left: 0.325rem
             color: #999
             &:hover
               color: $brand
         .locked
-          font-size: 1.4rem
+          font-size: 1rem
           color: $warning
     li:hover
       .toolbar
@@ -220,12 +217,10 @@
             color: #333
         .toolbar
           display: block
-    li.active
-      border-left: 2px solid #3f51b5
 
 
 .InterfaceEditor
-  margin-left: 2rem
+  margin-left: 1.3rem
   position: relative
   .InterfaceEditorToolbar
     position: absolute
@@ -234,11 +229,11 @@
     text-align: center
     .btn.edit, .btn.save, .btn.cancel, .locker-success, .locker-warning
       display: block
-      margin-bottom: 0.5rem
+      margin-bottom: 0.325rem
       width: 12rem
     .locker-success
       display: inline-block
-      padding: 0.5rem 1.5rem
+      padding: 0.325rem 1.5rem
       border-radius: 0.4rem
       color: white
       background-color: $success
@@ -247,12 +242,12 @@
       background-color: $warning
 
 .InterfaceSummary
-  margin-bottom: 2rem
+  margin-bottom: 1.3rem
   > .header
     margin-bottom: .5rem
     > .title
       font-size: 1.6rem
-      margin-right: 1rem
+      margin-right: 0.65rem
       .slash
         color: #999
     a.edit, a.delete
@@ -269,12 +264,15 @@
         margin-right: .3rem
 
 .PropertyList
-  margin-bottom: 3rem
+  margin-bottom: 1rem
+  padding-bottom: 1rem
+  margin-top: 1rem
   > .header
-    margin-bottom: 1rem
+    margin-bottom: 0.65rem
     > .title
-      font-size: 1.6rem
-      margin-right: 1rem
+      font-size: 1.2rem
+      margin-right: 0.65rem
+      font-weight: bold
     > .toolbar
       float: right
       .checked-button
@@ -284,20 +282,22 @@
         input
           margin-right: .5rem
   > .body
-    margin-bottom: 1rem
+    margin-bottom: 0.65rem
   > .footer
     > .Previewer
       display: flex
       justify-content: space-between
       flex-wrap: wrap
-      margin-top: 1rem
+      margin-top: 1.65rem
       > .result-template,
       > .result-mocked
         width: 49%
         > .header
           margin-bottom: .5rem
           .title
-            margin-right: .75rem
+            margin-right: 6px
+            font-weight: bold
+            font-size: 1.2rem
         > pre.body
           max-height: 90vh
           height: 100%
@@ -342,7 +342,7 @@
       .th, .td
         &.operations
           padding: .5rem
-          width: 1rem
+          width: 0.65rem
         &.name
           width: 20rem
           flex-grow: 3
@@ -383,7 +383,7 @@
             flex-grow: 1
           @for $i from 1 through 42
             &.depth-#{$i}
-              padding-left: $i * 1rem + 0.75rem
+              padding-left: $i * 0.65rem + 0.75rem
               &:after
                 display: block
                 content: ''
@@ -391,7 +391,7 @@
                 top: 0
                 bottom: 0
                 left: 0
-                width: $i * 1rem
+                width: $i * 0.65rem
                 opacity: .5
                 border-right: 1px dashed #707070
         &.payload.value
@@ -406,6 +406,7 @@
           padding: 0
         &.payload.desc
           word-break: break-word
+          white-space: pre-line
 .SortableTreeTable.editable
   .flex-row    
     .th, .td

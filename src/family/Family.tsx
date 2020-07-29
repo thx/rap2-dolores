@@ -3,12 +3,12 @@ import start from './start'
 import handleLocation from './handleLocation'
 import { createBrowserHistory as createHistory, History } from 'history'
 import { createStore, applyMiddleware, combineReducers, compose, Store } from 'redux'
+import { apiMiddleware } from 'redux-api-middleware'
 import {
   routerMiddleware as createRouterMiddleware,
   connectRouter,
   LOCATION_CHANGE,
 } from 'connected-react-router'
-import loggerMiddleware from './loggerMiddleware'
 import createSagaMiddleware from 'redux-saga'
 import URI from 'urijs'
 
@@ -109,8 +109,8 @@ const Family: {
         })) ||
       compose
     const middlewares = logger
-      ? [loggerMiddleware, routerMiddleware, sagaMiddleware]
-      : [routerMiddleware, sagaMiddleware]
+      ? [routerMiddleware, apiMiddleware, sagaMiddleware] // 真的不需要这个logger d-  o-b|||
+      : [routerMiddleware, apiMiddleware, sagaMiddleware]
     const store = createStore<any, any, any, any>(
       combineReducers({ ..._reducers, router: connectRouter(history) }),
       composeEnhancers(applyMiddleware(...middlewares)),
