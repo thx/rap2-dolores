@@ -5,11 +5,12 @@ import InterfaceSummary from './InterfaceSummary'
 import PropertyList from './PropertyList'
 import MoveInterfaceForm from './MoveInterfaceForm'
 import { fetchRepository } from '../../actions/repository'
-import { RootState } from 'actions/types'
+import { RootState, Property } from 'actions/types'
 import { lockInterface, unlockInterface, fetchInterface } from 'actions/interface'
 import { updateProperties } from 'actions/property'
 import { updateInterface } from 'actions/interface'
 import Spin from '../../components/utils/Spin'
+import { showMessage, MSG_TYPE } from 'actions/common'
 
 export const RequestPropertyList = (props: any) => {
   return <PropertyList scope="request" title="请求参数" label="请求" {...props} />
@@ -27,12 +28,13 @@ type InterfaceEditorProps = {
   unlockInterface: typeof unlockInterface
   updateInterface: typeof updateInterface
   updateProperties: typeof updateProperties
+  showMessage: typeof showMessage
 }
 
 type InterfaceEditorState = {
   summaryState: any
   itf: any
-  properties: any
+  properties: Property[]
   editable: boolean
   moveInterfaceDialogOpen: boolean
 }
@@ -97,7 +99,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
   fetchInterfaceProperties() {
     // 发现接口信息没有 properties 就发起请求
     if (this.state.properties === undefined) {
-      this.props.fetchInterface(this.state.itf.id, () => {})
+      this.props.fetchInterface(this.state.itf.id, () => { })
     }
   }
 
@@ -166,8 +168,8 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
             />
           </>
         ) : (
-          <Spin />
-        )}
+            <Spin />
+          )}
 
         {this.state.moveInterfaceDialogOpen && (
           <MoveInterfaceForm
@@ -243,11 +245,47 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
     e.preventDefault()
     const { itf } = this.state
     const { updateProperties, updateInterface } = this.props
+    if (!itf.name.trim()) {
+      this.props.showMessage('名称不能为空', MSG_TYPE.WARNING)
+      return
+    }
+
+    if (!itf.url.trim()) {
+      this.props.showMessage('URL地址不能为空', MSG_TYPE.WARNING)
+      return
+    }
+
+    if (itf.url.substring(0, 4) !== 'http' && itf.url[0] !== '/') {
+      this.props.showMessage('合法的URL地址，需以 http 或 / 开头，例如/a/b 或者 https://www.taobao.com', MSG_TYPE.WARNING)
+      return
+    }
+
+    // 判断参数命名冲突
+    const pMap: { [key: string]: number } = {}
+    const getPKey = (p: Property) => `${p.name}|${p.parentId}|${p.scope}`
+    for (const p of this.state.properties) {
+      if (!p.name.trim()) {
+        this.props.showMessage(`有参数未命名，请检查...${p.description ? '描述为：' + p.description : ''}`, MSG_TYPE.WARNING)
+        return
+      }
+      p.name = p.name.trim()
+      const key = getPKey(p)
+      if (pMap[key]) {
+        pMap[key]++
+      } else {
+        pMap[key] = 1
+      }
+      if (pMap[key] > 1) {
+        this.props.showMessage(`参数${p.name}命名冲突，同层级不能有相同的属性名`, MSG_TYPE.WARNING)
+        return
+      }
+    }
+
     updateInterface(
       {
         id: itf.id,
-        name: itf.name,
-        url: itf.url,
+        name: itf.name.trim(),
+        url: itf.url.trim(),
         method: itf.method,
         status: itf.status,
         description: itf.description,
@@ -293,5 +331,6 @@ const mapDispatchToProps = {
   unlockInterface,
   updateProperties,
   updateInterface,
+  showMessage,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(InterfaceEditor)

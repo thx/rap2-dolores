@@ -17,7 +17,7 @@ import { FaHistory } from 'react-icons/fa'
 import './RepositoryEditor.css'
 import ExportPostmanForm from '../repository/ExportPostmanForm'
 import ImportSwaggerRepositoryForm from '../repository/ImportSwaggerRepositoryForm'
-import { RootState, Repository } from 'actions/types'
+import { RootState, Repository, Module, Interface } from 'actions/types'
 import DefaultValueModal from './DefaultValueModal'
 import RapperInstallerModal from './RapperInstallerModal'
 import HistoryLogDrawer from './HistoryLogDrawer'
@@ -99,7 +99,7 @@ class RepositoryEditor extends Component<Props, States> {
 
   changeDocumentTitle() {
     const repository = this.props.repository.data
-    if (repository.name) {
+    if (repository && repository.name) {
       document.title = `RAP2 ${repository.name}`
     }
   }
@@ -142,13 +142,12 @@ class RepositoryEditor extends Component<Props, States> {
 
     const mod: any =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find((item: any) => item.id === +params.mod) || repository.modules[0]
-        : {}
-
-    const itf =
+        ? repository.modules.find(item => item.id === +params.mod) || repository.modules[0]
+        : ({} as Module)
+    const itf: Interface =
       mod.interfaces && mod.interfaces.length
         ? mod.interfaces.find((item: any) => item.id === +params.itf) || mod.interfaces[0]
-        : {}
+        : ({} as Interface)
 
     const ownerlink = repository.organization
       ? `/organization/repository?organization=${repository.organization.id}`

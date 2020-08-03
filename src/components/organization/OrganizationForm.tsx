@@ -154,7 +154,7 @@ function OrganizationForm(props: Props) {
                       />
                     </div>
                     <div className={classes.formItem}>
-                      <div className={classes.formTitle}>项目成员</div>
+                      <div className={classes.formTitle}>团队成员</div>
                       <UserList
                         isMulti={true}
                         loadOptions={loadUserOptions}

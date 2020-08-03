@@ -3,6 +3,7 @@ import * as RepositoryAction from '../../actions/repository'
 import RepositoryService from '../services/Repository'
 import { RootState } from 'actions/types'
 import { IFetchDefaultValsAction, fetchDefaultValsFailed, IUpdateDefaultValsAction } from '../../actions/repository'
+import { StoreStateRouterLocationURI } from 'family'
 
 //
 export function* fetchRepositoryCount(action: any) {
@@ -85,7 +86,14 @@ export function* importSwaggerRepository(action: any) {
 
 export function* fetchRepository(action: any) {
   try {
-    const repository = yield call(RepositoryService.fetchRepository, action.repository || action.id)
+    const router = yield select((state: RootState) => state.router)
+    const uri = StoreStateRouterLocationURI(router)
+    const params = uri.search(true)
+    const repository = yield call(
+      RepositoryService.fetchRepository,
+      action.repository || action.id,
+      params.token,
+    )
     yield put(RepositoryAction.fetchRepositorySucceeded(repository))
   } catch (e) {
     yield put(RepositoryAction.fetchRepositoryFailed(e.message))

@@ -1,5 +1,6 @@
 import { RouterState } from 'connected-react-router'
 import { THEME_TEMPLATE_KEY } from 'components/account/ThemeChangeOverlay'
+import { POS_TYPE } from 'components/editor/InterfaceSummary'
 
 export interface RootState {
   auth: {
@@ -115,8 +116,6 @@ export interface RepositoryFormData {
 
   collaboratorIdstring?: string
 
-  canUserEdit?: boolean
-
   token?: string
 
   modules?: Module[]
@@ -207,23 +206,20 @@ export interface Interface {
   status?: number
 }
 
-export type Property = {
-  name: string;
-  type: any;
-  rule: string;
-  value: any;
-  descripton: string;
-  creator: any;
-  repositoryId: number;
-  moduleId: number;
-  interfaceId: number;
-  scope: string;
-  parentId: number;
-  memory: boolean;
-  id: number;
-}
-
 export type Async<T> = {
   data: T
   fetching: boolean
+}
+export interface Property {
+  id: number | string
+  name: string
+  description: string
+  parentId: number | string
+  interfaceId: number
+  moduleId: number
+  repositoryId: number
+  scope: 'request' | 'response'
+  value: string
+  memory: boolean
+  pos: POS_TYPE
 }

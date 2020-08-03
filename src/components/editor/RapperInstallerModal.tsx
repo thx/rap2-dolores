@@ -8,8 +8,7 @@ import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
-import Slide from '@material-ui/core/Slide'
-import { TransitionProps } from '@material-ui/core/transitions'
+import { SlideUp } from 'components/common/Transition'
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -19,16 +18,9 @@ import { DialogContent } from '@material-ui/core'
 
 type RapperType = 'normal' | 'redux'
 
-const Transition = React.forwardRef((
-  props: TransitionProps & { children?: React.ReactElement<any, any> },
-  ref: React.Ref<unknown>,
-) => {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 const codeTmpl = ({ projectId, token, rapperType, rapperPath }: {
   projectId: number
-  token: string
+  token?: string
   rapperType: RapperType
   rapperPath: string
 }) => {
@@ -172,7 +164,7 @@ function RapperInstallerModal({
       fullScreen={true}
       open={open}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideUp}
     >
       <AppBar className={classes.appBar}>
         <Toolbar>
@@ -212,8 +204,8 @@ function RapperInstallerModal({
             onChange={(event) => setRapperPath(event.target.value)}
           />
         </div>
-        <p className={classes.step}>1. 安装 rapper 到项目的开发依赖</p>
-        <pre>npm install rap --save-dev</pre>
+        <p className={classes.step}>1. 安装 rapper 到项目依赖</p>
+        <pre>npm install rap --save</pre>
         <p className={classes.step}>2. 给 package.json 的 scripts 对象下添加下面一行脚本</p>
         <pre>
           {codeTmpl({ projectId: repository.id, token: repository.token, rapperType, rapperPath })}

@@ -44,8 +44,10 @@ const useStyles = makeStyles(({ spacing }: Theme) => ({
   },
 }))
 
-const schema = Yup.object().shape<Partial<RepositoryFormData>>({
-  name: Yup.string().required(YUP_MSG.REQUIRED).max(20, YUP_MSG.MAX_LENGTH(20)),
+const schema = Yup.object().shape<Partial<Repository>>({
+  name: Yup.string()
+    .required(YUP_MSG.REQUIRED)
+    .max(20, YUP_MSG.MAX_LENGTH(20)),
   description: Yup.string().max(1000, YUP_MSG.MAX_LENGTH(1000)),
 })
 
@@ -74,7 +76,7 @@ function RepositoryForm(props: Props) {
   }
   const auth = useSelector((state: RootState) => state.auth)
   const organizations = useSelector((state: RootState) => {
-    return [...state.ownedOrganizations.data, ...state.joinedOrganizations.data]
+    return _.uniqBy([...state.ownedOrganizations.data, ...state.joinedOrganizations.data], 'id')
   }).map(org => ({
     label: org.name,
     value: org.id,
