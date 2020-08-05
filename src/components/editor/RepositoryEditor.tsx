@@ -198,7 +198,7 @@ class RepositoryEditor extends Component<Props, States> {
               <GoDatabase /> 数据
             </a>
             <span className="g-link edit mr1" onClick={() => this.setState({ importSwagger: true })}>
-              <GoLinkExternal /> Swagger导入
+              <GoLinkExternal /> 导入
             </span>
             <ImportSwaggerRepositoryForm
               open={this.state.importSwagger}

@@ -76,7 +76,7 @@ function ImportSwaggerRepositoryForm(props: Props) {
         onClose={(_event, reason) => reason !== 'backdropClick' && onClose()}
         TransitionComponent={SlideUp}
       >
-        <DialogTitle>导入 Swagger 仓库</DialogTitle>
+        <DialogTitle>导入仓库</DialogTitle>
         <DialogContent dividers={true}>
           <div className={classes.form}>
             <Formik
