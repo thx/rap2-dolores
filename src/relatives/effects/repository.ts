@@ -90,7 +90,7 @@ export function* fetchRepository(action: any) {
     const uri = StoreStateRouterLocationURI(router)
     const params = uri.search(true)
     const repository = yield call(
-      RepositoryService.fetchRepository,
+      RepositoryService.fetchRepository as any,
       action.repository || action.id,
       params.token,
     )

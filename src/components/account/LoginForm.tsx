@@ -80,7 +80,7 @@ export default function LoginForm() {
       dispatch(
         login({ email, password, captcha }, () => {
           const uri = URI(pathname + hash + search)
-          const original = uri.search(true).original
+          const original = uri.search(true).original as string
           if (original) {
             dispatch(push(decodeURIComponent(original)))
           } else {
