@@ -38,7 +38,7 @@ class ImportRepositoryForm extends Component<any, any> {
               <label className="col-sm-4 control-label">版本</label>
               <div className="col-sm-10">
                 <RadioList
-                  data={[{ 'label': 'RAP1在线地址', 'value': 1 }, { 'label': 'RAP1 Project Data', 'value': 2 }]}
+                  data={[{ 'label': 'RAP1在线地址', 'value': 1 }, { 'label': 'RAP1 Data', 'value': 2 }, { 'label': 'RAP2 Data', 'value': 3 }]}
                   curVal={version}
                   name="version"
                   onChange={val => this.setState({ version: val })}
@@ -64,7 +64,7 @@ class ImportRepositoryForm extends Component<any, any> {
                 </div>
               </div>
             )}
-            {+version === 2 && (
+            {(+version === 2 || +version === 3) && (
               <div className="form-group row">
                 <label className="col-sm-4 control-label">文档数据</label>
                 <div className="col-sm-10">

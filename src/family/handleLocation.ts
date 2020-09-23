@@ -6,7 +6,6 @@ const handleLocation = ({
   location,
 }: any) => {
   // TODO 2.x 统一控制日志
-  location.params = URI(location.search || '').search(true)
   const auth = store.getState().auth
   const isLogined = !!(auth && auth.id)
   const {

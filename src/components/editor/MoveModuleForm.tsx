@@ -109,6 +109,7 @@ export default function MoveModuleForm(props: Props) {
       <DialogContent dividers={true}>
         <form className={classes.form} onSubmit={handleSubmit}>
           <div className="rmodal-body">
+            <div style={{ color: '#CC0000', fontSize: 16, marginBottom: 8 }}>请注意这里是移动模块，整个模块哦，不是移动接口。别搞错啦！！！</div>
             <div className={classes.formItem}>
               <div className={classes.formTitle}>选择目标仓库：</div>
               <FormControl>

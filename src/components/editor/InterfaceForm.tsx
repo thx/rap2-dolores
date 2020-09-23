@@ -126,7 +126,7 @@ function InterfaceForm(props: Props) {
                     <div className={classes.formItem}>
                       <Field
                         name="url"
-                        label="地址"
+                        label="URL地址"
                         component={TextField}
                         fullWidth={true}
                       />

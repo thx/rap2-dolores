@@ -1,4 +1,4 @@
-import React, { useState, MouseEventHandler } from 'react'
+import React, { useState, MouseEventHandler, CSSProperties } from 'react'
 import { connect, Link, StoreStateRouterLocationURI, replace } from '../../family'
 import { sortInterfaceList, deleteInterface } from '../../actions/interface'
 import { deleteModule } from '../../actions/module'
@@ -139,11 +139,13 @@ function InterfaceList(props: InterfaceListProps) {
   const { repository, itf, itfs = [], mod } = props
   const classes = useStyles()
 
+  const dangerousStyles: CSSProperties = { color: '#CC0000', fontWeight: 'bold', fontSize: 16, display: 'inline', margin: '0 4px' } // 给眼神不太好的同学专门的设计
+
   const handleDeleteModule: MouseEventHandler<HTMLButtonElement> = e => {
     e.preventDefault()
     const message = (
-      <div>
-        <div>模块被删除后不可恢复！并且会删除相关的接口！</div>
+      <div style={{ width: 800 }}>
+        <div><div style={dangerousStyles}>模块</div>被删除后<div style={dangerousStyles}>不可恢复</div>！并且会删除<div style={dangerousStyles}>相关的接口</div>！</div>
         <div>
           确认继续删除『#${mod.id} ${mod.name}
           』吗？

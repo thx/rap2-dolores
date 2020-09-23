@@ -1,19 +1,13 @@
 import React, { Component, PureComponent } from 'react'
 import { PropTypes, Link } from '../../family'
-import {
-  Tree,
-  SmartTextarea,
-  RModal,
-  RSortable,
-  CopyToClipboard
-} from '../utils'
+import { Tree, SmartTextarea, RModal, RSortable, CopyToClipboard } from '../utils'
 import { TYPES } from '../../utils/consts'
 import PropertyForm from './PropertyForm'
 import Importer from './Importer'
 import Previewer from './InterfacePreviewer'
 import { GoPlus, GoTrashcan, GoQuestion, GoChevronDown, GoChevronRight } from 'react-icons/go'
 import './PropertyList.css'
-import { ButtonGroup, Button, Checkbox, Chip } from '@material-ui/core'
+import { ButtonGroup, Button, Checkbox, Tooltip } from '@material-ui/core'
 import classNames from 'classnames'
 import _ from 'lodash'
 import Mock from 'mockjs'
@@ -282,7 +276,11 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                           <>
                             <CopyToClipboard text={item.name} type="right">
                               <span className="name-wrapper nowrap">
-                                {item.name}{item.pos === POS_TYPE.BODY && item.scope === 'request' ? <BodyParamLabel type={bodyOption} /> : null}
+                                {item.pos === POS_TYPE.BODY && item.scope === 'request' ? (
+                                  <Tooltip title={formatBodyOption(bodyOption ?? BODY_OPTION.RAW)}>
+                                    <span>{item.name}</span>
+                                  </Tooltip>
+                                ) : item.name}
                               </span>
                             </CopyToClipboard>
                             {item.scope === 'request' && item.depth === 0 ? (
@@ -429,11 +427,6 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
   }
 }
 
-function BodyParamLabel({ type }: { type: BODY_OPTION }) {
-  return (
-    <Chip label={formatBodyOption(type)} className="ml1" size="small" />
-  )
-}
 class SortableTreeTable extends Component<any, any> {
   render() {
     const {
@@ -607,6 +600,7 @@ class PropertyList extends PureComponent<any, any> {
             mod={mod}
             interfaceId={interfaceId}
             scope={scope}
+            pos={posFilter}
           />
         </RModal>
       </section>

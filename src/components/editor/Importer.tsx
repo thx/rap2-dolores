@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { connect, Link, Mock, _, PropTypes } from '../../family'
 import { RCodeMirror } from '../utils/'
 import { addProperty } from '../../actions/property'
-import { RootState } from 'actions/types'
+import { RootState, Property } from 'actions/types'
 import JSON5 from 'json5'
 import { Button } from '@material-ui/core'
+import { POS_TYPE } from './InterfaceSummary'
 const mockResult =
   process.env.NODE_ENV === 'development'
     ? () => ({
@@ -78,6 +79,7 @@ type ImporterProps = {
   handleAddMemoryProperties: (...args: any[]) => any,
   interfaceId: number
   [k: string]: any;
+  pos: POS_TYPE
 }
 type ImporterState = {
   result: string
@@ -142,9 +144,9 @@ class Importer extends Component<ImporterProps, ImporterState> {
   };
   // TODO 2.1 待完整测试各种输入
   // DONE 2.1 BUG 类型 Number，初始值 ''，被解析为随机字符串
-  handleJSONSchema = (schema: any, parent = { id: -1 }, memoryProperties: any, siblings?: any) => {
+  handleJSONSchema = (schema: any, parent = { id: -1 } as { id: number | string }, memoryProperties: any, siblings?: any) => {
     if (!schema) { return }
-    const { auth, repository, mod, interfaceId, scope } = this.props
+    const { auth, repository, mod, interfaceId, scope, pos } = this.props
     const hasSiblings = siblings instanceof Array && siblings.length > 0
     // DONE 2.1 需要与 Mock 的 rule.type 规则统一，首字符小写，好烦！应该忽略大小写！
     if (schema.name === lengthAlias) {
@@ -181,21 +183,6 @@ class Importer extends Component<ImporterProps, ImporterState> {
       }
     }
 
-    type Property = {
-        name: any;
-        type: any;
-        rule: string;
-        value: any;
-        description: string;
-        creator: any;
-        repositoryId: any;
-        moduleId: any;
-        interfaceId: any;
-        scope: any;
-        parentId: number;
-        memory: boolean;
-        id: any;
-    }
     const property: Property = Object.assign(
       {
         name: schema.name,
@@ -203,6 +190,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
         rule,
         value,
         description: '',
+        pos,
       },
       {
         creator: auth.id,

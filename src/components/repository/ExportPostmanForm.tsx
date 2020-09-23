@@ -18,6 +18,8 @@ export default function ExportPostmanForm(props: {
   const postmanLink = `${config.serve}/export/postman?id=${repoId}`
   const markdownLink = `${config.serve}/export/markdown?id=${repoId}&origin=${window.location.origin}`
   const docxLink = `${config.serve}/export/docx?id=${repoId}&origin=${window.location.origin}`
+  const rapLink =`${config.serve}/repository/get?id=${repoId}`
+
   // const pdfLink = `${config.serve}/export/pdf?id=${repoId}&origin=${window.location.origin}`
   return (
     <Dialog
@@ -67,16 +69,17 @@ export default function ExportPostmanForm(props: {
             </div>
           </div>
 
-          {/* <div>
-            <div>PDF:</div>
+          <div>
+            <div>RAP Data:</div>
             <div
               className="alert alert-info"
               role="alert"
               style={{ margin: '8px 0' }}
             >
-              <a href={pdfLink}>{pdfLink}</a>
+              <a href={rapLink}>{rapLink}</a>
             </div>
-          </div> */}
+            <div>用于备份，或在其它RAP2平台导入，打开后另存为保存即可。也可通过编程访问。</div>
+          </div>
 
           <div className="mt10">
             <Button variant="outlined" onClick={onClose}>
