@@ -1,6 +1,7 @@
 import { CREDENTIALS, serve } from './constant'
 import { IDefaultVal } from 'components/editor/DefaultValueModal'
 import { ENTITY_TYPE } from 'utils/consts'
+import { IMPORT_TYPE } from 'components/repository/ImportSwaggerRepositoryForm'
 
 // 仓库
 export default {
@@ -64,7 +65,7 @@ export default {
       .then(res => res.json())
   },
   importSwaggerRepository(data: any) {
-    return fetch(`${serve}/repository/importswagger`, {
+    return fetch(`${serve}/repository/${data.version === IMPORT_TYPE.SWAGGER_2_0 ? 'importswagger' : 'importRAP2Backup'}`, {
       ...CREDENTIALS,
       method: 'POST',
       body: JSON.stringify(data),

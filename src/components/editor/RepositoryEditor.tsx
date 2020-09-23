@@ -208,6 +208,7 @@ class RepositoryEditor extends Component<Props, States> {
               }}
               repositoryId={repository.id}
               orgId={(repository.organization || {}).id}
+              modId={+mod?.id || 0}
               mode="manual"
             />
             <span className="g-link edit mr1" onClick={() => this.setState({ exportPostman: true })}>

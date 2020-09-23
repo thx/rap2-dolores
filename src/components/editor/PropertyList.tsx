@@ -297,9 +297,15 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                                 }
                               }}
                               value={item.name}
-                              onChange={e =>
+                              onChange={e => {
                                 handleChangePropertyField(item.id, 'name', e.target.value)
-                              }
+                              }}
+                              onKeyPress={e => {
+                                if (e.ctrlKey === true && e.charCode === 13) {
+                                  // auto fill by name
+                                  // TODO: 
+                                }
+                              }}
                               className="form-control editable"
                               spellCheck={false}
                               placeholder=""

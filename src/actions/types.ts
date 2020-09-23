@@ -63,6 +63,7 @@ export interface ImportSwagger {
   mode: string
   repositoryId?: number
   swagger?: string
+  modId?: number
 }
 export interface User {
   id: number

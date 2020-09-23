@@ -1,6 +1,6 @@
 import React, { useState, MouseEventHandler, CSSProperties } from 'react'
 import { connect, Link, StoreStateRouterLocationURI, replace } from '../../family'
-import { sortInterfaceList, deleteInterface } from '../../actions/interface'
+import { sortInterfaceList, deleteInterface, unlockInterface } from '../../actions/interface'
 import { deleteModule } from '../../actions/module'
 import { Module, Repository, RootState, Interface, User } from '../../actions/types'
 import { RSortable, CustomScroll } from '../utils'
@@ -23,10 +23,11 @@ interface InterfaceBaseProps {
   curItf?: Interface
   deleteInterface: typeof deleteInterface
   replace?: typeof replace
+  unlockInterface: typeof unlockInterface
 }
 
 function InterfaceBase(props: InterfaceBaseProps) {
-  const { repository, mod, itf, curItf } = props
+  const { repository, mod, itf, curItf, unlockInterface } = props
   const auth = useSelector((state: RootState) => state.auth)
   const router = useSelector((state: RootState) => state.router)
   const selectHref = StoreStateRouterLocationURI(router)
@@ -54,10 +55,13 @@ function InterfaceBase(props: InterfaceBaseProps) {
           onClick={e => {
             if (
               curItf &&
-              curItf.locker &&
-              !window.confirm('编辑模式下切换接口，会导致编辑中的资料丢失，是否确定切换接口？')
+              curItf.locker
             ) {
-              e.preventDefault()
+              if (!window.confirm('编辑模式下切换接口，会导致编辑中的资料丢失，是否确定切换接口？')) {
+                e.preventDefault()
+              } else {
+                unlockInterface(curItf.id)
+              }
             } else {
               const top = document.querySelector<HTMLElement>('.InterfaceEditor')!.offsetTop - 10
               // 当接口列表悬浮时切换接口自动跳转到接口顶部
@@ -108,6 +112,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = {
   replace,
   deleteInterface,
+  unlockInterface,
 }
 const InterfaceWrap = connect(mapStateToProps, mapDispatchToProps)(InterfaceBase)
 
