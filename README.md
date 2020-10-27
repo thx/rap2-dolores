@@ -15,7 +15,7 @@ RAP2是在RAP1基础上重做的新项目，它包含两个组件(对应两个Gi
 ### Resources
 
 * [Official Site 官网: rap2.taobao.org](http://rap2.taobao.org)
-* DingDing Group ID 钉钉群: 11789704
+* DingDing Group ID 钉钉群: 31626736 (二群，一群已满）
 
 ## Deployment 部署
 
