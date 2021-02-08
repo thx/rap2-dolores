@@ -129,17 +129,23 @@ function ImportSwaggerRepositoryForm(props: Props) {
                   modId,
                 }
 
-                dispatch(
-                  importSwaggerRepository(importSwagger, (res: any) => {
-                    if (res.isOk === 'success') {
-                      setAlertOpen({ op: true, msg: '导入成功' })
-                      window.location.reload()
-                    } else {
-                      setAlertOpen({ op: true, msg: `导入失败，请检查文件格式，详细错误：${res.message}.` })
-                    }
-                    onClose(true)
-                  }),
-                )
+                const submitPromise = new Promise(resolve => {
+                  dispatch(
+                    importSwaggerRepository(importSwagger, (res: any) => {
+                      if (res.isOk === 'success') {
+                        setAlertOpen({ op: true, msg: '导入成功' })
+                        window.location.reload()
+                      } else {
+                        setAlertOpen({ op: true, msg: `导入失败，请检查文件格式，详细错误：${res.message}.` })
+                     }
+                      onClose(true)
+                      resolve()
+                    }),
+                  )
+                })
+
+                await submitPromise
+
               }}
               render={({ isSubmitting, setFieldValue, values }) => {
                 return (
@@ -154,8 +160,8 @@ function ImportSwaggerRepositoryForm(props: Props) {
                           }}
                           row={true}
                         >
-                          <FormControlLabel value={IMPORT_TYPE.SWAGGER_2_0} control={<Radio />} label="Swagger 2.0" />
-                          <FormControlLabel value={IMPORT_TYPE.RAP2_ITF_BACKUP} control={<Radio />} label="RAP2接口备份JSON" />
+                          <FormControlLabel disabled={isSubmitting} value={IMPORT_TYPE.SWAGGER_2_0} control={<Radio />} label="Swagger 2.0" />
+                          <FormControlLabel disabled={isSubmitting} value={IMPORT_TYPE.RAP2_ITF_BACKUP} control={<Radio />} label="RAP2接口备份JSON" />
                         </RadioGroup>
                       </div>
                       {values.version === IMPORT_TYPE.SWAGGER_2_0 &&
@@ -167,6 +173,7 @@ function ImportSwaggerRepositoryForm(props: Props) {
                             component={TextField}
                             fullWidth={true}
                             variant="outlined"
+                            disabled={isSubmitting}
                           />
                         </div>
                       }
@@ -180,6 +187,7 @@ function ImportSwaggerRepositoryForm(props: Props) {
                           multiline={true}
                           rows="4"
                           variant="outlined"
+                          disabled={isSubmitting}
                         />
                       </div>
                     </div>

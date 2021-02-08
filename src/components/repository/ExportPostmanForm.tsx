@@ -65,7 +65,7 @@ export default function ExportPostmanForm(props: {
               role="alert"
               style={{ margin: '8px 0' }}
             >
-              <a href={docxLink}>{docxLink}</a>
+              <a href={docxLink} target="_blank" rel="noopener noreferrer">{docxLink}</a>
             </div>
           </div>
 
@@ -76,7 +76,7 @@ export default function ExportPostmanForm(props: {
               role="alert"
               style={{ margin: '8px 0' }}
             >
-              <a href={rapLink}>{rapLink}</a>
+              <a href={rapLink} target="_blank" rel="noopener noreferrer">{rapLink}</a>
             </div>
             <div>用于备份，或在其它RAP2平台导入，打开后另存为保存即可。也可通过编程访问。</div>
           </div>

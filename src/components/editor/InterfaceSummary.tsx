@@ -19,6 +19,20 @@ export enum BODY_OPTION {
   BINARY = 'BINARY',
 }
 
+export const getBodyOptionStr = (bo: string) => {
+  if (bo === BODY_OPTION.FORM_URLENCODED) {
+    return 'x-www-form-urlencoded'
+  } else if (bo === BODY_OPTION.FORM_DATA) {
+    return 'form-data'
+  } else if (bo === BODY_OPTION.RAW) {
+    return 'raw'
+  } else if (bo === BODY_OPTION.BINARY) {
+    return 'binary'
+  } else {
+    return '-'
+  }
+}
+
 export function formatBodyOption(type: BODY_OPTION) {
   switch (type) {
     case BODY_OPTION.BINARY:
@@ -329,7 +343,7 @@ class InterfaceSummary extends Component<
         </ul>
         {itf.description && (
           <CopyToClipboard text={itf.description}>
-            <Markdown>{itf.description}</Markdown>
+            <Markdown>{itf.description || ''}</Markdown>
           </CopyToClipboard>
         )}
         {

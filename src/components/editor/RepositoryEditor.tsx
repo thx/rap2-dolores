@@ -140,14 +140,22 @@ class RepositoryEditor extends Component<Props, States> {
       document.title = `RAP2 ${repository.name}`
     }
 
-    const mod: any =
+    let mod =
       repository && repository.modules && repository.modules.length
-        ? repository.modules.find(item => item.id === +params.mod) || repository.modules[0]
-        : ({} as Module)
-    const itf: Interface =
-      mod.interfaces && mod.interfaces.length
-        ? mod.interfaces.find((item: any) => item.id === +params.itf) || mod.interfaces[0]
-        : ({} as Interface)
+        ? repository.modules.find((item: any) => item.id === +params.mod) || repository.modules[0]
+        : null
+
+    if (!(+params.mod > 0) && +params.itf > 0) {
+      const tryMods = repository?.modules?.filter(m => m.interfaces.map(x => x.id).indexOf(+params.itf) > -1)
+      if (tryMods && tryMods[0]) {
+        mod = tryMods[0]
+      }
+    }
+
+    const itf =
+      mod?.interfaces && mod?.interfaces?.length
+        ? mod?.interfaces?.find((item: any) => item.id === +params.itf) || mod?.interfaces[0]
+        : {}
 
     const ownerlink = repository.organization
       ? `/organization/repository?organization=${repository.organization.id}`
@@ -256,14 +264,14 @@ class RepositoryEditor extends Component<Props, States> {
             />
           </div>
           <RepositorySearcher repository={repository} />
-          <div className="desc"><Markdown>{repository.description}</Markdown></div>
+          <div className="desc"><Markdown>{repository.description || ''}</Markdown></div>
           {this.renderRelatedProjects()}
           <DuplicatedInterfacesWarning repository={repository} />
         </div>
         <div className="body">
           <ModuleList mods={repository.modules} repository={repository} mod={mod} />
           <div className="InterfaceWrapper">
-            <InterfaceList itfs={mod.interfaces} repository={repository} mod={mod} itf={itf} />
+            <InterfaceList itfs={mod?.interfaces || []} repository={repository} mod={mod} itf={itf} />
             <InterfaceEditor itf={itf} mod={mod} repository={repository} />
           </div>
         </div>

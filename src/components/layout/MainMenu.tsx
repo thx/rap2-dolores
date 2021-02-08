@@ -166,6 +166,7 @@ export default function MainMenu(props: Props) {
             <Link to="/api" className={classes.link}><Button color="inherit"> 接口 </Button></Link>
             <Link to="/status" className={classes.link}><Button color="inherit"> 状态 </Button></Link>
             <Link to="/about" className={classes.link}><Button color="inherit"> 关于 </Button></Link>
+            <Button onClick={() => window.open('https://github.com/thx/rap2-delos/issues/new/choose')} color="inherit">问题反馈</Button>
           </div>
           <AccountButton user={user} />
         </Toolbar>

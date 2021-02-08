@@ -32,7 +32,7 @@ function* renderOpeningScreenAdvertising() {
       ),
       document.getElementById('root'),
       () => {
-        resolve()
+        resolve(null)
       }
     )
   })

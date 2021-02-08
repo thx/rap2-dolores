@@ -147,7 +147,7 @@ class RepositorySearcher extends Component<any, IState> {
           onChange={e => {
             const val = e.target.value
             this.setState({ seed: val })
-            this.debouncedInput(val)
+            this.debouncedInput(val.trim())
           }}
           style={{ backgroundColor: '#fafbfc', marginRight: 12 }}
           className="dropdown-input form-control"

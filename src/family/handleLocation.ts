@@ -1,5 +1,3 @@
-import URI from 'urijs'
-
 const handleLocation = ({
   store,
   listeners,

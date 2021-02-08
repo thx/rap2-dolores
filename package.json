@@ -12,15 +12,12 @@
     "test-backup": "npm run lint && react-scripts test --env=jsdom",
     "test": "npm run lint",
     "eject": "react-scripts eject",
-    "dev": "npm run start",
-    "lint": "tslint --project ./ -c tslint.json --fix"
+    "lint": "tslint --project ./ -c tslint.json --fix",
+    "build-docker": "docker build --rm -f \"Dockerfile\" -t rapteam/rap2-dolores:latest ."
   },
   "repository": {
     "type": "git",
     "url": "git@gitlab.alibaba-inc.com:thx/rap2-dolores.git"
-  },
-  "engines": {
-    "install-alinode": "v5.15.0"
   },
   "author": "mozhi.gyy@alibaba-inc.com",
   "license": "ISC",
@@ -39,7 +36,7 @@
     "codemirror": "5.49.0",
     "connected-react-router": "^6.5.2",
     "debounce-promise": "^3.1.2",
-    "formik": "^2.1.4",
+    "formik": "^2.2.6",
     "formik-material-ui": "^2.0.1",
     "graceful": "1.0.2",
     "history": "^4.10.1",

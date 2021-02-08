@@ -33,7 +33,9 @@ const treeToJson = (tree: any) => {
   const parse = (item: any, result: any) => {
     const rule = item.rule ? ('|' + item.rule) : ''
     let value = item.value
-    if (typeof value === 'string' && (value[0] === '[' || value.indexOf('function(') === 0)) {
+    if (typeof value === 'string' &&
+      (value[0] === '[' || value.indexOf('function(') === 0) &&
+      !!rule) {
       value = tryToCalculateValue(value)
     }
     switch (item.type) {
@@ -94,8 +96,8 @@ const treeToJson = (tree: any) => {
         }
         break
       case 'Null':
-          result[item.name + rule] = null
-          break
+        result[item.name + rule] = null
+        break
       default:
         result[item.name + rule] = item.value
     }

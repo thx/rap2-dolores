@@ -151,6 +151,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
               repository={repository}
               mod={mod}
               interfaceId={itf.id}
+              itf={itf}
               bodyOption={bodyOption}
               posFilter={this.state.summaryState.posFilter}
               handleChangeProperty={this.handleChangeProperty}
@@ -161,6 +162,7 @@ class InterfaceEditor extends Component<InterfaceEditorProps, InterfaceEditorSta
               auth={auth}
               editable={editable}
               repository={repository}
+              itf={itf}
               mod={mod}
               interfaceId={itf.id}
               handleChangeProperty={this.handleChangeProperty}
