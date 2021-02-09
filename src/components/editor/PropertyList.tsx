@@ -303,7 +303,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                               onKeyPress={e => {
                                 if (e.ctrlKey === true && e.charCode === 13) {
                                   // auto fill by name
-                                  // TODO: 
+                                  // TODO:
                                 }
                               }}
                               className="form-control editable"

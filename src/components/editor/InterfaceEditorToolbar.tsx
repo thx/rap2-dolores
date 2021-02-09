@@ -9,7 +9,9 @@ import { useSelector } from 'react-redux'
 import { RootState } from 'actions/types'
 import History from '@material-ui/icons/History'
 import HistoryLogDrawer from './HistoryLogDrawer'
+import CloudDownload from '@material-ui/icons/CloudDownload'
 import { ENTITY_TYPE } from 'utils/consts'
+import { serve } from 'relatives/services/constant'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +52,7 @@ function InterfaceEditorToolbar(props: Props) {
     handleMoveInterface,
     handleSaveInterfaceAndProperties,
     handleUnlockInterface,
+    itfId,
   } = props
 
   const loading = useSelector((state: RootState) => state.loading)
@@ -93,6 +96,17 @@ function InterfaceEditorToolbar(props: Props) {
   }
   return (
     <div className="InterfaceEditorToolbar">
+       <Tooltip title="导出的备份文件，可以导入到其它项目，或本项目">
+        <Button
+          className={`${classes.button} guide-2`}
+          variant="contained"
+          onClick={() => window.open(`${serve}/interface/backup/JSONData/${itfId}`)}
+          size="small"
+        >
+          导出
+        <CloudDownload className={classes.rightIcon} />
+        </Button>
+      </Tooltip>
       <Tooltip title="查看该接口中的所有改动历史">
         <Button
           className={`${classes.button} guide-2`}
