@@ -13,7 +13,8 @@ import _ from 'lodash'
 import Mock from 'mockjs'
 import JSON5 from 'json5'
 import { elementInViewport } from 'utils/ElementInViewport'
-import { POS_TYPE, BODY_OPTION, formatBodyOption } from './InterfaceSummary'
+import { POS_TYPE, BODY_OPTION, formatBodyOption, getBodyOptionStr } from './InterfaceSummary'
+import { Interface } from 'actions/types'
 
 const mockProperty =
   process.env.NODE_ENV === 'development'
@@ -104,11 +105,14 @@ class SortableTreeTableHeader extends Component<any, any> {
 }
 
 const PropertyLabel = (props: any) => {
-  const { pos } = props
+  const { pos, itf } = props
   if (pos === 1) {
     return <span className="badge badge-danger">HEAD</span>
   } else if (pos === 3) {
-    return <span className="badge badge-primary">BODY</span>
+    return <>
+      <span className="badge badge-primary">BODY</span>
+      {itf?.bodyOption && <span style={{ color: '#CC0000' }}>{getBodyOptionStr(itf.bodyOption)}</span>}
+    </>
   } else {
     return <span className="badge badge-secondary">QUERY</span>
   }
@@ -144,6 +148,7 @@ interface SortableTreeTableRowProps {
   /** 当前层级是不是展开 */
   isExpanding: boolean
   interfaceId: number
+  itf: Interface
   [k: string]: any
 }
 class SortableTreeTableRow extends Component<SortableTreeTableRowProps, SortableTreeTableRowState> {
@@ -201,6 +206,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
       handleChangePropertyField,
       handleSortProperties,
       bodyOption,
+      itf,
     } = this.props
     return (
       isExpanding && (
@@ -285,7 +291,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                             </CopyToClipboard>
                             {item.scope === 'request' && item.depth === 0 ? (
                               <div style={{ margin: '1px 0 0 3px' }}>
-                                <PropertyLabel pos={item.pos} />
+                                <PropertyLabel pos={item.pos} itf={itf} />
                               </div>
                             ) : null}
                           </>
@@ -421,6 +427,7 @@ class SortableTreeTableRow extends Component<SortableTreeTableRowProps, Sortable
                         property={item}
                         bodyOption={bodyOption}
                         isExpanding={childrenIsExpanding}
+                        itf={itf}
                       />
                     ) : null}
                   </div>
@@ -446,6 +453,7 @@ class SortableTreeTable extends Component<any, any> {
       handleChangePropertyField,
       handleSortProperties,
       bodyOption,
+      itf,
     } = this.props
     return (
       <div className={`SortableTreeTable ${editable ? 'editable' : ''}`}>
@@ -462,6 +470,7 @@ class SortableTreeTable extends Component<any, any> {
           property={root}
           isExpanding={true}
           bodyOption={bodyOption}
+          itf={itf}
         />
       </div>
     )
@@ -479,6 +488,7 @@ class PropertyList extends PureComponent<any, any> {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     interfaceId: PropTypes.number.isRequired,
+    itf: PropTypes.object.isRequired,
     editable: PropTypes.bool.isRequired,
     /** optional */
     bodyOption: PropTypes.string,
@@ -508,6 +518,7 @@ class PropertyList extends PureComponent<any, any> {
       interfaceId,
       bodyOption,
       posFilter,
+      itf,
     } = this.props
     if (!interfaceId) {
       return null
@@ -556,6 +567,7 @@ class PropertyList extends PureComponent<any, any> {
             handleChangeProperty={this.handleChangeProperty}
             handleSortProperties={this.handleSortProperties}
             handleClickCreatePropertyButton={this.handleClickCreatePropertyButton}
+            itf={itf}
           />
         </div>
         <div className="footer">

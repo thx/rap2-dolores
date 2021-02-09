@@ -139,7 +139,7 @@ function ImportSwaggerRepositoryForm(props: Props) {
                         setAlertOpen({ op: true, msg: `导入失败，请检查文件格式，详细错误：${res.message}.` })
                      }
                       onClose(true)
-                      resolve()
+                      resolve(null)
                     }),
                   )
                 })

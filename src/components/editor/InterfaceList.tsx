@@ -118,7 +118,7 @@ const InterfaceWrap = connect(mapStateToProps, mapDispatchToProps)(InterfaceBase
 
 interface InterfaceListProps {
   itfs?: Interface[]
-  itf?: Interface
+  itf?: any
   curItf: Interface
   mod: Module
   repository: Repository
