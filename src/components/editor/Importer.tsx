@@ -158,6 +158,9 @@ class Importer extends Component<ImporterProps, ImporterState> {
       rule = schema.items.length
     }
     let value = /Array|Object/.test(type) ? '' : schema.template
+    if (type === 'Boolean' && typeof value === 'boolean') {
+      value = value + ''
+    }
     if (schema.items && schema.items.length) {
       const childType = schema.items[0].type
       if (isPrimitiveType(childType)) {

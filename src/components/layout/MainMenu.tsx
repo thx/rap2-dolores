@@ -10,6 +10,7 @@ import Popper from '@material-ui/core/Popper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { GoLinkExternal } from 'react-icons/go'
 import { Link } from 'react-router-dom'
 import { User } from 'actions/types'
 import Logo from './Logo'
@@ -105,6 +106,14 @@ function AccountButton({ user }: { user: User }) {
   return (
     <div>
       <Button
+        onClick={() => window.open('https://github.com/thx/gogocode')}
+        color="inherit"
+        style={{ textTransform: 'none' }}
+      >
+        代码转换试试GoGoCode
+        <GoLinkExternal className="ml5" />
+      </Button>
+      <Button
         color="inherit"
         aria-haspopup="true"
         aria-label="账户"
@@ -128,10 +137,7 @@ function AccountButton({ user }: { user: User }) {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu">
                   {options.map(({ key, text }) => (
-                    <MenuItem
-                      key={key}
-                      onClick={event => handleMenuItemClick(event, key)}
-                    >
+                    <MenuItem key={key} onClick={(event) => handleMenuItemClick(event, key)}>
                       {text}
                     </MenuItem>
                   ))}
@@ -153,6 +159,7 @@ interface Props {
 export default function MainMenu(props: Props) {
   const { user } = props
   const classes = useStyles()
+  const dispatch = useDispatch()
 
   return (
     <div className={classes.root}>
@@ -160,13 +167,19 @@ export default function MainMenu(props: Props) {
         <Toolbar className={classes.toolbar} variant="dense">
           <div className={classes.links}>
             <Link to="/" className={classes.logo}><Logo /> </Link>
-            <Link to="/" className={classes.link}><Button color="inherit"> 首页 </Button></Link>
-            <Link to="/repository/joined" className={classes.link}><Button color="inherit"> 仓库 </Button></Link>
-            <Link to="/organization/joined" className={classes.link}><Button color="inherit"> 团队 </Button></Link>
-            <Link to="/api" className={classes.link}><Button color="inherit"> 接口 </Button></Link>
-            <Link to="/status" className={classes.link}><Button color="inherit"> 状态 </Button></Link>
-            <Link to="/about" className={classes.link}><Button color="inherit"> 关于 </Button></Link>
-            <Button onClick={() => window.open('https://github.com/thx/rap2-delos/issues/new/choose')} color="inherit">问题反馈</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/'))}>首页</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/repository/joined'))}>仓库</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/organization/joined'))}>团队</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/api'))}>接口</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/status'))}>状态</Button>
+            <Button className={classes.link} onClick={() => dispatch(push('/about'))}>关于</Button>
+            <Button
+              className={classes.link}
+              onClick={() => window.open('https://github.com/thx/rap2-delos/issues/new/choose')}
+              color="inherit"
+            >
+              问题反馈
+            </Button>
           </div>
           <AccountButton user={user} />
         </Toolbar>
