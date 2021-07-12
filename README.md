@@ -2,10 +2,6 @@
 
 [![Build Status](https://travis-ci.org/thx/rap2-dolores.svg?branch=master)](https://travis-ci.org/thx/rap2-dolores)
 
-### About this repo
-
-本人作为RAP最初作者和主要维护人，已于2021年6月8日离职。后续的所有维护工作，将在本Repo中进行，并定期提交PR至 thx/rap2-delos & thx/rap2-dolores
-
 ### Intro
 
 RAP2 is a new project based on [RAP1](https://github.com/thx/RAP). It has two components:
