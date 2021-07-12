@@ -121,7 +121,7 @@ function HistoryLogDrawer({ entityId, entityType, open, onClose }:
         count={result.count}
         rowsPerPage={limit}
         page={page}
-        onChangePage={(_, val) => setPage(val)}
+        onPageChange={(_, val) => setPage(val)}
         onChangeRowsPerPage={e => { setLimit(parseInt(e.target.value, 10)); setPage(0) }}
         {...TablePaginationProps}
       />

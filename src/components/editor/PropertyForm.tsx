@@ -38,6 +38,7 @@ class PropertyForm extends Component<any, any> {
     repository: PropTypes.object.isRequired,
     mod: PropTypes.object.isRequired,
     interfaceId: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
   }
   static contextTypes = {
     rmodal: PropTypes.instanceOf(Component),
