@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
 import { grey, red, pink, purple, orange, blue, green, cyan, indigo } from '@material-ui/core/colors'
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Theme } from '@material-ui/core'
 import { SimplePaletteColorOptions, makeStyles, createStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { changeTheme } from 'actions/account'
+import { ThemeOptions } from '@material-ui/core/styles'
 
 export enum THEME_TEMPLATE_KEY {
   INDIGO = 'INDIGO', // DEFAULT

@@ -13,6 +13,7 @@ class ImportRepositoryForm extends Component<any, any> {
   static propTypes = {
     orgId: PropTypes.number.isRequired,
     importRepository: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
   }
   constructor(props: any) {
     super(props)

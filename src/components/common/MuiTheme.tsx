@@ -1,4 +1,4 @@
-import createMuiTheme, { ThemeOptions } from '@material-ui/core/styles/createMuiTheme'
+import { ThemeOptions, createTheme } from '@material-ui/core/styles'
 import { THEME_TEMPLATES, THEME_TEMPLATE_KEY } from 'components/account/ThemeChangeOverlay'
 
 export const theme = {
@@ -22,7 +22,7 @@ export const theme = {
   },
 }
 
-const MuiTheme = (options?: ThemeOptions) => createMuiTheme({
+const MuiTheme = (options?: ThemeOptions) => createTheme({
   ...theme as ThemeOptions,
   ...(options || {})
 })
