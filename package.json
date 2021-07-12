@@ -33,7 +33,7 @@
     "chart.js": "^2.9.3",
     "classnames": "^2.2.6",
     "clipboard-copy": "^3.1.0",
-    "codemirror": "5.49.0",
+    "codemirror": "5.58.2",
     "connected-react-router": "^6.5.2",
     "debounce-promise": "^3.1.2",
     "formik": "^2.2.6",
