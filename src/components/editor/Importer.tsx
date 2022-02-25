@@ -6,6 +6,8 @@ import { RootState, Property } from 'actions/types'
 import JSON5 from 'json5'
 import { Button } from '@material-ui/core'
 import { POS_TYPE } from './InterfaceSummary'
+import {MSG_TYPE, showMessage} from '../../actions/common'
+
 const mockResult =
   process.env.NODE_ENV === 'development'
     ? () => ({
@@ -120,7 +122,7 @@ class Importer extends Component<ImporterProps, ImporterState> {
           </div>
           <div className="rmodal-footer">
             <div className="form-group mb0">
-              <Button type="submit" style={{ marginRight: 8 }} variant="contained" color="primary">
+              <Button type="submit" onClick={this.verifyJSONFormat} style={{ marginRight: 8 }} variant="contained" color="primary">
                 提交
               </Button>
               <Button onClick={() => rmodal.close()} > 取消 </Button>
@@ -129,6 +131,16 @@ class Importer extends Component<ImporterProps, ImporterState> {
         </form>
       </section>
     )
+  }
+  // 校验JSON格式异常, 有异常时提示错误
+  verifyJSONFormat = (event: any) => {
+    try {
+      JSON5.parse(this.state.result)
+    } catch (e) {
+      console.error(e.message)
+      this.props.showMessage('JSON格式错误, 请校正后重试', MSG_TYPE.WARNING)
+      event.preventDefault()
+    }
   }
   componentDidUpdate() {
     this.context.rmodal.reposition()
@@ -248,5 +260,6 @@ const mapStateToProps = (state: RootState) => ({
 })
 const mapDispatchToProps = {
   onAddProperty: addProperty,
+  showMessage: showMessage
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Importer)
