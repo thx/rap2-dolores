@@ -76,7 +76,7 @@
     "reselect": "^4.0.0",
     "sortablejs": "1.10.0",
     "urijs": ">=1.19.11",
-    "yup": "^0.27.0"
+    "yup": "^1.4.0"
   },
   "standard": {
     "parser": "babel-eslint",
